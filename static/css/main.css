@@ -595,18 +595,17 @@ nav {
 .section-nav a {
     text-decoration: none;
     display: block;
-    color: #ccc;
+    color: #3700ff;
     transition: all 50ms ease-in-out;
 }
 
 .section-nav li::marker {
-    color: #ccc;
+    color: #3700ff;
 }
 
 .section-nav a:hover,
 .section-nav a:focus {
     border: none;
-    color: #3700ff;
     font-weight: 600;
 }
 
