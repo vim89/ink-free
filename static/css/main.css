@@ -198,7 +198,7 @@ ul {
 }
 
 .post {
-    max-width: 1100px;
+    max-width: 90%;
 }
 
 .post ul li {
@@ -220,22 +220,22 @@ ul {
 .highlight {
     /* background: 0 0; */
     font-size: 0.8em;
-    max-width: 1100px;
+    max-width: 90%;
     overflow-x: auto;
 }
 
 .wrapper {
-    max-width: 1100px;
+    max-width: 90%;
     margin: 0 auto;
 }
 
 .container {
-    max-width: 1100px;
-    margin-top: 30px;
+    max-width: 90%;
+    margin-top: 40px;
 }
 
 .container-wide {
-    max-width: 1100px;
+    max-width: 90%;
     margin-top: 30px;
 }
 
@@ -344,7 +344,7 @@ ul {
 }
 
 .post-header .meta .date {
-    margin-right: 30px;
+    margin-right: 25px;
     width: 64px;
     text-align: center;
 }
@@ -618,12 +618,12 @@ nav {
 .toc a {
     text-decoration: none;
     display: block;
-    color: #515151;
+    color: #3700ff;
     transition: all 50ms ease-in-out;
 }
 
 .toc li::marker {
-    color: #515151;
+    color: #3700ff;
 }
 
 .toc a:hover,
