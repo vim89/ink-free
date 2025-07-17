@@ -199,7 +199,6 @@ ul {
 
 .post {
     max-width: 1100px;
-    margin-right: 280px;
 }
 
 .post ul li {
@@ -241,8 +240,8 @@ ul {
 }
 
 .header {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    margin-bottom: 50px;
+    padding-bottom: 50px;
 }
 
 .header .avatar {
@@ -548,7 +547,7 @@ code {
     display: none !important;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1100px) {
     .hide-on-mobile {
         display: none !important;
     }
@@ -558,11 +557,11 @@ code {
     }
 
     .container-wide {
-        max-width: 800px;
+        max-width: 1100px;
     }
 }
 
-@media only screen and (min-width: 1025px) {
+@media only screen and (min-width: 1100px) {
     .article-nav {
         display: grid;
         grid-template-columns: 1fr 15em;
@@ -626,7 +625,6 @@ nav {
 .toc a:hover,
 .toc a:focus {
     border: none;
-    color: #666;
     font-weight: 600;
 }
 
