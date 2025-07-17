@@ -599,6 +599,10 @@ nav {
     transition: all 50ms ease-in-out;
 }
 
+.section-nav li::marker {
+    color: #3700ff;
+}
+
 .section-nav a:hover,
 .section-nav a:focus {
     border: none;
@@ -615,6 +619,10 @@ nav {
     display: block;
     color: #3700ff;
     transition: all 50ms ease-in-out;
+}
+
+.toc li::marker {
+    color: #3700ff;
 }
 
 .toc a:hover,
