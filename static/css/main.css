@@ -83,7 +83,7 @@ table thead th {
     vertical-align: bottom;
 }
 
-table tbody+tbody {
+table tbody + tbody {
     border-top: 2px solid #dee2e6;
 }
 
@@ -198,7 +198,8 @@ ul {
 }
 
 .post {
-    max-width: 800px;
+    max-width: 1100px;
+    margin-right: 280px;
 }
 
 .post ul li {
@@ -220,23 +221,23 @@ ul {
 .highlight {
     /* background: 0 0; */
     font-size: 0.8em;
-    max-width: 800px;
+    max-width: 1100px;
     overflow-x: auto;
 }
 
 .wrapper {
-    max-width: 760px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
 .container {
-    max-width: 800px;
-    margin-top: 50px;
+    max-width: 1100px;
+    margin-top: 30px;
 }
 
 .container-wide {
-    max-width: 1000px;
-    margin-top: 50px;
+    max-width: 1300px;
+    margin-top: 30px;
 }
 
 .header {
@@ -380,11 +381,11 @@ ul {
     background-color: #f9f2f4;
 }
 
-.post .tags a  {
-    display: inline-block; 
+.post .tags a {
+    display: inline-block;
     border: 1px solid #3700ff;
     border-radius: 3px;
-    padding: 0px 6px;
+    padding: 0 6px;
     color: #3700ff;
     line-height: 20px;
     font-size: 0.85em;
@@ -510,7 +511,7 @@ ul {
 }
 
 .figcaption-img {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 figcaption {
@@ -520,7 +521,7 @@ figcaption {
     color: gray;
 }
 
-code:not(pre *)  {
+code:not(pre *) {
     font-family: monospace;
     font-size: 1em;
     background-color: rgb(239, 241, 243);
@@ -536,6 +537,7 @@ code {
 .footer-separator {
     border-top: 0.1em dashed lightgray;
 }
+
 /* Table of contents */
 
 .toc {
@@ -545,86 +547,89 @@ code {
 .show-on-mobile {
     display: none !important;
 }
+
 @media screen and (max-width: 1024px) {
     .hide-on-mobile {
         display: none !important;
     }
+
     .show-on-mobile {
         display: block !important;
     }
+
     .container-wide {
         max-width: 800px;
     }
-  }
+}
 
 @media only screen and (min-width: 1025px) {
     .article-nav {
-      display: grid;
-      grid-template-columns: 1fr 15em;
-      max-width: 100em;
-      width: 100%;
-      margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 15em;
+        max-width: 100em;
+        width: 100%;
+        margin: 0 auto;
     }
-  }
+}
 
-  nav {
+nav {
     position: sticky;
     top: 2rem;
     align-self: start;
-  }
-  
-  .section-nav li.active > a {
+}
+
+.section-nav li.active > a {
     font-weight: 600;
     color: black;
-  }
-  
-  .section-nav {
+}
+
+.section-nav {
     font-size: smaller;
     padding-left: 0;
     border-left: 2px solid #efefef;
-  }
-
-  .section-nav a {
-    text-decoration: none;
-    display: block;
-    color: #ccc;
-    transition: all 50ms ease-in-out; 
-  }
-
-  .section-nav li::marker {
-    color: #ccc;
-  }
-
-  .section-nav a:hover,
-.section-nav a:focus {
-    border: none;
-  color: #666;
-  font-weight: 600;
 }
 
-  .depth-nested {
-    display: none;
-  }
-
-  /* Static TOC */
-  .toc a {
+.section-nav a {
     text-decoration: none;
     display: block;
-    color: #515151;
-    transition: all 50ms ease-in-out; 
-  }
+    color: #ccc;
+    transition: all 50ms ease-in-out;
+}
 
-  .toc li::marker {
-    color: #515151;
-  }
+.section-nav li::marker {
+    color: #ccc;
+}
 
-  .toc a:hover,
-  .toc a:focus {
+.section-nav a:hover,
+.section-nav a:focus {
     border: none;
     color: #666;
     font-weight: 600;
-  }
-  
+}
+
+.depth-nested {
+    display: none;
+}
+
+/* Static TOC */
+.toc a {
+    text-decoration: none;
+    display: block;
+    color: #515151;
+    transition: all 50ms ease-in-out;
+}
+
+.toc li::marker {
+    color: #515151;
+}
+
+.toc a:hover,
+.toc a:focus {
+    border: none;
+    color: #666;
+    font-weight: 600;
+}
+
 
 /* For https://github.com/martignoni/hugo-notice */
 .notice {
