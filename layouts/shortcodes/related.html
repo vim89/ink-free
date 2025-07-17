@@ -1,0 +1,9 @@
+<h3>🔗 Related Posts</h3>
+<ul>
+  {{ $current := .Page }}
+  {{ range first 5 (where .Site.RegularPages "Params.tags" "intersect" $current.Params.tags) }}
+    {{ if ne .Permalink $current.Permalink }}
+    <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{ end }}
+  {{ end }}
+</ul>
