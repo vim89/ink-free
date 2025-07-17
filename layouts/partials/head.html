@@ -15,7 +15,7 @@
 			<ul class="flat">
 				{{- range $index, $key := .Site.Params.Social -}}
 					<li>
-						<a href="{{ $key.url }}" title="{{ $key.name }}" target="_blank" rel="noopener noreferrer">
+						<a href="{{ $key.url }}" title="{{ $key.name }}" target="_blank" rel="nofollow noopener noreferrer">
 							<i class="fab fa-{{ .icon }}" data-feather="{{ $key.icon }}"></i>
 						</a>
 					</li>
