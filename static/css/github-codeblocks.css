@@ -14,75 +14,19 @@
   position: relative;
 }
 
-/* Code header with language label and copy button */
-.code-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 16px;
-  background-color: #f6f8fa;
-  border-bottom: 1px solid #d1d9e0;
-  min-height: 17px;
-}
-
-.code-lang {
-  font-size: 12px;
-  font-weight: 600;
-  color: #656d76;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.copy-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  color: #656d76;
-  border-radius: 4px;
-  transition: background-color 0.2s, color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.copy-button:hover {
-  background-color: #e5e5e5;
-  color: #24292f;
-}
-
-.copy-button:active {
-  background-color: #d1d9e0;
-}
-
-.copy-icon {
-  width: 16px;
-  height: 16px;
-}
+/* Overlay tools inserted by render hook */
+.highlight { position: relative; }
+.highlight .code-tools { position: absolute; top: 8px; left: 8px; right: 8px; z-index: 1; }
+.highlight .code-lang { position: absolute; left: 0; top: 0; font: 12px/1 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; color: #7d8590; text-transform: uppercase; letter-spacing: .3px; background: rgba(0,0,0,0); padding: 2px 6px; border-radius: 6px; border: 1px solid #d1d9e0; }
+html.dark .highlight .code-lang { color: #7d8590; border-color: #30363d; }
 
 /* Pre and code styling */
-.github-code-block {
-  margin: 0;
-  padding: 16px;
-  background: transparent;
-  overflow-x: auto;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: #24292f;
-}
-
-.github-code-block code {
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  word-wrap: normal;
-  white-space: pre;
-  color: inherit;
-}
+/* Typography for Chroma output */
+.highlight .chroma pre { font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace; font-size: 14.5px; line-height: 1.6; padding: 16px; margin: 0; background: transparent; }
+.highlight .chroma .lntable .lntd:last-child pre { padding: 16px; }
+/* Make room for tools row */
+.highlight .chroma pre { padding-top: 34px; }
+.highlight .chroma .lntable .lntd:last-child pre { padding-top: 34px; }
 
 /* Chroma line number styling - GitHub style */
 .highlight .chroma .lnt,
