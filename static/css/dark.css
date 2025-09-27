@@ -75,8 +75,14 @@ html.dark .footer {
   border-color: #333;
 }
 
+/* Dark-mode code blocks: align with Monokai (Chroma default) */
 html.dark .highlight {
-  background-color: #333;
+  background-color: #272822;
+}
+html.dark .chroma,
+html.dark pre.chroma {
+  background-color: #272822;
+  color: #f8f8f2;
 }
 
 html.dark .header .site-description .scheme-toggle a svg {
@@ -84,8 +90,9 @@ html.dark .header .site-description .scheme-toggle a svg {
     color: #f8e04f !important;
 }
 
+/* Avoid crushing token colors in numbered code blocks */
 html.dark td pre code {
-  color: #333;
+  color: #f8f8f2;
 }
 
 html.dark code:not(pre *)  {
