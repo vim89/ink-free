@@ -418,6 +418,37 @@ ul {
     color: #3700ff;
 }
 
+/* Sidebar TOC: sticky, scroll, progress rail */
+.section-nav {
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+    padding-left: 10px;
+    border-left: 2px solid #eee;
+}
+.section-nav::-webkit-scrollbar { width: 8px; }
+.section-nav::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+.section-nav::-webkit-scrollbar-thumb:hover { background: #ccc; }
+
+.section-nav .toc-progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 0;
+    background: #3700ff;
+    border-radius: 2px;
+    transition: height .2s ease;
+}
+
+@media (max-width: 768px) {
+  .section-nav .toc-progress { display: none; }
+}
+
+/* Honor sticky headers for anchor scroll */
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] { scroll-margin-top: 80px; }
+
 .tag-cloud {
     margin-top: 20px;
 }
