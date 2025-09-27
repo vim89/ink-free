@@ -1,0 +1,320 @@
+/* GitHub-Style Code Blocks for ink-free theme */
+/* Based on github-markdown-css with theme integration */
+
+/* Code block container - GitHub styling */
+.highlight {
+  margin: 1.5rem 0;
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+  background-color: #f6f8fa;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.45;
+  position: relative;
+}
+
+/* Code header with language label and copy button */
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #f6f8fa;
+  border-bottom: 1px solid #d1d9e0;
+  min-height: 17px;
+}
+
+.code-lang {
+  font-size: 12px;
+  font-weight: 600;
+  color: #656d76;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.copy-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #656d76;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-button:hover {
+  background-color: #e5e5e5;
+  color: #24292f;
+}
+
+.copy-button:active {
+  background-color: #d1d9e0;
+}
+
+.copy-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Pre and code styling */
+.github-code-block {
+  margin: 0;
+  padding: 16px;
+  background: transparent;
+  overflow-x: auto;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: #24292f;
+}
+
+.github-code-block code {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  word-wrap: normal;
+  white-space: pre;
+  color: inherit;
+}
+
+/* Chroma line number styling - GitHub style */
+.highlight .chroma .lnt,
+.highlight .chroma .ln {
+  color: #656d76;
+  user-select: none;
+  margin-right: 16px;
+  padding-right: 16px;
+  text-align: right;
+  border-right: 1px solid #d1d9e0;
+  min-width: 42px;
+  font-size: 12px;
+}
+
+.highlight .chroma .lntable {
+  border-spacing: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  width: 100%;
+}
+
+.highlight .chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.highlight .chroma .lntd:first-child {
+  width: 50px;
+}
+
+.highlight .chroma .lntd:last-child {
+  width: 100%;
+}
+
+/* GitHub syntax highlighting colors (light mode) */
+.highlight .chroma .k { color: #cf222e; } /* Keyword */
+.highlight .chroma .kc { color: #0550ae; } /* Keyword.Constant */
+.highlight .chroma .kd { color: #cf222e; } /* Keyword.Declaration */
+.highlight .chroma .kn { color: #cf222e; } /* Keyword.Namespace */
+.highlight .chroma .kp { color: #cf222e; } /* Keyword.Pseudo */
+.highlight .chroma .kr { color: #cf222e; } /* Keyword.Reserved */
+.highlight .chroma .kt { color: #cf222e; } /* Keyword.Type */
+
+.highlight .chroma .n { color: #24292f; } /* Name */
+.highlight .chroma .na { color: #24292f; } /* Name.Attribute */
+.highlight .chroma .nc { color: #953800; } /* Name.Class */
+.highlight .chroma .no { color: #0550ae; } /* Name.Constant */
+.highlight .chroma .nd { color: #8250df; } /* Name.Decorator */
+.highlight .chroma .ne { color: #953800; } /* Name.Exception */
+.highlight .chroma .nf { color: #8250df; } /* Name.Function */
+.highlight .chroma .nn { color: #24292f; } /* Name.Namespace */
+.highlight .chroma .nt { color: #116329; } /* Name.Tag */
+.highlight .chroma .nv { color: #953800; } /* Name.Variable */
+
+.highlight .chroma .s { color: #0a3069; } /* Literal.String */
+.highlight .chroma .s1 { color: #0a3069; } /* Literal.String.Single */
+.highlight .chroma .s2 { color: #0a3069; } /* Literal.String.Double */
+.highlight .chroma .sb { color: #0a3069; } /* Literal.String.Backtick */
+.highlight .chroma .sc { color: #0a3069; } /* Literal.String.Char */
+.highlight .chroma .sd { color: #0a3069; } /* Literal.String.Doc */
+.highlight .chroma .se { color: #0a3069; } /* Literal.String.Escape */
+.highlight .chroma .sh { color: #0a3069; } /* Literal.String.Heredoc */
+.highlight .chroma .si { color: #0a3069; } /* Literal.String.Interpol */
+.highlight .chroma .sr { color: #0a3069; } /* Literal.String.Regex */
+.highlight .chroma .ss { color: #0a3069; } /* Literal.String.Symbol */
+
+.highlight .chroma .m { color: #0550ae; } /* Literal.Number */
+.highlight .chroma .mi { color: #0550ae; } /* Literal.Number.Integer */
+.highlight .chroma .mf { color: #0550ae; } /* Literal.Number.Float */
+.highlight .chroma .mh { color: #0550ae; } /* Literal.Number.Hex */
+.highlight .chroma .mo { color: #0550ae; } /* Literal.Number.Oct */
+
+.highlight .chroma .o { color: #cf222e; } /* Operator */
+.highlight .chroma .ow { color: #cf222e; } /* Operator.Word */
+
+.highlight .chroma .p { color: #24292f; } /* Punctuation */
+
+.highlight .chroma .c { color: #6e7781; font-style: italic; } /* Comment */
+.highlight .chroma .c1 { color: #6e7781; font-style: italic; } /* Comment.Single */
+.highlight .chroma .cm { color: #6e7781; font-style: italic; } /* Comment.Multiline */
+.highlight .chroma .cp { color: #6e7781; font-style: italic; } /* Comment.Preproc */
+.highlight .chroma .cs { color: #6e7781; font-style: italic; } /* Comment.Special */
+
+/* Dark mode styles */
+html.dark .highlight {
+  background-color: #0d1117;
+  border-color: #30363d;
+}
+
+html.dark .code-header {
+  background-color: #161b22;
+  border-bottom-color: #30363d;
+}
+
+html.dark .code-lang {
+  color: #7d8590;
+}
+
+html.dark .copy-button {
+  color: #7d8590;
+}
+
+html.dark .copy-button:hover {
+  background-color: #21262d;
+  color: #f0f6fc;
+}
+
+html.dark .copy-button:active {
+  background-color: #30363d;
+}
+
+html.dark .github-code-block {
+  color: #f0f6fc;
+}
+
+html.dark .highlight .chroma .lnt,
+html.dark .highlight .chroma .ln {
+  color: #7d8590;
+  border-right-color: #30363d;
+}
+
+/* Dark mode syntax highlighting */
+html.dark .highlight .chroma .k { color: #ff7b72; } /* Keyword */
+html.dark .highlight .chroma .kc { color: #79c0ff; } /* Keyword.Constant */
+html.dark .highlight .chroma .kd { color: #ff7b72; } /* Keyword.Declaration */
+html.dark .highlight .chroma .kn { color: #ff7b72; } /* Keyword.Namespace */
+html.dark .highlight .chroma .kp { color: #ff7b72; } /* Keyword.Pseudo */
+html.dark .highlight .chroma .kr { color: #ff7b72; } /* Keyword.Reserved */
+html.dark .highlight .chroma .kt { color: #ff7b72; } /* Keyword.Type */
+
+html.dark .highlight .chroma .n { color: #f0f6fc; } /* Name */
+html.dark .highlight .chroma .na { color: #f0f6fc; } /* Name.Attribute */
+html.dark .highlight .chroma .nc { color: #ffa657; } /* Name.Class */
+html.dark .highlight .chroma .no { color: #79c0ff; } /* Name.Constant */
+html.dark .highlight .chroma .nd { color: #d2a8ff; } /* Name.Decorator */
+html.dark .highlight .chroma .ne { color: #ffa657; } /* Name.Exception */
+html.dark .highlight .chroma .nf { color: #d2a8ff; } /* Name.Function */
+html.dark .highlight .chroma .nn { color: #f0f6fc; } /* Name.Namespace */
+html.dark .highlight .chroma .nt { color: #7ee787; } /* Name.Tag */
+html.dark .highlight .chroma .nv { color: #ffa657; } /* Name.Variable */
+
+html.dark .highlight .chroma .s { color: #a5d6ff; } /* Literal.String */
+html.dark .highlight .chroma .s1 { color: #a5d6ff; } /* Literal.String.Single */
+html.dark .highlight .chroma .s2 { color: #a5d6ff; } /* Literal.String.Double */
+html.dark .highlight .chroma .sb { color: #a5d6ff; } /* Literal.String.Backtick */
+html.dark .highlight .chroma .sc { color: #a5d6ff; } /* Literal.String.Char */
+html.dark .highlight .chroma .sd { color: #a5d6ff; } /* Literal.String.Doc */
+html.dark .highlight .chroma .se { color: #79c0ff; } /* Literal.String.Escape */
+html.dark .highlight .chroma .sh { color: #a5d6ff; } /* Literal.String.Heredoc */
+html.dark .highlight .chroma .si { color: #a5d6ff; } /* Literal.String.Interpol */
+html.dark .highlight .chroma .sr { color: #a5d6ff; } /* Literal.String.Regex */
+html.dark .highlight .chroma .ss { color: #a5d6ff; } /* Literal.String.Symbol */
+
+html.dark .highlight .chroma .m { color: #a5d6ff; } /* Literal.Number */
+html.dark .highlight .chroma .mi { color: #a5d6ff; } /* Literal.Number.Integer */
+html.dark .highlight .chroma .mf { color: #a5d6ff; } /* Literal.Number.Float */
+html.dark .highlight .chroma .mh { color: #a5d6ff; } /* Literal.Number.Hex */
+html.dark .highlight .chroma .mo { color: #a5d6ff; } /* Literal.Number.Oct */
+
+html.dark .highlight .chroma .o { color: #ff7b72; } /* Operator */
+html.dark .highlight .chroma .ow { color: #ff7b72; } /* Operator.Word */
+
+html.dark .highlight .chroma .p { color: #f0f6fc; } /* Punctuation */
+
+html.dark .highlight .chroma .c { color: #8b949e; font-style: italic; } /* Comment */
+html.dark .highlight .chroma .c1 { color: #8b949e; font-style: italic; } /* Comment.Single */
+html.dark .highlight .chroma .cm { color: #8b949e; font-style: italic; } /* Comment.Multiline */
+html.dark .highlight .chroma .cp { color: #8b949e; font-style: italic; } /* Comment.Preproc */
+html.dark .highlight .chroma .cs { color: #8b949e; font-style: italic; } /* Comment.Special */
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .highlight {
+    margin: 1rem 0;
+    border-radius: 6px;
+  }
+
+  .code-header {
+    padding: 6px 12px;
+  }
+
+  .github-code-block {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .highlight .chroma .lnt,
+  .highlight .chroma .ln {
+    margin-right: 12px;
+    padding-right: 12px;
+    min-width: 36px;
+    font-size: 11px;
+  }
+}
+
+/* Hide default theme code styles when using GitHub blocks */
+.highlight.highlight-text,
+.highlight.highlight-bash,
+.highlight.highlight-javascript,
+.highlight.highlight-python,
+.highlight.highlight-go,
+.highlight.highlight-rust,
+.highlight.highlight-scala,
+.highlight.highlight-java,
+.highlight.highlight-typescript,
+.highlight.highlight-css,
+.highlight.highlight-html,
+.highlight.highlight-json,
+.highlight.highlight-yaml,
+.highlight.highlight-toml,
+.highlight.highlight-markdown {
+  font-size: 14px; /* Override theme's 0.8em */
+  max-width: 100%; /* Override theme's 90% */
+}
+
+.highlight.highlight-text pre,
+.highlight.highlight-bash pre,
+.highlight.highlight-javascript pre,
+.highlight.highlight-python pre,
+.highlight.highlight-go pre,
+.highlight.highlight-rust pre,
+.highlight.highlight-scala pre,
+.highlight.highlight-java pre,
+.highlight.highlight-typescript pre,
+.highlight.highlight-css pre,
+.highlight.highlight-html pre,
+.highlight.highlight-json pre,
+.highlight.highlight-yaml pre,
+.highlight.highlight-toml pre,
+.highlight.highlight-markdown pre {
+  padding: 16px; /* Override theme's 5px */
+}

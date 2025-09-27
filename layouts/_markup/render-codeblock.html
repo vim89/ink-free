@@ -1,0 +1,58 @@
+{{- $lang := .Type | default "text" -}}
+{{- $options := .Attributes -}}
+{{- $ordinal := .Ordinal -}}
+
+{{- /* GitHub-style code block render hook */ -}}
+<div class="highlight highlight-{{ $lang }}" data-lang="{{ $lang }}">
+  <div class="code-header">
+    {{- if $lang -}}
+    <span class="code-lang">{{ $lang }}</span>
+    {{- end -}}
+    <button class="copy-button" data-copy-target="code-{{ $ordinal }}" aria-label="Copy to clipboard">
+      <svg class="copy-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M0 6.75A.75.75 0 01.75 6h1.5a.75.75 0 110 1.5h-.75v4.75c0 .414.336.75.75.75h4.5a.75.75 0 110 1.5H2.5A2.5 2.5 0 010 11.5V6.75zM5 1.75A.75.75 0 015.75 1h5.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-2.75h-4.25A.75.75 0 015 1.75z"/>
+        <path d="M5 4.25A.75.75 0 015.75 3.5h5.5a.75.75 0 01.75.75v7a.75.75 0 01-.75.75h-5.5a.75.75 0 01-.75-.75v-7z"/>
+      </svg>
+    </button>
+  </div>
+  <pre class="github-code-block"><code id="code-{{ $ordinal }}" class="language-{{ $lang }}">
+    {{- highlight .Inner $lang (dict "style" "github" "lineNos" (index $options "lineNos") "hl_lines" (index $options "hl_lines") "lineNumbersInTable" true) | safeHTML -}}
+  </code></pre>
+</div>
+
+{{- /* JavaScript for copy functionality */ -}}
+{{- if not (.Page.Scratch.Get "github-codeblock-js") -}}
+  {{- .Page.Scratch.Set "github-codeblock-js" true -}}
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Copy button functionality
+    document.querySelectorAll('.copy-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-copy-target');
+        const codeElement = document.getElementById(targetId);
+
+        if (codeElement) {
+          // Get text content, excluding line numbers
+          const codeText = codeElement.querySelector('.chroma .lntd:last-child')?.textContent || codeElement.textContent;
+
+          navigator.clipboard.writeText(codeText.trim()).then(() => {
+            // Visual feedback
+            const icon = this.querySelector('.copy-icon');
+            const originalTitle = this.getAttribute('aria-label');
+
+            this.setAttribute('aria-label', 'Copied!');
+            icon.style.color = '#28a745';
+
+            setTimeout(() => {
+              this.setAttribute('aria-label', originalTitle);
+              icon.style.color = '';
+            }, 2000);
+          }).catch(err => {
+            console.error('Failed to copy text: ', err);
+          });
+        }
+      });
+    });
+  });
+  </script>
+{{- end -}}
