@@ -75,15 +75,9 @@ html.dark .footer {
   border-color: #333;
 }
 
-/* Dark-mode code blocks: align with Monokai (Chroma default) */
-html.dark .highlight {
-  background-color: #272822;
-}
-html.dark .chroma,
-html.dark pre.chroma {
-  background-color: #272822;
-  color: #f8f8f2;
-}
+/* Dark-mode code blocks: GitHub Dark Default */
+html.dark .highlight { background-color: #0d1117; border-color: #30363d; }
+html.dark .chroma, html.dark pre.chroma { background-color: #0d1117; color: #f0f6fc; }
 
 html.dark .header .site-description .scheme-toggle a svg {
     fill: #f8e04f !important;
