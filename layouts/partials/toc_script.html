@@ -17,10 +17,14 @@
                                 if (filterDepth && depth <= MAX_DEPTH) {
                                     clearActiveStatesInTableOfContents();
                                     s.parentElement.classList.add('active')
+                                    centerActiveIntoView(s);
+                                    updateTocProgress();
                                 }
                             } else if (!filterDepth) {
                                 clearActiveStatesInTableOfContents();
                                 s.parentElement.classList.add('active');
+                                centerActiveIntoView(s);
+                                updateTocProgress();
                             }
                         }
                         )
@@ -32,6 +36,28 @@
         document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]').forEach((section) => {
             observerForTableOfContentActiveState.observe(section);
         });
+
+        // Smooth scroll honoring CSS scroll-margin-top
+        const toc = document.querySelector('.section-nav') || document.querySelector('aside.toc');
+        if (toc) {
+            toc.addEventListener('click', function (e) {
+                const a = e.target.closest('a[href^="#"]');
+                if (!a) return;
+                const target = document.getElementById(a.getAttribute('href').slice(1));
+                if (!target) return;
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        // Insert progress bar into TOC
+        if (toc && !toc.querySelector('.toc-progress')) {
+            const bar = document.createElement('div');
+            bar.className = 'toc-progress';
+            toc.appendChild(bar);
+            updateTocProgress();
+            window.addEventListener('scroll', updateTocProgress, { passive: true });
+        }
 
     });
 
@@ -109,5 +135,31 @@
         }
 
     });
+
+    function centerActiveIntoView(anchor) {
+        const toc = document.querySelector('.section-nav');
+        if (!toc) return;
+        const li = anchor.closest('li');
+        if (!li) return;
+        const liRect = li.getBoundingClientRect();
+        const tocRect = toc.getBoundingClientRect();
+        const offset = liRect.top - (tocRect.top + tocRect.height / 2) + liRect.height / 2;
+        toc.scrollBy({ top: offset, behavior: 'smooth' });
+    }
+
+    function updateTocProgress() {
+        const toc = document.querySelector('.section-nav');
+        const bar = toc && toc.querySelector('.toc-progress');
+        if (!toc || !bar) return;
+        const headings = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]'));
+        if (headings.length === 0) { bar.style.height = '0%'; return; }
+        const mid = window.innerHeight * 0.35;
+        let idx = 0;
+        for (let i = 0; i < headings.length; i++) {
+            if (headings[i].getBoundingClientRect().top - mid <= 0) idx = i; else break;
+        }
+        const progress = (idx / Math.max(1, headings.length - 1)) * 100;
+        bar.style.height = progress + '%';
+    }
 
 </script>
