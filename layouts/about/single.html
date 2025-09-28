@@ -3,18 +3,20 @@
 {{ partial "header.html" . }}
 
 <body>
-	<a href="#main-content" class="skip-link">Skip to main content</a>
 
 	<div class="container wrapper">
 		{{ partial "head.html" . }}
 
 		{{ partial "content_static.html" . }}
 
-		{{- /* Enhanced E-E-A-T Author Information */ -}}
-		<section class="eeat-enhancement">
-			<hr>
-			{{ partial "author-eeat.html" . }}
-		</section>
+		{{- /* Projects Showcase - Flagship */ -}}
+		{{ partial "professional-timeline.html" . }}
+
+		{{- /* Technical Expertise */ -}}
+		{{ partial "technical-skills.html" . }}
+
+		{{- /* Enhanced E-E-A-T with Let's Connect */ -}}
+		{{ partial "author-eeat.html" . }}
 	</div>
 
 	{{ partial "footer.html" . }}

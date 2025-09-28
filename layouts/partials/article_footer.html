@@ -5,7 +5,7 @@
     <ul class="flat">
         {{ range . }}
         <li class="tag-li">
-            <a href="{{ (printf "/tags/%s/" (. | urlize)) | absLangURL }}">{{ . }}</a>
+            <a href="{{ (printf "/tags/%s/" (. | urlize)) | relLangURL }}">{{ . }}</a>
         </li>
         {{ end }}
     </ul>

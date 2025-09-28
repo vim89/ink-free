@@ -22,7 +22,7 @@
   <div class="series-article-tags">
     {{ range (split $tags ",") }}
     {{ $t := trim . " " }}
-    <a class="tag" href="{{ (printf "/tags/%s/" ($t | urlize)) | absLangURL }}">{{ $t }}</a>
+    <a class="tag" href="{{ (printf "/tags/%s/" ($t | urlize)) | relLangURL }}">{{ $t }}</a>
     {{ end }}
   </div>
   {{ end }}

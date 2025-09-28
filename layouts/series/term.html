@@ -3,7 +3,6 @@
 {{ partial "header.html" . }}
 
 <body>
-	<a href="#main-content" class="skip-link">Skip to main content</a>
 
 	<div class="container wrapper">
 		{{ partial "head.html" . }}
@@ -49,7 +48,7 @@
 										{{ if $page.Params.tags }}
 										<div class="series-article-tags">
 											{{ range first 3 $page.Params.tags }}
-											<a class="tag" href="{{ (printf "/tags/%s/" (. | urlize)) | absLangURL }}">{{ . }}</a>
+											<a class="tag" href="{{ (printf "/tags/%s/" (. | urlize)) | relLangURL }}">{{ . }}</a>
 											{{ end }}
 										</div>
 										{{ end }}

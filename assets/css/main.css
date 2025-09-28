@@ -319,10 +319,25 @@ ul {
 
 .header nav.social a {
     color: var(--text-color);
+    display: inline-block;
+    margin: 0 0.6rem;
+    padding: 4px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
 .header nav.social a:hover {
     color: var(--accent-color);
+    background-color: var(--bg-secondary);
+    border-bottom: none;
+}
+
+.header nav.social svg {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
 }
 
 .header .site-description nav {
@@ -341,10 +356,29 @@ ul {
     height: 100%;
 }
 
+.header .site-description .scheme-toggle a {
+    display: inline-block;
+    padding: 4px 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.header .site-description .scheme-toggle a:hover {
+    background-color: var(--accent-color);
+    color: white;
+    border-bottom: none;
+}
+
 .header .site-description .scheme-toggle a svg {
     max-height: 15px;
-    fill: grey;
-    color: black;
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+    vertical-align: middle;
 }
 
 .section .section-header {

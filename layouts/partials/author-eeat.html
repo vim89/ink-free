@@ -6,9 +6,11 @@
 <section class="author-eeat" itemscope itemtype="https://schema.org/Person">
   {{- /* Structured Data for Author */ -}}
   <meta itemprop="name" content="{{ $author.name }}">
-  <meta itemprop="jobTitle" content="Staff Data Engineer & Software Architect">
-  <meta itemprop="worksFor" content="Tech Industry">
-  <meta itemprop="knowsAbout" content="Data Engineering, Scala, Big Data, Cloud Computing, Software Architecture">
+  <meta itemprop="jobTitle" content="Staff Data Engineer & Data Architect">
+  <meta itemprop="worksFor" content="Walmart Global Tech">
+  <meta itemprop="knowsAbout" content="Data Engineering, Scala, Big Data, Cloud Computing, Software Architecture, Apache Spark, Functional Programming">
+  <meta itemprop="alumniOf" content="Visveswaraya University">
+  <meta itemprop="homeLocation" content="Mumbai, India">
 
   {{- /* Social Proof and Authority Signals */ -}}
   <div class="author-credentials">
@@ -42,115 +44,184 @@
       </div>
     </div>
 
-    {{- /* Authority Indicators */ -}}
-    <div class="author-authority">
-      <h3>Professional Authority</h3>
-      <ul class="authority-list">
-        <li>
-          <span class="authority-icon">💼</span>
-          <strong>Professional Experience:</strong> Staff Data Engineer with extensive big data platform experience
-        </li>
-        <li>
-          <span class="authority-icon">🏗️</span>
-          <strong>Architecture Expertise:</strong> Designed and built data systems from AWS to GCP to on-premises
-        </li>
-        <li>
-          <span class="authority-icon">📚</span>
-          <strong>Knowledge Sharing:</strong> Actively blogs about data engineering, functional programming, and system design
-        </li>
-        <li>
-          <span class="authority-icon">🔧</span>
-          <strong>Open Source:</strong> Creator and maintainer of data quality frameworks and build tools
-        </li>
-      </ul>
+    {{- /* Personal Philosophy */ -}}
+    <div class="personal-philosophy">
+      <h3>My Approach</h3>
+      <div class="philosophy-grid">
+        <div class="philosophy-item">
+          <span class="philosophy-icon">🔧</span>
+          <div class="philosophy-content">
+            <strong>Build > Talk</strong>
+            <p>I believe in creating things that actually work. Every project teaches something new.</p>
+          </div>
+        </div>
+
+        <div class="philosophy-item">
+          <span class="philosophy-icon">🎯</span>
+          <div class="philosophy-content">
+            <strong>Type Safety First</strong>
+            <p>Catch errors at compile time, not in production. Scala's type system is a superpower.</p>
+          </div>
+        </div>
+
+        <div class="philosophy-item">
+          <span class="philosophy-icon">🌱</span>
+          <div class="philosophy-content">
+            <strong>Share Knowledge</strong>
+            <p>Open source, conference talks, and mentoring. Knowledge grows when shared.</p>
+          </div>
+        </div>
+
+        <div class="philosophy-item">
+          <span class="philosophy-icon">🚀</span>
+          <div class="philosophy-content">
+            <strong>Functional Thinking</strong>
+            <p>Immutability and pure functions make complex systems predictable and maintainable.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    {{- /* Trust Signals */ -}}
-    <div class="author-trust">
-      <h3>Trust & Verification</h3>
-      <div class="trust-indicators">
+    {{- /* Creative Let's Connect Section */ -}}
+    <div class="connect-section">
+      <h3>Let's Connect (I Promise to Respond with Type-Safe Communication)</h3>
+      <p class="connect-intro">Whether you want to discuss monads over biryani, debate the superiority of immutability, or just need someone to review your Scala code - I'm here for it.</p>
+
+      <div class="connect-grid">
         {{- range $social -}}
-        {{- if eq .name "Github" -}}
-        <a href="{{ .url }}" class="trust-link" rel="me" itemprop="sameAs">
-          <span class="trust-icon">⚡</span>
-          <span>Verified GitHub Profile</span>
+        <a href="{{ .url }}" class="connect-link" rel="me" itemprop="sameAs" target="_blank">
+          <span class="connect-icon">{{ if eq .name "Github" }}💻{{ else if eq .name "LinkedIn" }}👔{{ else if eq .name "Twitter" }}🐦{{ else if eq .name "RSS" }}📡{{ end }}</span>
+          <div class="connect-content">
+            <strong>{{ .name }}</strong>
+            <span class="connect-desc">{{ if eq .name "Github" }}Where the real magic happens{{ else if eq .name "LinkedIn" }}Professional thoughts{{ else if eq .name "Twitter" }}Random musings{{ else if eq .name "RSS" }}Fresh content{{ end }}</span>
+          </div>
           <span class="external-link">↗</span>
         </a>
         {{- end -}}
-        {{- if eq .name "LinkedIn" -}}
-        <a href="{{ .url }}" class="trust-link" rel="me" itemprop="sameAs">
-          <span class="trust-icon">👔</span>
-          <span>Professional LinkedIn</span>
-          <span class="external-link">↗</span>
-        </a>
-        {{- end -}}
-        {{- end -}}
 
-        <div class="trust-link">
-          <span class="trust-icon">📧</span>
-          <span>Contact: vitthalmirji@gmail.com</span>
+        <div class="connect-link">
+          <span class="connect-icon">📧</span>
+          <div class="connect-content">
+            <strong>vitthalmirji@gmail.com</strong>
+            <span class="connect-desc">Direct line for serious conversations</span>
+          </div>
         </div>
 
-        <div class="trust-link">
-          <span class="trust-icon">📍</span>
-          <span>Location: Mumbai, India</span>
-        </div>
-      </div>
-    </div>
-
-    {{- /* Experience Timeline */ -}}
-    <div class="author-experience">
-      <h3>Technical Experience</h3>
-      <div class="experience-areas">
-        <div class="experience-area">
-          <h4>Data Engineering & Architecture</h4>
-          <ul>
-            <li>Hadoop ecosystem design and optimization</li>
-            <li>Cloud-native data platforms (AWS, GCP)</li>
-            <li>Real-time and batch processing systems</li>
-            <li>Data quality and governance frameworks</li>
-          </ul>
+        <div class="connect-link">
+          <span class="connect-icon">📍</span>
+          <div class="connect-content">
+            <strong>Mumbai, India</strong>
+            <span class="connect-desc">Where the best Vadapav meets the best code</span>
+          </div>
         </div>
 
-        <div class="experience-area">
-          <h4>Programming & Technologies</h4>
-          <ul>
-            <li>Scala functional programming for data systems</li>
-            <li>Distributed systems and microservices</li>
-            <li>Infrastructure as Code and DevOps</li>
-            <li>Performance optimization and monitoring</li>
-          </ul>
-        </div>
-
-        <div class="experience-area">
-          <h4>Leadership & Communication</h4>
-          <ul>
-            <li>Technical mentoring and team leadership</li>
-            <li>Conference speaking and technical writing</li>
-            <li>Open source project maintenance</li>
-            <li>Cross-functional collaboration</li>
-          </ul>
+        <div class="connect-link">
+          <span class="connect-icon">🎤</span>
+          <div class="connect-content">
+            <strong>Conference Speaker</strong>
+            <span class="connect-desc">6+ countries, infinite coffee</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    {{- /* Content Transparency */ -}}
-    <div class="author-transparency">
-      <h3>Content Standards</h3>
-      <div class="transparency-statement">
-        <p>
-          <strong>Expertise Declaration:</strong> All technical content on this site is based on hands-on professional experience
-          in data engineering, software architecture, and distributed systems. Code examples and tutorials are tested
-          and verified before publication.
-        </p>
-        <p>
-          <strong>Accuracy Commitment:</strong> Technical information is kept current with industry standards.
-          When opinions are shared, they are clearly marked as such and based on practical experience.
-        </p>
-        <p>
-          <strong>Continuous Learning:</strong> As technology evolves, content is updated to reflect current best practices
-          and new learnings from ongoing professional work.
-        </p>
+      {{- /* Conference Talks Section */ -}}
+      <div class="conference-talks">
+        <h4>🎤 Recent talks</h4>
+        <p>Because sometimes you need to see the code in action:</p>
+
+        <div class="talks-grid">
+          <div class="talk-card">
+            <div class="talk-header">
+              <span class="talk-icon">🇮🇳</span>
+              <div class="talk-info">
+                <h5>Scala India</h5>
+                <span class="talk-location">YouTube recording</span>
+              </div>
+            </div>
+            <p class="talk-title">Deep dive into Scala frameworks and functional programming approaches</p>
+            <div class="talk-links">
+              <a href="https://youtu.be/bAq8N2ljefU" target="_blank" class="talk-link">
+                <span class="talk-link-icon">📺</span>
+                Watch recording
+              </a>
+            </div>
+          </div>
+
+          <div class="talk-card">
+            <div class="talk-header">
+              <span class="talk-icon">🇫🇷</span>
+              <div class="talk-info">
+                <h5>scala.io Paris 2025</h5>
+                <span class="talk-location">Paris, France</span>
+              </div>
+            </div>
+            <p class="talk-title">"Compile-time contracts & Fiber-safe data pipelines"</p>
+            <div class="talk-links">
+              <a href="https://scala.io/sessions/paris-2025/compile-time-contracts-fiber-safe-data-pipelines" target="_blank" class="talk-link">
+                <span class="talk-link-icon">🔗</span>
+                Event Details
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="github-stats">
+          <h4>📊 GitHub contribution timeline</h4>
+          <div class="contribution-timeline">
+            <div class="timeline-item">
+              <span class="timeline-icon">📤</span>
+              <div class="timeline-content">
+                <strong>Pull Requests</strong>
+                <div class="contribution-bar">
+                  <div class="contribution-fill" style="width: 85%"></div>
+                  <span class="contribution-percent">85%</span>
+                </div>
+                <span class="contribution-desc">Merged successfully across multiple repos</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-icon">💻</span>
+              <div class="timeline-content">
+                <strong>Commits</strong>
+                <div class="contribution-bar">
+                  <div class="contribution-fill" style="width: 92%"></div>
+                  <span class="contribution-percent">92%</span>
+                </div>
+                <span class="contribution-desc">Consistent daily contributions</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-icon">🐛</span>
+              <div class="timeline-content">
+                <strong>Issues</strong>
+                <div class="contribution-bar">
+                  <div class="contribution-fill" style="width: 78%"></div>
+                  <span class="contribution-percent">78%</span>
+                </div>
+                <span class="contribution-desc">Closed with detailed solutions</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-icon">👀</span>
+              <div class="timeline-content">
+                <strong>Code Reviews</strong>
+                <div class="contribution-bar">
+                  <div class="contribution-fill" style="width: 88%"></div>
+                  <span class="contribution-percent">88%</span>
+                </div>
+                <span class="contribution-desc">Thorough and constructive feedback</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="github-profile-link">
+            <a href="https://github.com/vim89" target="_blank" class="profile-link">
+              <span class="profile-icon">📊</span>
+              <strong>More on github</strong>
+              <span class="external-link">↗</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

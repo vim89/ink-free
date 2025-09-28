@@ -19,6 +19,11 @@ function toggleDarkMode() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Feather icons first
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+
     const globalDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     const localMode = localStorage.getItem("scheme");
     const mode = document.getElementById("scheme-toggle");
