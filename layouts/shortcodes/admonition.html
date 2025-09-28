@@ -1,0 +1,31 @@
+{{- /* Enhanced Admonition Shortcode
+Usage: {{< admonition type="note" title="Custom Title" >}}Content here{{< /admonition >}}
+Types: note, info, tip, hint, warning, caution, danger, error, success
+*/ -}}
+
+{{- $type := .Get "type" | default "note" -}}
+{{- $title := .Get "title" -}}
+{{- $class := printf "admonition %s" $type -}}
+
+{{- $defaultTitles := dict
+  "note" "Note"
+  "info" "Information"
+  "tip" "Tip"
+  "hint" "Hint"
+  "warning" "Warning"
+  "caution" "Caution"
+  "danger" "Danger"
+  "error" "Error"
+  "success" "Success"
+-}}
+
+{{- if not $title -}}
+  {{- $title = index $defaultTitles $type | default "Note" -}}
+{{- end -}}
+
+<div class="{{ $class }}">
+  <div class="admonition-title">{{ $title }}</div>
+  <div class="admonition-content">
+    {{ .Inner | markdownify }}
+  </div>
+</div>

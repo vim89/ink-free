@@ -1,0 +1,34 @@
+{{- $title := .Get "title" -}}
+{{- $url := .Get "url" -}}
+{{- $description := .Get "description" -}}
+{{- $icon := .Get "icon" -}}
+{{- $tags := .Get "tags" -}}
+
+<div class="topic-card">
+  <div class="topic-card-header">
+    {{ if $icon }}
+    <div class="topic-icon">{{ $icon }}</div>
+    {{ end }}
+    <h3 class="topic-card-title">
+      <a href="{{ $url | relURL }}">{{ $title }}</a>
+    </h3>
+  </div>
+
+  {{ if $description }}
+  <p class="topic-card-description">{{ $description }}</p>
+  {{ end }}
+
+  {{ if $tags }}
+  <div class="topic-card-tags">
+    {{ range (split $tags ",") }}
+    <span class="topic-tag">{{ trim . " " }}</span>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <div class="topic-card-footer">
+    <a href="{{ $url | relURL }}" class="topic-card-link">
+      Explore {{ $title }} →
+    </a>
+  </div>
+</div>

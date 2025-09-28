@@ -1,6 +1,9 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{- /* Security Headers and CSP */ -}}
+	{{- partial "security-headers.html" . -}}
 	{{- $title := ( .Title ) -}}
 	{{- $siteTitle := ( .Site.Title ) -}}
 	{{- if .IsHome -}}
@@ -70,6 +73,47 @@
 			{{- $searchCSSProcessed := $searchCSS | resources.Minify | resources.Fingerprint -}}
 			<link rel="stylesheet" href="{{ $searchCSSProcessed.RelPermalink }}" integrity="{{ $searchCSSProcessed.Data.Integrity }}">
 		{{- end -}}
+	{{- end -}}
+
+	{{- /* Topic Hub CSS for topic pages */ -}}
+	{{- if eq .Layout "topic-hub" -}}
+		{{- $topicCSS := resources.Get "css/topic-hub.css" -}}
+		{{- if $topicCSS -}}
+			{{- $topicCSSProcessed := $topicCSS | resources.Minify | resources.Fingerprint -}}
+			<link rel="stylesheet" href="{{ $topicCSSProcessed.RelPermalink }}" integrity="{{ $topicCSSProcessed.Data.Integrity }}">
+		{{- end -}}
+	{{- end -}}
+
+	{{- /* Series CSS for series pages */ -}}
+	{{- if eq .Type "series" -}}
+		{{- $seriesCSS := resources.Get "css/series.css" -}}
+		{{- if $seriesCSS -}}
+			{{- $seriesCSSProcessed := $seriesCSS | resources.Minify | resources.Fingerprint -}}
+			<link rel="stylesheet" href="{{ $seriesCSSProcessed.RelPermalink }}" integrity="{{ $seriesCSSProcessed.Data.Integrity }}">
+		{{- end -}}
+	{{- end -}}
+
+	{{- /* Accessibility CSS for all pages */ -}}
+	{{- $accessibilityCSS := resources.Get "css/accessibility.css" -}}
+	{{- if $accessibilityCSS -}}
+		{{- $accessibilityCSSProcessed := $accessibilityCSS | resources.Minify | resources.Fingerprint -}}
+		<link rel="stylesheet" href="{{ $accessibilityCSSProcessed.RelPermalink }}" integrity="{{ $accessibilityCSSProcessed.Data.Integrity }}">
+	{{- end -}}
+
+	{{- /* Author E-E-A-T CSS for about/author pages */ -}}
+	{{- if or (eq .Type "about") (in .RelPermalink "/about") -}}
+		{{- $authorEEATCSS := resources.Get "css/author-eeat.css" -}}
+		{{- if $authorEEATCSS -}}
+			{{- $authorEEATCSSProcessed := $authorEEATCSS | resources.Minify | resources.Fingerprint -}}
+			<link rel="stylesheet" href="{{ $authorEEATCSSProcessed.RelPermalink }}" integrity="{{ $authorEEATCSSProcessed.Data.Integrity }}">
+		{{- end -}}
+	{{- end -}}
+
+	{{- /* Aesthetic Refinements CSS for enhanced typography and design */ -}}
+	{{- $aestheticCSS := resources.Get "css/aesthetic-refinements.css" -}}
+	{{- if $aestheticCSS -}}
+		{{- $aestheticCSSProcessed := $aestheticCSS | resources.Minify | resources.Fingerprint -}}
+		<link rel="stylesheet" href="{{ $aestheticCSSProcessed.RelPermalink }}" integrity="{{ $aestheticCSSProcessed.Data.Integrity }}">
 	{{- end -}}
 	{{- $enableUmami := and (isset .Site.Params "enableumami") (.Site.Params.enableUmami) -}}
 	{{- $hasURL := isset .Site.Params "umamiurl" -}}

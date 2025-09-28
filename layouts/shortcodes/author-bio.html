@@ -1,0 +1,73 @@
+{{- /* Author Biography with E-E-A-T Signals Shortcode */ -}}
+
+{{- $includeEEAT := .Get "eeat" | default "true" -}}
+{{- $layout := .Get "layout" | default "full" -}}
+
+<div class="author-bio-section">
+  {{- if eq $layout "compact" -}}
+    {{- /* Compact author bio for article footers */ -}}
+    <div class="author-bio-compact">
+      <div class="author-info">
+        <h3>About {{ .Site.Params.author.name }}</h3>
+        <p>Staff Data Engineer & Software Architect specializing in big data systems, Scala, and cloud architecture.
+           Passionate about open source, technical education, and building scalable data platforms.</p>
+
+        <div class="author-links">
+          {{- range .Site.Params.social -}}
+          {{- if or (eq .name "Github") (eq .name "LinkedIn") -}}
+          <a href="{{ .url }}" rel="me" class="author-link">{{ .name }}</a>
+          {{- end -}}
+          {{- end -}}
+        </div>
+      </div>
+    </div>
+  {{- else -}}
+    {{- /* Full E-E-A-T enhanced author section */ -}}
+    {{- if eq $includeEEAT "true" -}}
+      {{- partial "author-eeat.html" . -}}
+    {{- else -}}
+      <div class="author-bio-standard">
+        <h2>About {{ .Site.Params.author.name }}</h2>
+        <p>{{ .Site.Params.description }}</p>
+      </div>
+    {{- end -}}
+  {{- end -}}
+</div>
+
+{{- /* Include CSS for author bio */ -}}
+{{- if eq $includeEEAT "true" -}}
+<style>
+  /* Inline critical styles for author bio */
+  .author-bio-section {
+    margin: 2rem 0;
+  }
+
+  .author-bio-compact {
+    background: var(--color-bg-secondary, #f8f9fa);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-accent, #007acc);
+  }
+
+  .author-bio-compact h3 {
+    margin-top: 0;
+    color: var(--color-primary, #333);
+  }
+
+  .author-links {
+    margin-top: 1rem;
+  }
+
+  .author-link {
+    display: inline-block;
+    margin-right: 1rem;
+    color: var(--color-accent, #007acc);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .author-link:hover {
+    text-decoration: underline;
+  }
+</style>
+{{- end -}}

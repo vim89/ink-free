@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+{{ partial "header.html" . }}
+
+<body>
+	<a href="#main-content" class="skip-link">Skip to main content</a>
+
+	<div class="container wrapper">
+		{{ partial "head.html" . }}
+
+		<article class="series-term" id="main-content">
+			<header class="series-header">
+				<h1 class="series-title">{{ .Title }}</h1>
+				<div class="series-meta">
+					<p class="series-count">{{ len .Pages }} {{ if eq (len .Pages) 1 }}article{{ else }}articles{{ end }} in this series</p>
+					{{ with .Params.description }}
+					<p class="series-description">{{ . }}</p>
+					{{ end }}
+				</div>
+			</header>
+
+			<div class="series-content">
+				{{ if .Content }}
+				<div class="series-intro">
+					{{ .Content }}
+				</div>
+				{{ end }}
+
+				{{ if .Pages }}
+				<div class="series-articles">
+					<h2>Articles in this series</h2>
+
+					<div class="series-timeline">
+						{{ range $index, $page := .Pages.ByDate }}
+						<article class="series-article">
+							<div class="series-article-number">
+								{{ add $index 1 }}
+							</div>
+
+							<div class="series-article-content">
+								<header class="series-article-header">
+									<h3 class="series-article-title">
+										<a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a>
+									</h3>
+									<div class="series-article-meta">
+										<time datetime="{{ $page.Date.Format "2006-01-02T15:04:05Z07:00" }}">
+											{{ $page.Date.Format "January 2, 2006" }}
+										</time>
+										{{ if $page.Params.tags }}
+										<div class="series-article-tags">
+											{{ range first 3 $page.Params.tags }}
+											<span class="tag">{{ . }}</span>
+											{{ end }}
+										</div>
+										{{ end }}
+									</div>
+								</header>
+
+								{{ if $page.Description }}
+								<p class="series-article-description">{{ $page.Description }}</p>
+								{{ else if $page.Summary }}
+								<p class="series-article-description">{{ $page.Summary | truncate 150 }}</p>
+								{{ end }}
+
+								<footer class="series-article-footer">
+									<a href="{{ $page.RelPermalink }}" class="read-more">Read article →</a>
+								</footer>
+							</div>
+						</article>
+						{{ end }}
+					</div>
+				</div>
+				{{ end }}
+			</div>
+
+			<footer class="series-footer">
+				<div class="series-navigation">
+					<a href="/series/" class="back-to-series">← All Series</a>
+				</div>
+			</footer>
+		</article>
+	</div>
+
+	{{ partial "footer.html" . }}
+</body>
+</html>

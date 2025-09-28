@@ -1,0 +1,14 @@
+{{- $id := .Get "id" | default (.Get 0) -}}
+{{- $text := .Get "text" | default (.Get 1) -}}
+
+{{- if and $id $text -}}
+<sup class="footnote-ref">
+  <a href="#footnote-{{ $id }}"
+     id="footnote-ref-{{ $id }}"
+     role="doc-noteref"
+     aria-describedby="footnote-{{ $id }}"
+     title="Go to footnote {{ $id }}">{{ $id }}</a>
+</sup>
+{{- else -}}
+  <em>Error: footnote shortcode requires both id and text parameters</em>
+{{- end -}}

@@ -1,0 +1,67 @@
+{{- $tag := .Get "tag" -}}
+{{- $limit := .Get "limit" | default 10 -}}
+{{- $pages := slice -}}
+
+{{- range .Site.RegularPages -}}
+  {{- if and (eq .Type "posts") (not .Draft) -}}
+    {{- $currentPage := . -}}
+    {{- range .Params.tags -}}
+      {{- if eq (lower .) (lower $tag) -}}
+        {{- $pages = $pages | append $currentPage -}}
+        {{- break -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $pages = $pages | first $limit -}}
+
+{{- if $pages -}}
+<div class="topic-articles">
+  <div class="articles-grid">
+    {{- range $pages -}}
+    <article class="article-card">
+      <header class="article-header">
+        <h3 class="article-title">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h3>
+        <div class="article-meta">
+          <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "Jan 2, 2006" }}
+          </time>
+          {{ if .Params.tags }}
+          <div class="article-tags">
+            {{ range first 3 .Params.tags }}
+            <span class="tag">{{ . }}</span>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </header>
+
+      {{ if .Description }}
+      <p class="article-description">{{ .Description }}</p>
+      {{ else if .Summary }}
+      <p class="article-description">{{ .Summary | truncate 150 }}</p>
+      {{ end }}
+
+      <footer class="article-footer">
+        <a href="{{ .RelPermalink }}" class="read-more">Read more →</a>
+      </footer>
+    </article>
+    {{- end -}}
+  </div>
+
+  {{- if gt (len .Site.RegularPages) $limit -}}
+  <div class="view-all">
+    <a href="/tags/{{ $tag | urlize }}/" class="view-all-link">
+      View all "{{ $tag }}" articles →
+    </a>
+  </div>
+  {{- end -}}
+</div>
+{{- else -}}
+<div class="no-articles">
+  <p>No articles found for "{{ $tag }}". <a href="/posts/">Browse all posts</a> or use the <a href="/search/">search</a> to find specific content.</p>
+</div>
+{{- end -}}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+{{ partial "header.html" . }}
+
+<body>
+	<a href="#main-content" class="skip-link">Skip to main content</a>
+
+	<div class="container wrapper">
+		{{ partial "head.html" . }}
+
+		<article class="series-list" id="main-content">
+  <header class="series-list-header">
+    <h1>Article Series</h1>
+    <p class="series-list-description">
+      Explore curated collections of related articles organized into comprehensive learning paths and content series.
+    </p>
+  </header>
+
+  <div class="series-list-content">
+    {{ if .Data.Terms }}
+    <div class="series-grid">
+      {{ range .Data.Terms.Alphabetical }}
+      {{ $seriesPages := .Pages.ByDate }}
+      {{ $seriesCount := len $seriesPages }}
+
+      <div class="series-card">
+        <header class="series-card-header">
+          <h2 class="series-card-title">
+            <a href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
+          </h2>
+          <div class="series-card-meta">
+            <span class="series-card-count">{{ $seriesCount }} {{ if eq $seriesCount 1 }}article{{ else }}articles{{ end }}</span>
+            {{ if gt $seriesCount 0 }}
+            <span class="series-card-dates">
+              {{ $firstPost := index $seriesPages 0 }}
+              {{ $firstDate := $firstPost.Date.Format "Jan 2006" }}
+              {{ if gt $seriesCount 1 }}
+                {{ $lastPost := index $seriesPages (sub $seriesCount 1) }}
+                {{ $lastDate := $lastPost.Date.Format "Jan 2006" }}
+                {{ $firstDate }}{{ if ne $firstDate $lastDate }} - {{ $lastDate }}{{ end }}
+              {{ else }}
+                {{ $firstDate }}
+              {{ end }}
+            </span>
+            {{ end }}
+          </div>
+        </header>
+
+        <div class="series-card-content">
+          {{ if .Page.Description }}
+          <p class="series-card-description">{{ .Page.Description }}</p>
+          {{ else if gt $seriesCount 0 }}
+          {{ $firstPost := index $seriesPages 0 }}
+          <p class="series-card-description">{{ $firstPost.Description | default $firstPost.Summary | truncate 120 }}</p>
+          {{ end }}
+
+          <div class="series-card-articles">
+            <h4>Latest articles:</h4>
+            <ul class="series-card-article-list">
+              {{ range first 3 .Pages.ByDate.Reverse }}
+              <li>
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                <time>{{ .Date.Format "Jan 2" }}</time>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+
+        <footer class="series-card-footer">
+          <a href="{{ .Page.RelPermalink }}" class="series-card-link">
+            Explore series →
+          </a>
+        </footer>
+      </div>
+      {{ end }}
+    </div>
+    {{ else }}
+    <div class="no-series">
+      <p>No article series available yet. Check back soon for curated content collections!</p>
+      <a href="/posts/" class="browse-posts">Browse all posts →</a>
+    </div>
+    {{ end }}
+  </div>
+
+  <footer class="series-list-footer">
+    <div class="series-navigation">
+      <a href="/topics/" class="related-link">Browse Topics</a>
+      <a href="/tags/" class="related-link">Browse Tags</a>
+      <a href="/posts/" class="related-link">All Posts</a>
+    </div>
+  </footer>
+		</article>
+	</div>
+
+	{{ partial "footer.html" . }}
+</body>
+</html>
