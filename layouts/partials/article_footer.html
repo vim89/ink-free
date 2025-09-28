@@ -1,11 +1,11 @@
 <hr class="footer-separator" />
 <div class="tags">
     {{ if ne .Type "page" }}
-    {{ if gt .Params.tags 0 }}
+    {{ with .Params.tags }}
     <ul class="flat">
-        {{ range .Params.tags }}
-        {{ $tagUrl := "tags/"}}
-        <li class="tag-li"><a href="{{ $tagUrl | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+        {{ range . }}
+        <li class="tag-li">
+            <a href="{{ (printf "/tags/%s/" (. | urlize)) | absLangURL }}">{{ . }}</a>
         </li>
         {{ end }}
     </ul>

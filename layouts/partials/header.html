@@ -2,6 +2,21 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+	<script>
+	// Early theme init: avoid FOUC by setting dark class before CSS
+	(function(){
+	  try {
+	    var mode = {{ printf "%q" .Site.Params.mode }} || "auto";
+	    var ls = null;
+	    try { ls = localStorage.getItem('theme'); } catch(e) {}
+	    var prefersDark = false;
+	    try { prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; } catch(e) {}
+	    var useDark = (ls === 'dark') || (!ls && (mode === 'dark' || (mode === 'auto' && prefersDark)));
+	    if (useDark) document.documentElement.classList.add('dark');
+	  } catch(e) {}
+	})();
+	</script>
+
 	{{- /* Security Headers and CSP */ -}}
 	{{- partial "security-headers.html" . -}}
 	{{- $title := ( .Title ) -}}
@@ -36,6 +51,15 @@
 	{{- $bundledCSS := $coreCSS | resources.Concat "css/bundle.css" | resources.Minify | resources.Fingerprint -}}
 
 	<link rel="stylesheet" href="{{ $bundledCSS.RelPermalink }}" integrity="{{ $bundledCSS.Data.Integrity }}" media="screen">
+
+	{{- /* Tags & taxonomy specific CSS */ -}}
+	{{- if or (eq .Kind "taxonomy") (eq .Kind "term") -}}
+		{{- $tagsCSS := resources.Get "css/tags.css" -}}
+		{{- if $tagsCSS -}}
+			{{- $tagsCSSProcessed := $tagsCSS | resources.Minify | resources.Fingerprint -}}
+			<link rel="stylesheet" href="{{ $tagsCSSProcessed.RelPermalink }}" integrity="{{ $tagsCSSProcessed.Data.Integrity }}">
+		{{- end -}}
+	{{- end -}}
 
 	{{- /* Custom CSS if defined */ -}}
 	{{- if isset .Site.Params "customcss" -}}

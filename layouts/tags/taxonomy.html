@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html {{- if (eq .Site.Params.mode "dark") -}}class="dark"{{ end }}>
+{{ partial "header.html" . }}
+
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div class="container wrapper">
+    {{ partial "head.html" . }}
+
+    <article class="tags-list" id="main-content">
+      <header class="tags-list-header">
+        <h1>Tags & Statistics</h1>
+        <p class="tags-list-description">
+          Explore content by topic tags and discover popular themes across all articles.
+        </p>
+      </header>
+
+      <div class="tags">
+        {{ if .Data.Terms }}
+        <ul class="flat">
+          {{ range .Data.Terms.ByCount }}
+            {{ $tagCount := .Count }}
+            {{ $tagSize := cond (ge $tagCount 10) "tag-xl" (cond (ge $tagCount 5) "tag-lg" (cond (ge $tagCount 3) "tag-md" "tag-sm")) }}
+            <li class="tag-li">
+              <a href="{{ .Page.RelPermalink }}" class="tag-cloud-item {{ $tagSize }}" title="{{ .Page.Title }} ({{ $tagCount }} {{ if eq $tagCount 1 }}post{{ else }}posts{{ end }})">
+                <span class="tag-name">{{ .Page.Title }}</span>
+                <span class="tag-count">{{ $tagCount }}</span>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+
+        <div class="tags-stats">
+          <h2>Tag Statistics</h2>
+          <div class="stats-summary">
+            <div class="stat-item">
+              <span class="stat-number">{{ len .Data.Terms }}</span>
+              <span class="stat-label">Total Tags</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ .Site.RegularPages | len }}</span>
+              <span class="stat-label">Total Posts</span>
+            </div>
+            <div class="stat-item">
+              {{ $avg := div (add (.Site.RegularPages | len) 1) (add (len .Data.Terms) 1) }}
+              <span class="stat-number">{{ $avg }}</span>
+              <span class="stat-label">Avg Posts/Tag</span>
+            </div>
+          </div>
+
+          <div class="popular-tags">
+            <h3>Most Popular Tags</h3>
+            <ul class="popular-tags-list">
+              {{ range first 10 .Data.Terms.ByCount }}
+              <li class="popular-tag-item">
+                <a href="{{ .Page.RelPermalink }}" class="popular-tag-link">
+                  <span class="popular-tag-name">{{ .Page.Title }}</span>
+                  <span class="popular-tag-count">{{ .Count }} {{ if eq .Count 1 }}post{{ else }}posts{{ end }}</span>
+                </a>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+        {{ else }}
+          <div class="no-tags">
+            <p>No tags found. Check back soon as content gets tagged!</p>
+            <a href="/posts/" class="browse-posts">Browse all posts →</a>
+          </div>
+        {{ end }}
+      </div>
+
+      <footer class="tags-list-footer">
+        <div class="tags-navigation">
+          <a href="/topics/" class="related-link">Browse Topics</a>
+          <a href="/series/" class="related-link">Browse Series</a>
+          <a href="/posts/" class="related-link">All Posts</a>
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  {{ partial "footer.html" . }}
+</body>
+</html>

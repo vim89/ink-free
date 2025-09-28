@@ -1,33 +1,54 @@
+:root {
+    --accent-color: #3700ff;
+    --accent-hover: #2a00cc;
+    --text-color: #333;
+    --text-muted: #6e7781;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f6f8fa;
+    --border-color: #e1e4e8;
+    --accent-bg: rgba(55, 0, 255, 0.08);
+    --accent-border: rgba(55, 0, 255, 0.20);
+
+    /* Mapping for components that use series/topic color tokens */
+    --color-primary: var(--text-color);
+    --color-text-secondary: var(--text-muted);
+    --color-bg-secondary: var(--bg-secondary);
+    --color-border: var(--border-color);
+    --color-accent: var(--accent-color);
+    --color-accent-light: rgba(55, 0, 255, 0.12);
+    --color-accent-dark: var(--accent-hover);
+}
+
 body {
     font-family: "Inter", sans-serif;
     font-weight: 400;
-    color: #333;
+    color: var(--text-color);
     line-height: 1.8em;
     font-size: 17px;
 }
 
 a {
-    color: #3700ff;
+    color: var(--accent-color);
     text-decoration: none;
     word-break: break-word;
 }
 
 a:hover {
-    border-bottom: 2px solid #3700ff;
+    border-bottom: 2px solid var(--accent-color);
 }
 
 html, button, input, select, textarea {
-    color: #333;
+    color: var(--text-color);
 }
 
 ::-moz-selection {
-    background: #3700ff;
+    background: var(--accent-color);
     text-shadow: none;
     color: #fff;
 }
 
 ::selection {
-    background: #3700ff;
+    background: var(--accent-color);
     text-shadow: none;
     color: #fff;
 }
@@ -109,7 +130,7 @@ blockquote {
     font-size: 1.1rem;
     font-family: Georgia, bitstream charter, serif;
     border-left: 3px solid;
-    border-color: #3700ff;
+    border-color: var(--accent-color);
     padding-left: 15px;
 }
 
@@ -128,7 +149,7 @@ blockquote code {
 
 
 h1, h2, h3, h4, h5, h6 {
-    color: #333;
+    color: var(--text-color);
     font-weight: 500;
     line-height: 1.3em;
     margin: 30px 0 20px 0;
@@ -262,7 +283,7 @@ ul {
 }
 
 .site-title a {
-    color: #333;
+    color: var(--text-color);
     text-decoration: none !important;
 }
 
@@ -293,15 +314,15 @@ ul {
 }
 
 .header nav li a:hover {
-    color: #3700ff;
+    color: var(--accent-color);
 }
 
 .header nav.social a {
-    color: #333;
+    color: var(--text-color);
 }
 
 .header nav.social a:hover {
-    color: #3700ff;
+    color: var(--accent-color);
 }
 
 .header .site-description nav {
@@ -376,7 +397,7 @@ ul {
 }
 
 .post .draft-label {
-    color: #3700ff;
+    color: var(--accent-color);
     text-decoration: none;
     padding: 2px 4px;
     border-radius: 4px;
@@ -386,10 +407,10 @@ ul {
 
 .post .tags a {
     display: inline-block;
-    border: 1px solid #3700ff;
+    border: 1px solid var(--accent-color);
     border-radius: 3px;
     padding: 0 6px;
-    color: #3700ff;
+    color: var(--accent-color);
     line-height: 20px;
     font-size: 0.85em;
     text-decoration: none;
@@ -415,7 +436,7 @@ ul {
 }
 
 .footer a:hover {
-    color: #3700ff;
+    color: var(--accent-color);
 }
 
 /* Sidebar TOC: sticky, scroll, progress rail */
@@ -437,7 +458,7 @@ ul {
     top: 0;
     width: 2px;
     height: 0;
-    background: #3700ff;
+    background: var(--accent-color);
     border-radius: 2px;
     transition: height .2s ease;
 }
@@ -450,7 +471,7 @@ ul {
 h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] { scroll-margin-top: 80px; }
 
 .tag-cloud {
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 .tag-cloud a {
@@ -626,12 +647,12 @@ nav {
 .section-nav a {
     text-decoration: none;
     display: block;
-    color: #3700ff;
+    color: var(--accent-color);
     transition: all 50ms ease-in-out;
 }
 
 .section-nav li::marker {
-    color: #3700ff;
+    color: var(--accent-color);
 }
 
 .section-nav a:hover,
@@ -648,12 +669,12 @@ nav {
 .toc a {
     text-decoration: none;
     display: block;
-    color: #3700ff;
+    color: var(--accent-color);
     transition: all 50ms ease-in-out;
 }
 
 .toc li::marker {
-    color: #3700ff;
+    color: var(--accent-color);
 }
 
 .toc a:hover,
@@ -666,4 +687,31 @@ nav {
 /* For https://github.com/martignoni/hugo-notice */
 .notice {
     width: 85%;
+}
+
+/* Unified tag pills (used in series pages and topic cards) */
+.series-article-tags {
+  display: flex;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.series-article-tags .tag {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent-color, #0969da);
+  background-color: var(--accent-bg, rgba(9, 105, 218, 0.1));
+  border: 1px solid var(--accent-border, rgba(9, 105, 218, 0.2));
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.series-article-tags .tag:hover {
+  background-color: var(--accent-color, #0969da);
+  color: white;
+  border-color: var(--accent-color, #0969da);
 }

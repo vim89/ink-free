@@ -33,12 +33,12 @@
 								}} min read
 							</h4>
 							<h4 class="title small smaller">
-								{{ if gt .Params.tags 0 }}
+								{{ with .Params.tags }}
 								<ul class="tags flat">
-									{{ $tagUrl := "tags/"}}
-									{{ range first .Site.Params.maxTags .Params.tags }}
-									<li class="tag-li"><a href="{{ $tagUrl | relLangURL }}{{ . | urlize }}">{{ .
-											}}</a></li>
+									{{ range . }}
+									<li class="tag-li">
+									<a href="{{ (printf "/tags/%s/" (. | urlize)) | absLangURL }}">{{ . }}</a>
+									</li>
 									{{ end }}
 								</ul>
 								{{ end }}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html {{- if (eq .Site.Params.mode "dark") -}}class="dark"{{ end }}>
+{{ partial "header.html" . }}
+
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div class="container wrapper">
+    {{ partial "head.html" . }}
+
+    <article class="topics-index" id="main-content">
+      <header class="topics-header">
+        <h1>{{ .Title }}</h1>
+        {{ if .Params.description }}
+        <p class="topics-description">{{ .Params.description }}</p>
+        {{ end }}
+      </header>
+
+      <div class="topics-content">
+        {{ .Content }}
+      </div>
+    </article>
+  </div>
+
+  {{ partial "footer.html" . }}
+
+<style>
+/* reuse the same styles defined in topics-index template */
+.topics-index { max-width: 900px; margin: 0 auto; padding: 1rem; }
+.topics-header { text-align: center; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border, #e1e5e9); padding-bottom: 1.5rem; }
+.topics-header h1 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--color-primary, #333); }
+.topics-description { font-size: 1.2rem; color: var(--color-text-secondary, #666); line-height: 1.6; max-width: 600px; margin: 0 auto; }
+.topics-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem; line-height: 1.7; }
+.topics-content h2 { margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary, #333); border-bottom: 2px solid var(--color-accent, #007acc); padding-bottom: 0.5rem; }
+.topics-content h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
+/* cards use series.css classes; only icon sizing remains */
+.topic-icon { font-size: 2rem; flex-shrink: 0; }
+@media (max-width: 768px) {
+  .topics-index { padding: .5rem; }
+  .topics-header h1 { font-size: 2rem; }
+  .topics-description { font-size: 1rem; }
+  .topic-icon { font-size: 1.5rem; }
+}
+</style>
+
+</body>
+
+</html>

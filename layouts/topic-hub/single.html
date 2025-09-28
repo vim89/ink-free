@@ -1,39 +1,53 @@
-{{ define "main" }}
-<article class="topic-hub" id="main-content">
-  <header class="topic-header">
-    <h1>{{ .Title }}</h1>
-    {{ if .Params.description }}
-    <p class="topic-description">{{ .Params.description }}</p>
-    {{ end }}
-  </header>
+<!DOCTYPE html>
+<html {{- if (eq .Site.Params.mode "dark") -}}class="dark"{{ end }}>
+{{ partial "header.html" . }}
 
-  {{ if .Params.toc }}
-  <div class="topic-toc">
-    {{ .TableOfContents }}
-  </div>
-  {{ end }}
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <div class="topic-content">
-    {{ .Content }}
-  </div>
+  <div class="container wrapper">
+    {{ partial "head.html" . }}
 
-  <footer class="topic-footer">
-    <div class="topic-meta">
-      {{ if .Date }}
-      <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-        Last updated: {{ .Date.Format "January 2, 2006" }}
-      </time>
-      {{ end }}
-
-      {{ with .Params.aliases }}
-      <div class="topic-aliases">
-        <strong>Also available at:</strong>
-        {{ range . }}
-        <a href="{{ . | relURL }}">{{ . }}</a>{{ if not (eq . (index $.Params.aliases (sub (len $.Params.aliases) 1))) }}, {{ end }}
+    <article class="topic-hub" id="main-content">
+      <header class="topic-header">
+        <h1>{{ .Title }}</h1>
+        {{ if .Params.description }}
+        <p class="topic-description">{{ .Params.description }}</p>
         {{ end }}
+      </header>
+
+      {{ if .Params.toc }}
+      <div class="topic-toc">
+        {{ .TableOfContents }}
       </div>
       {{ end }}
-    </div>
-  </footer>
-</article>
-{{ end }}
+
+      <div class="topic-content">
+        {{ .Content }}
+      </div>
+
+      <footer class="topic-footer">
+        <div class="topic-meta">
+          {{ if .Date }}
+          <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            Last updated: {{ .Date.Format "January 2, 2006" }}
+          </time>
+          {{ end }}
+
+          {{ with .Params.aliases }}
+          <div class="topic-aliases">
+            <strong>Also available at:</strong>
+            {{ range . }}
+            <a href="{{ . | relURL }}">{{ . }}</a>{{ if not (eq . (index $.Params.aliases (sub (len $.Params.aliases) 1))) }}, {{ end }}
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </footer>
+    </article>
+  </div>
+
+  {{ partial "footer.html" . }}
+</body>
+
+</html>

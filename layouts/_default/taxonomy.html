@@ -3,26 +3,13 @@
 {{ partial "header.html" . }}
 
 <body>
-	<a href="#main-content" class="skip-link">Skip to main content</a>
-	<div class="container wrapper list">
+	<div class="container wrapper tags">
 		{{ partial "head.html" . }}
 
-		{{ if isset .Data "Term" }}
-			<h2 id="main-content">{{ .Data.Term }}</h2>
-		{{ else }}
-		<h2 class="page-title" id="main-content">{{ .Name }}</h2>
-		{{ end }}
-
-		{{ if .Content }}
-		<div class="list-content">
-			{{ .Content }}
-		</div>
-		{{ end }}
+		<h1 class="page-title">{{ .Title }}</h1>
 
 		<ul class="posts flat">
-			{{- range .Data.Pages -}}
-			{{- if (in (.Site.Params.excludedTypes | default (slice "page")) .Type) -}}
-			{{- else -}}
+			{{ range .Pages }}
 			<li class="post">
 				<div class="post-header">
 					<div class="meta">
@@ -47,8 +34,7 @@
 					</div>
 				</div>
 			</li>
-			{{- end -}}
-			{{- end -}}
+			{{ end }}
 		</ul>
 	</div>
 

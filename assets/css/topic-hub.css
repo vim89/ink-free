@@ -98,10 +98,9 @@
 }
 
 .article-card {
-  background: var(--color-bg-secondary, #f8f9fa);
   border: 1px solid var(--color-border, #e1e5e9);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 0.5rem;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -149,12 +148,22 @@
 }
 
 .article-tags .tag {
-  background: var(--color-accent-light, #e3f2fd);
-  color: var(--color-accent, #007acc);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  display: inline-block !important;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-color, #0969da);
+    background-color: var(--accent-bg, rgba(9, 105, 218, 0.1));
+    border: 1px solid var(--accent-border, rgba(9, 105, 218, 0.2));
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.article-tags .tag:hover {
+    background-color: var(--accent-color, #0969da);
+    color: white;
+    border-color: var(--accent-color, #0969da);
 }
 
 .article-description {

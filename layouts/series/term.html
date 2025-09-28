@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html {{- if (eq .Site.Params.mode "dark") -}}class="dark"{{ end }}>
 {{ partial "header.html" . }}
 
 <body>
@@ -49,7 +49,7 @@
 										{{ if $page.Params.tags }}
 										<div class="series-article-tags">
 											{{ range first 3 $page.Params.tags }}
-											<span class="tag">{{ . }}</span>
+											<a class="tag" href="{{ (printf "/tags/%s/" (. | urlize)) | absLangURL }}">{{ . }}</a>
 											{{ end }}
 										</div>
 										{{ end }}

@@ -1,3 +1,16 @@
+/* Dark theme variables */
+html.dark {
+  --accent-color: #9375fd;
+  --accent-hover: #7d63f3;
+  --text-color: #ddd;
+  --text-muted: #9aa0a6;
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --border-color: #30363d;
+  --accent-bg: rgba(147, 117, 253, 0.18);
+  --accent-border: rgba(147, 117, 253, 0.40);
+}
+
 html.dark body {
   color: #ddd;
   background-color: #000;
@@ -33,7 +46,7 @@ html.dark h6 {
 }
 
 html.dark a, html.dark a:hover {
-  color: #9375fd;
+  color: var(--accent-color);
   text-decoration: none;
 }
 
@@ -51,19 +64,9 @@ html.dark a:hover {
   opacity: 0.8;
 }
 
-html.dark .post-tags .tags a {
-  border: 1px solid #ddd;
-  color: #ddd;
-}
-
-.post .tags a  {
-  color:  #8362fd;
-  border: 1px solid #8362fd;
-}
-
-a:hover {
-  border-bottom: 2px solid #8362fd;
-}
+/* Tags leverage CSS variables now */
+.post .tags a  { color: var(--accent-color); border: 1px solid var(--accent-color); }
+a:hover { border-bottom: 2px solid var(--accent-color); }
 
 html.dark .site-title a {
   color: #ddd;

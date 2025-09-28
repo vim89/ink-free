@@ -75,7 +75,6 @@
   align-items: flex-start;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: var(--color-bg-secondary, #f8f9fa);
   border: 1px solid var(--color-border, #e1e5e9);
   border-radius: 12px;
   transition: all 0.3s ease;
@@ -140,12 +139,7 @@
 }
 
 .series-article-tags .tag {
-  background: var(--color-accent-light, #e3f2fd);
-  color: var(--color-accent, #007acc);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  display: inline !important;
 }
 
 .series-article-description {
@@ -173,17 +167,16 @@
 }
 
 .back-to-series {
-  color: var(--color-accent, #007acc);
+  color: var(--color-accent, #e3f2fd);
   text-decoration: none;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
-  border: 2px solid var(--color-accent, #007acc);
+  border: 2px solid var(--color-accent, #e3f2fd);
   border-radius: 8px;
   transition: all 0.3s ease;
 }
 
 .back-to-series:hover {
-  background: var(--color-accent, #007acc);
   color: white;
 }
 
@@ -224,20 +217,19 @@
 }
 
 .series-card {
-  background: var(--color-bg-secondary, #f8f9fa);
-  border: 1px solid var(--color-border, #e1e5e9);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+    border: 1px solid var(--color-border, #e1e5e9);
+    border-radius: 12px;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .series-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--color-accent, #007acc);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-accent, #007acc);
 }
 
 .series-card-title {
@@ -324,20 +316,14 @@
 }
 
 .series-card-link {
-  display: inline-flex;
-  align-items: center;
-  color: var(--color-accent, #007acc);
-  text-decoration: none;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border: 2px solid var(--color-accent, #007acc);
-  border-radius: 8px;
-  transition: all 0.3s ease;
+    color: var(--color-accent, #007acc);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 600;
 }
 
 .series-card-link:hover {
-  background: var(--color-accent, #007acc);
-  color: white;
+    color: var(--color-accent-dark, #005fa3);
 }
 
 .no-series {

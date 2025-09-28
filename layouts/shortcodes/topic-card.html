@@ -4,30 +4,31 @@
 {{- $icon := .Get "icon" -}}
 {{- $tags := .Get "tags" -}}
 
-<div class="topic-card">
-  <div class="topic-card-header">
+<div class="series-card">
+  <div class="series-card-header">
     {{ if $icon }}
     <div class="topic-icon">{{ $icon }}</div>
     {{ end }}
-    <h3 class="topic-card-title">
+    <h3 class="series-card-title">
       <a href="{{ $url | relURL }}">{{ $title }}</a>
     </h3>
   </div>
 
   {{ if $description }}
-  <p class="topic-card-description">{{ $description }}</p>
+  <p class="series-card-description">{{ $description }}</p>
   {{ end }}
 
   {{ if $tags }}
-  <div class="topic-card-tags">
+  <div class="series-article-tags">
     {{ range (split $tags ",") }}
-    <span class="topic-tag">{{ trim . " " }}</span>
+    {{ $t := trim . " " }}
+    <a class="tag" href="{{ (printf "/tags/%s/" ($t | urlize)) | absLangURL }}">{{ $t }}</a>
     {{ end }}
   </div>
   {{ end }}
 
-  <div class="topic-card-footer">
-    <a href="{{ $url | relURL }}" class="topic-card-link">
+  <div class="series-card-footer">
+    <a href="{{ $url | relURL }}" class="series-card-link">
       Explore {{ $title }} →
     </a>
   </div>
