@@ -22,19 +22,46 @@
 	{{- template "_internal/schema.html" . -}}
 	{{- template "_internal/opengraph.html" . -}}
 	{{- template "_internal/twitter_cards.html" . -}}
-	<link rel="stylesheet" type="text/css" media="screen" href="{{ .Site.BaseURL }}css/normalize.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="{{ .Site.BaseURL }}css/main.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="{{ .Site.BaseURL }}css/github-markdown.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="{{ .Site.BaseURL }}css/github-codeblocks.css" />
-	{{- if isset .Site.Params "customcss" }}
-	<link rel="stylesheet" type="text/css" href="{{ .Site.BaseURL }}{{ .Site.Params.customCSS }}" />
-	{{ end }}
+	{{- /* Hugo Pipes CSS with SRI */ -}}
+	{{- $normalize := resources.Get "css/normalize.css" -}}
+	{{- $main := resources.Get "css/main.css" -}}
+	{{- $markdown := resources.Get "css/github-markdown.css" -}}
+	{{- $codeblocks := resources.Get "css/github-codeblocks.css" -}}
 
-	<link id="dark-scheme" rel="stylesheet" type="text/css" href="{{ .Site.BaseURL }}css/dark.css" />
-	{{- if isset .Site.Params "customdarkcss" }}
-	<link id="dark-scheme" rel="stylesheet" type="text/css"
-		href="{{ .Site.BaseURL }}{{ .Site.Params.customDarkCSS }}" />
-	{{- end }}
+	{{- /* Bundle core CSS */ -}}
+	{{- $coreCSS := slice $normalize $main $markdown $codeblocks -}}
+	{{- $bundledCSS := $coreCSS | resources.Concat "css/bundle.css" | resources.Minify | resources.Fingerprint -}}
+
+	<link rel="stylesheet" href="{{ $bundledCSS.RelPermalink }}" integrity="{{ $bundledCSS.Data.Integrity }}" media="screen">
+
+	{{- /* Custom CSS if defined */ -}}
+	{{- if isset .Site.Params "customcss" -}}
+		{{- range .Site.Params.customCSS -}}
+			{{- $customCSS := resources.Get . -}}
+			{{- if $customCSS -}}
+				{{- $customCSSProcessed := $customCSS | resources.Minify | resources.Fingerprint -}}
+				<link rel="stylesheet" href="{{ $customCSSProcessed.RelPermalink }}" integrity="{{ $customCSSProcessed.Data.Integrity }}">
+			{{- end -}}
+		{{- end -}}
+	{{- end -}}
+
+	{{- /* Dark mode CSS */ -}}
+	{{- $darkCSS := resources.Get "css/dark.css" -}}
+	{{- if $darkCSS -}}
+		{{- $darkCSSProcessed := $darkCSS | resources.Minify | resources.Fingerprint -}}
+		<link id="dark-scheme" rel="stylesheet" href="{{ $darkCSSProcessed.RelPermalink }}" integrity="{{ $darkCSSProcessed.Data.Integrity }}">
+	{{- end -}}
+
+	{{- /* Custom dark CSS if defined */ -}}
+	{{- if isset .Site.Params "customdarkcss" -}}
+		{{- range .Site.Params.customDarkCSS -}}
+			{{- $customDarkCSS := resources.Get . -}}
+			{{- if $customDarkCSS -}}
+				{{- $customDarkCSSProcessed := $customDarkCSS | resources.Minify | resources.Fingerprint -}}
+				<link id="dark-scheme" rel="stylesheet" href="{{ $customDarkCSSProcessed.RelPermalink }}" integrity="{{ $customDarkCSSProcessed.Data.Integrity }}">
+			{{- end -}}
+		{{- end -}}
+	{{- end -}}
 	{{- $enableUmami := and (isset .Site.Params "enableumami") (.Site.Params.enableUmami) -}}
 	{{- $hasURL := isset .Site.Params "umamiurl" -}}
 	{{- $hasID := isset .Site.Params "umamiwebsiteid" -}}
@@ -42,15 +69,36 @@
 	<script defer src="{{ .Site.Params.umamiURL }}" data-website-id="{{ .Site.Params.umamiWebsiteId }}"
 		data-tag="blog"></script>
 	{{- end -}}
-	{{ if and (isset .Site.Params "social") (isset .Site.Params "feathericonscdn") (eq .Site.Params.featherIconsCDN
-	true) -}}
-	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	{{- /* JavaScript assets with Hugo Pipes and SRI */ -}}
+	{{ if and (isset .Site.Params "social") (isset .Site.Params "feathericonscdn") (eq .Site.Params.featherIconsCDN true) -}}
+		{{- /* CDN version with SRI */ -}}
+		<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"
+		        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+		        crossorigin="anonymous" defer></script>
 	{{- else if (isset .Site.Params "social") -}}
-	<script src="{{ .Site.BaseURL }}js/feather.min.js"></script>
+		{{- /* Local feather icons */ -}}
+		{{- $feather := resources.Get "js/feather.min.js" -}}
+		{{- if $feather -}}
+			{{- $featherProcessed := $feather | resources.Minify | resources.Fingerprint -}}
+			<script src="{{ $featherProcessed.RelPermalink }}" integrity="{{ $featherProcessed.Data.Integrity }}" defer></script>
+		{{- end -}}
 	{{ end }}
-	<script src="{{ .Site.BaseURL }}js/main.js"></script>
+
+	{{- /* Main theme JavaScript */ -}}
+	{{- $mainJS := resources.Get "js/main.js" -}}
+	{{- if $mainJS -}}
+		{{- $mainJSProcessed := $mainJS | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $mainJSProcessed.RelPermalink }}" integrity="{{ $mainJSProcessed.Data.Integrity }}" defer></script>
+	{{- end -}}
+
+	{{- /* Custom JavaScript if defined */ -}}
 	{{- if isset .Site.Params "customjs" -}}
-	{{- range .Site.Params.customJS }}
-	<script src="{{ $.Site.BaseURL }}{{ . }}"></script>{{- end }}
-	{{- end }}
+		{{- range .Site.Params.customJS -}}
+			{{- $customJS := resources.Get . -}}
+			{{- if $customJS -}}
+				{{- $customJSProcessed := $customJS | resources.Minify | resources.Fingerprint -}}
+				<script src="{{ $customJSProcessed.RelPermalink }}" integrity="{{ $customJSProcessed.Data.Integrity }}" defer></script>
+			{{- end -}}
+		{{- end -}}
+	{{- end -}}
 </head>
