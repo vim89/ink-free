@@ -3,13 +3,14 @@
 {{ partial "header.html" . }}
 
 <body>
+	<a href="#main-content" class="skip-link">Skip to main content</a>
 	<div class="container wrapper list">
 		{{ partial "head.html" . }}
 
 		{{ if isset .Data "Term" }}
-			<h2>{{ .Data.Term }}</h2>
+			<h2 id="main-content">{{ .Data.Term }}</h2>
 		{{ else }}
-		<h2 class="page-title">{{ .Name }}</h2>
+		<h2 class="page-title" id="main-content">{{ .Name }}</h2>
 		{{ end }}
 
 		<ul class="posts flat">

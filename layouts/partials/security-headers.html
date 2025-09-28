@@ -1,0 +1,125 @@
+{{- /* Security Headers and Content Security Policy */ -}}
+<!-- Security Headers Implementation Active -->
+{{- $isDevelopment := eq hugo.Environment "development" -}}
+{{- $baseURL := .Site.BaseURL | strings.TrimSuffix "/" -}}
+
+{{- /* Content Security Policy */ -}}
+{{- $cspDirectives := slice -}}
+
+{{- /* default-src: Fallback for other fetch directives */ -}}
+{{- $cspDirectives = $cspDirectives | append "default-src 'self'" -}}
+
+{{- /* script-src: JavaScript sources */ -}}
+{{- $scriptSrc := slice "'self'" -}}
+{{- /* Allow inline scripts for theme functionality and search */ -}}
+{{- $scriptSrc = $scriptSrc | append "'unsafe-inline'" -}}
+{{- /* Allow Plausible analytics if enabled */ -}}
+{{- if .Site.Params.plausibleDomain -}}
+{{- $scriptSrc = $scriptSrc | append "plausible.io" -}}
+{{- end -}}
+{{- /* Allow livereload in development */ -}}
+{{- if $isDevelopment -}}
+{{- $scriptSrc = $scriptSrc | append "'unsafe-eval'" -}}
+{{- end -}}
+{{- $cspDirectives = $cspDirectives | append (printf "script-src %s" (delimit $scriptSrc " ")) -}}
+
+{{- /* style-src: CSS sources */ -}}
+{{- $styleSrc := slice "'self'" "'unsafe-inline'" -}}
+{{- $cspDirectives = $cspDirectives | append (printf "style-src %s" (delimit $styleSrc " ")) -}}
+
+{{- /* img-src: Image sources */ -}}
+{{- $imgSrc := slice "'self'" "data:" -}}
+{{- /* Allow external images from common sources */ -}}
+{{- $imgSrc = $imgSrc | append "*.gravatar.com" "avatars.githubusercontent.com" -}}
+{{- $cspDirectives = $cspDirectives | append (printf "img-src %s" (delimit $imgSrc " ")) -}}
+
+{{- /* font-src: Font sources */ -}}
+{{- $fontSrc := slice "'self'" "data:" -}}
+{{- $cspDirectives = $cspDirectives | append (printf "font-src %s" (delimit $fontSrc " ")) -}}
+
+{{- /* connect-src: AJAX, WebSocket, EventSource */ -}}
+{{- $connectSrc := slice "'self'" -}}
+{{- /* Allow Plausible analytics if enabled */ -}}
+{{- if .Site.Params.plausibleDomain -}}
+{{- $connectSrc = $connectSrc | append "plausible.io" -}}
+{{- end -}}
+{{- /* Allow livereload in development */ -}}
+{{- if $isDevelopment -}}
+{{- $connectSrc = $connectSrc | append "ws:" "wss:" -}}
+{{- end -}}
+{{- $cspDirectives = $cspDirectives | append (printf "connect-src %s" (delimit $connectSrc " ")) -}}
+
+{{- /* frame-src: Embedded content */ -}}
+{{- $cspDirectives = $cspDirectives | append "frame-src 'none'" -}}
+
+{{- /* object-src: Flash, plugins */ -}}
+{{- $cspDirectives = $cspDirectives | append "object-src 'none'" -}}
+
+{{- /* base-uri: Document base URL */ -}}
+{{- $cspDirectives = $cspDirectives | append "base-uri 'self'" -}}
+
+{{- /* form-action: Form submission targets */ -}}
+{{- $cspDirectives = $cspDirectives | append "form-action 'self'" -}}
+
+{{- /* frame-ancestors: Embedding in frames */ -}}
+{{- $cspDirectives = $cspDirectives | append "frame-ancestors 'none'" -}}
+
+{{- /* worker-src: Web Workers, Service Workers */ -}}
+{{- $cspDirectives = $cspDirectives | append "worker-src 'self'" -}}
+
+{{- /* manifest-src: Web app manifests */ -}}
+{{- $cspDirectives = $cspDirectives | append "manifest-src 'self'" -}}
+
+{{- /* media-src: Audio and video */ -}}
+{{- $cspDirectives = $cspDirectives | append "media-src 'self'" -}}
+
+{{- /* Upgrade insecure requests in production */ -}}
+{{- if not $isDevelopment -}}
+{{- $cspDirectives = $cspDirectives | append "upgrade-insecure-requests" -}}
+{{- end -}}
+
+{{- /* Build final CSP header */ -}}
+{{- $cspHeader := delimit $cspDirectives "; " -}}
+
+{{- /* Use Content-Security-Policy-Report-Only for initial deployment */ -}}
+<meta http-equiv="Content-Security-Policy-Report-Only" content="{{ $cspHeader }}">
+
+{{- /* Security Headers via meta tags (limited effectiveness, but better than nothing) */ -}}
+{{- /* X-Content-Type-Options */ -}}
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+{{- /* X-Frame-Options */ -}}
+<meta http-equiv="X-Frame-Options" content="DENY">
+
+{{- /* X-XSS-Protection (legacy but still useful) */ -}}
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+{{- /* Referrer Policy */ -}}
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+{{- /* Permissions Policy (Feature Policy) */ -}}
+<meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), autoplay=()">
+
+{{- /* Additional security meta tags */ -}}
+{{- if not $isDevelopment -}}
+{{- /* HSTS suggestion (actual HSTS must be set at server level) */ -}}
+<!-- Strict-Transport-Security: max-age=31536000; includeSubDomains; preload (set at server level) -->
+{{- end -}}
+
+{{- /* Preconnect to external resources for performance */ -}}
+{{- if .Site.Params.plausibleDomain -}}
+<link rel="preconnect" href="https://plausible.io" crossorigin>
+{{- end -}}
+
+{{- /* DNS prefetch for social links */ -}}
+<link rel="dns-prefetch" href="//github.com">
+<link rel="dns-prefetch" href="//twitter.com">
+<link rel="dns-prefetch" href="//linkedin.com">
+
+{{- /* Development-specific headers */ -}}
+{{- if $isDevelopment -}}
+<!-- Development Mode: CSP in Report-Only mode -->
+<!-- Livereload and unsafe-eval enabled for development -->
+{{- else -}}
+<!-- Production Mode: Enhanced security enabled -->
+{{- end -}}

@@ -1,0 +1,210 @@
+{{- $currentPage := .Page -}}
+{{- if $currentPage.Params.series -}}
+  {{- range $currentPage.Params.series -}}
+    {{- $seriesName := . -}}
+    {{- $seriesPages := where $.Site.RegularPages "Params.series" "intersect" (slice $seriesName) -}}
+    {{- $seriesPages = $seriesPages.ByDate -}}
+    {{- $currentIndex := 0 -}}
+    {{- range $i, $page := $seriesPages -}}
+      {{- if eq $page.RelPermalink $currentPage.RelPermalink -}}
+        {{- $currentIndex = $i -}}
+      {{- end -}}
+    {{- end -}}
+
+    <div class="series-navigation">
+      <div class="series-header">
+        <h3 class="series-title">
+          <a href="/series/{{ $seriesName | urlize }}/">{{ $seriesName }}</a>
+        </h3>
+        <p class="series-progress">
+          Part {{ add $currentIndex 1 }} of {{ len $seriesPages }}
+        </p>
+      </div>
+
+      <div class="series-articles">
+        {{- range $i, $page := $seriesPages -}}
+        <div class="series-article{{ if eq $page.RelPermalink $currentPage.RelPermalink }} current{{ end }}">
+          <span class="series-number">{{ add $i 1 }}</span>
+          {{- if eq $page.RelPermalink $currentPage.RelPermalink -}}
+            <span class="series-current-title">{{ $page.Title }}</span>
+          {{- else -}}
+            <a href="{{ $page.RelPermalink }}" class="series-link">{{ $page.Title }}</a>
+          {{- end -}}
+        </div>
+        {{- end -}}
+      </div>
+
+      <div class="series-controls">
+        {{- if gt $currentIndex 0 -}}
+          {{- $prevPage := index $seriesPages (sub $currentIndex 1) -}}
+          <a href="{{ $prevPage.RelPermalink }}" class="series-prev">
+            ← {{ $prevPage.Title }}
+          </a>
+        {{- end -}}
+
+        {{- if lt $currentIndex (sub (len $seriesPages) 1) -}}
+          {{- $nextPage := index $seriesPages (add $currentIndex 1) -}}
+          <a href="{{ $nextPage.RelPermalink }}" class="series-next">
+            {{ $nextPage.Title }} →
+          </a>
+        {{- end -}}
+      </div>
+    </div>
+  {{- end -}}
+{{- end -}}
+
+<style>
+.series-navigation {
+  background: var(--color-bg-secondary, #f8f9fa);
+  border: 1px solid var(--color-border, #e1e5e9);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.series-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border, #e1e5e9);
+}
+
+.series-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.series-title a {
+  color: var(--color-accent, #007acc);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.series-title a:hover {
+  text-decoration: underline;
+}
+
+.series-progress {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary, #666);
+  font-weight: 500;
+}
+
+.series-articles {
+  margin-bottom: 1.5rem;
+}
+
+.series-article {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border, #e1e5e9);
+}
+
+.series-article:last-child {
+  border-bottom: none;
+}
+
+.series-article.current {
+  background: var(--color-accent-light, #e3f2fd);
+  margin: 0 -0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border-bottom: 1px solid var(--color-border, #e1e5e9);
+}
+
+.series-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-accent, #007acc);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.series-current-title {
+  font-weight: 600;
+  color: var(--color-primary, #333);
+}
+
+.series-link {
+  color: var(--color-primary, #333);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.series-link:hover {
+  color: var(--color-accent, #007acc);
+}
+
+.series-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border, #e1e5e9);
+}
+
+.series-prev,
+.series-next {
+  color: var(--color-accent, #007acc);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-accent, #007acc);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex: 1;
+  text-align: center;
+}
+
+.series-prev:hover,
+.series-next:hover {
+  background: var(--color-accent, #007acc);
+  color: white;
+}
+
+.series-prev {
+  margin-right: auto;
+}
+
+.series-next {
+  margin-left: auto;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .series-navigation {
+    --color-primary: #f0f0f0;
+    --color-text-secondary: #b0b0b0;
+    --color-bg-secondary: #2a2a2a;
+    --color-border: #404040;
+    --color-accent: #4dabf7;
+    --color-accent-light: #1a365d;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .series-navigation {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .series-controls {
+    flex-direction: column;
+  }
+
+  .series-prev,
+  .series-next {
+    margin: 0;
+  }
+}
+</style>

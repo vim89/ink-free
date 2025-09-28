@@ -1,0 +1,30 @@
+{{- $footnotes := .Inner | markdownify -}}
+<section class="footnotes" role="doc-endnotes" aria-labelledby="footnotes-heading">
+  <h2 id="footnotes-heading" class="footnotes-title">Footnotes</h2>
+  {{ $footnotes }}
+</section>
+
+{{- /* Process footnotes to add proper ARIA attributes */ -}}
+<script>
+(function() {
+  // Enhance footnote accessibility
+  const footnotes = document.querySelectorAll('.footnotes ol li');
+  footnotes.forEach((footnote, index) => {
+    const id = footnote.id || `footnote-${index + 1}`;
+    footnote.setAttribute('id', id);
+    footnote.setAttribute('role', 'doc-endnote');
+
+    // Add back reference if it doesn't exist
+    if (!footnote.querySelector('.footnote-backref')) {
+      const backref = document.createElement('a');
+      backref.href = `#footnote-ref-${index + 1}`;
+      backref.className = 'footnote-backref';
+      backref.setAttribute('role', 'doc-backlink');
+      backref.setAttribute('aria-label', `Return to footnote ${index + 1} reference`);
+      backref.textContent = '↩';
+      footnote.appendChild(document.createTextNode(' '));
+      footnote.appendChild(backref);
+    }
+  });
+})();
+</script>

@@ -1,0 +1,13 @@
+{{ $path := .Get "path" }}
+{{ $pdf := .Page.Resources.GetMatch $path }}
+{{ if $pdf }}
+<iframe
+  src="{{ $pdf.RelPermalink }}"
+  width="{{ .Get "width" | default "100%" }}"
+  height="{{ .Get "height" | default "600" }}"
+  style="border:none;"
+  title="{{ .Get "title" | default "Embedded PDF" }}">
+</iframe>
+{{ else }}
+  <p>PDF '{{ $path }}' not found.</p>
+{{ end }}

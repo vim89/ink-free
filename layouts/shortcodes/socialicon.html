@@ -1,0 +1,14 @@
+{{ $provider := .Get "provider" | lower }}
+{{ $url := .Get "url" }}
+
+<a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="social-icon social-{{ $provider }}">
+    {{ if eq $provider "github" }}
+    <i class="fab fa-github"></i>
+    {{ else if eq $provider "linkedin" }}
+    <i class="fab fa-linkedin"></i>
+    {{ else if eq $provider "twitter" }}
+    <i class="fab fa-twitter"></i>
+    {{ else }}
+    {{ .Get "provider" }}
+    {{ end }}
+</a>

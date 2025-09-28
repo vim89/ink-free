@@ -1,0 +1,157 @@
+{{- /* Enhanced Author E-E-A-T (Expertise, Authoritativeness, Trustworthiness) Signals */ -}}
+
+{{- $author := .Site.Params.author -}}
+{{- $social := .Site.Params.social -}}
+
+<section class="author-eeat" itemscope itemtype="https://schema.org/Person">
+  {{- /* Structured Data for Author */ -}}
+  <meta itemprop="name" content="{{ $author.name }}">
+  <meta itemprop="jobTitle" content="Staff Data Engineer & Software Architect">
+  <meta itemprop="worksFor" content="Tech Industry">
+  <meta itemprop="knowsAbout" content="Data Engineering, Scala, Big Data, Cloud Computing, Software Architecture">
+
+  {{- /* Social Proof and Authority Signals */ -}}
+  <div class="author-credentials">
+    <div class="author-title">
+      <h2>About the Author</h2>
+    </div>
+
+    <div class="author-expertise">
+      <div class="expertise-badge">
+        <span class="badge-icon">🏆</span>
+        <div class="badge-content">
+          <strong>Staff Data Engineer</strong>
+          <p>Senior-level expertise in distributed systems and data architecture</p>
+        </div>
+      </div>
+
+      <div class="expertise-badge">
+        <span class="badge-icon">🎓</span>
+        <div class="badge-content">
+          <strong>Technical Speaker & Educator</strong>
+          <p>Regular speaker at conferences and technical meetups</p>
+        </div>
+      </div>
+
+      <div class="expertise-badge">
+        <span class="badge-icon">🚀</span>
+        <div class="badge-content">
+          <strong>Open Source Contributor</strong>
+          <p>Active contributor to data engineering and build tools</p>
+        </div>
+      </div>
+    </div>
+
+    {{- /* Authority Indicators */ -}}
+    <div class="author-authority">
+      <h3>Professional Authority</h3>
+      <ul class="authority-list">
+        <li>
+          <span class="authority-icon">💼</span>
+          <strong>Professional Experience:</strong> Staff Data Engineer with extensive big data platform experience
+        </li>
+        <li>
+          <span class="authority-icon">🏗️</span>
+          <strong>Architecture Expertise:</strong> Designed and built data systems from AWS to GCP to on-premises
+        </li>
+        <li>
+          <span class="authority-icon">📚</span>
+          <strong>Knowledge Sharing:</strong> Actively blogs about data engineering, functional programming, and system design
+        </li>
+        <li>
+          <span class="authority-icon">🔧</span>
+          <strong>Open Source:</strong> Creator and maintainer of data quality frameworks and build tools
+        </li>
+      </ul>
+    </div>
+
+    {{- /* Trust Signals */ -}}
+    <div class="author-trust">
+      <h3>Trust & Verification</h3>
+      <div class="trust-indicators">
+        {{- range $social -}}
+        {{- if eq .name "Github" -}}
+        <a href="{{ .url }}" class="trust-link" rel="me" itemprop="sameAs">
+          <span class="trust-icon">⚡</span>
+          <span>Verified GitHub Profile</span>
+          <span class="external-link">↗</span>
+        </a>
+        {{- end -}}
+        {{- if eq .name "LinkedIn" -}}
+        <a href="{{ .url }}" class="trust-link" rel="me" itemprop="sameAs">
+          <span class="trust-icon">👔</span>
+          <span>Professional LinkedIn</span>
+          <span class="external-link">↗</span>
+        </a>
+        {{- end -}}
+        {{- end -}}
+
+        <div class="trust-link">
+          <span class="trust-icon">📧</span>
+          <span>Contact: vitthalmirji@gmail.com</span>
+        </div>
+
+        <div class="trust-link">
+          <span class="trust-icon">📍</span>
+          <span>Location: Mumbai, India</span>
+        </div>
+      </div>
+    </div>
+
+    {{- /* Experience Timeline */ -}}
+    <div class="author-experience">
+      <h3>Technical Experience</h3>
+      <div class="experience-areas">
+        <div class="experience-area">
+          <h4>Data Engineering & Architecture</h4>
+          <ul>
+            <li>Hadoop ecosystem design and optimization</li>
+            <li>Cloud-native data platforms (AWS, GCP)</li>
+            <li>Real-time and batch processing systems</li>
+            <li>Data quality and governance frameworks</li>
+          </ul>
+        </div>
+
+        <div class="experience-area">
+          <h4>Programming & Technologies</h4>
+          <ul>
+            <li>Scala functional programming for data systems</li>
+            <li>Distributed systems and microservices</li>
+            <li>Infrastructure as Code and DevOps</li>
+            <li>Performance optimization and monitoring</li>
+          </ul>
+        </div>
+
+        <div class="experience-area">
+          <h4>Leadership & Communication</h4>
+          <ul>
+            <li>Technical mentoring and team leadership</li>
+            <li>Conference speaking and technical writing</li>
+            <li>Open source project maintenance</li>
+            <li>Cross-functional collaboration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {{- /* Content Transparency */ -}}
+    <div class="author-transparency">
+      <h3>Content Standards</h3>
+      <div class="transparency-statement">
+        <p>
+          <strong>Expertise Declaration:</strong> All technical content on this site is based on hands-on professional experience
+          in data engineering, software architecture, and distributed systems. Code examples and tutorials are tested
+          and verified before publication.
+        </p>
+        <p>
+          <strong>Accuracy Commitment:</strong> Technical information is kept current with industry standards.
+          When opinions are shared, they are clearly marked as such and based on practical experience.
+        </p>
+        <p>
+          <strong>Continuous Learning:</strong> As technology evolves, content is updated to reflect current best practices
+          and new learnings from ongoing professional work.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
