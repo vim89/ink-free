@@ -62,6 +62,15 @@
 			{{- end -}}
 		{{- end -}}
 	{{- end -}}
+
+	{{- /* Search CSS if enabled */ -}}
+	{{- if .Site.Params.enablePagefind -}}
+		{{- $searchCSS := resources.Get "css/search.css" -}}
+		{{- if $searchCSS -}}
+			{{- $searchCSSProcessed := $searchCSS | resources.Minify | resources.Fingerprint -}}
+			<link rel="stylesheet" href="{{ $searchCSSProcessed.RelPermalink }}" integrity="{{ $searchCSSProcessed.Data.Integrity }}">
+		{{- end -}}
+	{{- end -}}
 	{{- $enableUmami := and (isset .Site.Params "enableumami") (.Site.Params.enableUmami) -}}
 	{{- $hasURL := isset .Site.Params "umamiurl" -}}
 	{{- $hasID := isset .Site.Params "umamiwebsiteid" -}}

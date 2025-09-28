@@ -1,0 +1,7 @@
+{{- if .Site.Params.enablePagefind -}}
+{{ partial "search.html" . }}
+{{- else -}}
+<div class="search-disabled">
+  <p>Search is disabled. To enable search, set <code>enablePagefind = true</code> in your site configuration.</p>
+</div>
+{{- end -}}
