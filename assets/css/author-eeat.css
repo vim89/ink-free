@@ -68,7 +68,6 @@
 .author-trust h3,
 .author-experience h3,
 .author-transparency h3 {
-  color: var(--color-primary, #333);
   font-size: 1.4rem;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
