@@ -35,6 +35,11 @@
 				<a href="{{ .URL }}">{{ .Name }}</a>
 			</li>
 			{{ end }}
+			{{- if .Site.Params.enablePagefind -}}
+			<li>
+				<a href="/search/">Search</a>
+			</li>
+			{{- end -}}
 		</ul>
 	</nav>
 </div>

@@ -1,0 +1,146 @@
+{{- if .Site.Params.enablePagefind -}}
+<div class="search-container">
+  <div class="search-input-wrapper">
+    <input
+      type="search"
+      id="search"
+      class="search-input"
+      placeholder="Search posts and pages..."
+      autocomplete="off"
+      spellcheck="false"
+    >
+    <div class="search-loading" id="search-loading" style="display: none;">
+      <span>Searching...</span>
+    </div>
+  </div>
+
+  <div class="search-results" id="search-results"></div>
+
+  <div class="search-message" id="search-message" style="display: none;">
+    <p>Start typing to search through {{ .Site.Title }}'s content.</p>
+  </div>
+</div>
+
+<script>
+{{- if not (.Page.Scratch.Get "pagefind-loaded") -}}
+  {{- .Page.Scratch.Set "pagefind-loaded" true -}}
+
+  // Load Pagefind only when search is actually used
+  let pagefindLoaded = false;
+  let pagefind = null;
+
+  async function loadPagefind() {
+    if (pagefindLoaded) return pagefind;
+
+    try {
+      pagefind = await import('/pagefind/pagefind.js');
+      await pagefind.options({
+        basePath: '/pagefind/',
+        excerptLength: 30
+      });
+      pagefindLoaded = true;
+      return pagefind;
+    } catch (error) {
+      console.error('Failed to load Pagefind:', error);
+      return null;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search');
+    const searchResults = document.getElementById('search-results');
+    const searchLoading = document.getElementById('search-loading');
+    const searchMessage = document.getElementById('search-message');
+
+    if (!searchInput || !searchResults) return;
+
+    let debounceTimer;
+    let currentSearch = '';
+
+    searchInput.addEventListener('input', function(e) {
+      const query = e.target.value.trim();
+
+      clearTimeout(debounceTimer);
+
+      if (query.length === 0) {
+        searchResults.innerHTML = '';
+        searchMessage.style.display = 'block';
+        searchLoading.style.display = 'none';
+        return;
+      }
+
+      if (query.length < 2) return;
+
+      searchMessage.style.display = 'none';
+      searchLoading.style.display = 'block';
+
+      debounceTimer = setTimeout(async () => {
+        currentSearch = query;
+        await performSearch(query);
+      }, 300);
+    });
+
+    async function performSearch(query) {
+      try {
+        const pf = await loadPagefind();
+        if (!pf) {
+          showError('Search functionality is not available.');
+          return;
+        }
+
+        const results = await pf.search(query);
+
+        // Check if this is still the current search
+        if (currentSearch !== query) return;
+
+        searchLoading.style.display = 'none';
+
+        if (results.results.length === 0) {
+          searchResults.innerHTML = '<div class="search-no-results"><p>No results found for "' + escapeHtml(query) + '"</p></div>';
+          return;
+        }
+
+        let html = '<div class="search-results-list">';
+        html += '<div class="search-results-header"><span>' + results.results.length + ' result' + (results.results.length !== 1 ? 's' : '') + ' for "' + escapeHtml(query) + '"</span></div>';
+
+        for (const result of results.results.slice(0, 10)) {
+          const data = await result.data();
+          html += '<div class="search-result-item">';
+          html += '<h3 class="search-result-title"><a href="' + data.url + '">' + data.meta.title + '</a></h3>';
+          if (data.excerpt) {
+            html += '<p class="search-result-excerpt">' + data.excerpt + '</p>';
+          }
+          html += '<div class="search-result-url">' + data.url + '</div>';
+          html += '</div>';
+        }
+
+        html += '</div>';
+        searchResults.innerHTML = html;
+
+      } catch (error) {
+        console.error('Search error:', error);
+        showError('Search failed. Please try again.');
+      }
+    }
+
+    function showError(message) {
+      searchLoading.style.display = 'none';
+      searchResults.innerHTML = '<div class="search-error"><p>' + escapeHtml(message) + '</p></div>';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Initialize with message
+    searchMessage.style.display = 'block';
+  });
+{{- end -}}
+</script>
+{{- else -}}
+<div class="search-disabled">
+  <p>Search is disabled. To enable search, set <code>enablePagefind = true</code> in your site configuration.</p>
+</div>
+{{- end -}}
