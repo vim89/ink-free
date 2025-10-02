@@ -110,12 +110,13 @@
 		{{- end -}}
 	{{- end -}}
 
-	{{- if eq .Type "series" -}}
-		{{- $seriesCSS := resources.Get "css/series.css" -}}
-		{{- if $seriesCSS -}}
-			{{- $allCSS = $allCSS | append $seriesCSS -}}
-		{{- end -}}
-	{{- end -}}
+    {{- /* Series-specific CSS */ -}}
+    {{- if eq .Type "series" -}}
+        {{- $seriesCSS := resources.Get "css/series.css" -}}
+        {{- if $seriesCSS -}}
+            {{- $allCSS = $allCSS | append $seriesCSS -}}
+        {{- end -}}
+    {{- end -}}
 
 	{{- $accessibilityCSS := resources.Get "css/accessibility.css" -}}
 	{{- if $accessibilityCSS -}}
