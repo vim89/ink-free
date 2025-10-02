@@ -3,23 +3,628 @@
 {{ partial "header.html" . }}
 
 <body>
+  <div class="container wrapper">
+    <header class="site-header">
+      {{ partial "head.html" . }}
+    </header>
 
-	<div class="container wrapper">
-		{{ partial "head.html" . }}
+    <main role="main" aria-label="About">
+      <article class="series-index" id="main-content">
+        <header class="series-header">
+          <h1>{{ .Title }}</h1>
+          <p class="series-description">{{ .Description }}</p>
+        </header>
 
-		{{ partial "content_static.html" . }}
+        <div class="series-content">
+          {{- /* Main about content - personal story */ -}}
+          <div class="about-personal-content">
+            {{ .Content }}
+          </div>
 
-		{{- /* Projects Showcase - Flagship */ -}}
-		{{ partial "professional-timeline.html" . }}
+          <hr>
 
-		{{- /* Technical Expertise */ -}}
-		{{ partial "technical-skills.html" . }}
+        </div>
+      </article>
 
-		{{- /* Enhanced E-E-A-T with Let's Connect */ -}}
-		{{ partial "author-eeat.html" . }}
-	</div>
+      <section class="series-index" id="project-showcase">
+        <header class="series-header">
+          <h2>What I actually build (github)</h2>
+          <p class="series-description">Here's where your compile-time safety meets my runtime reality.</p>
+        </header>
 
-	{{ partial "footer.html" . }}
+        <div class="series-content">
+
+          {{- /* FlowForge */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🔧</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/flowforge" target="_blank" rel="noopener noreferrer">flowforge</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Type-safe Data Engineering framework that catches schema issues at compile time, not in production</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/data-engineering/">data engineering</a>
+              <a class="tag" href="/tags/framework/">framework</a>
+              <a class="tag" href="/tags/type-safety/">type safety</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/flowforge" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* LLM4S */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🤖</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/llm4s" target="_blank" rel="noopener noreferrer">llm4s</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Type-safe LLM applications in Scala with compile-time prompt validation and structured outputs</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/ai/">ai</a>
+              <a class="tag" href="/tags/llm/">llm</a>
+              <a class="tag" href="/tags/type-safety/">type safety</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/llm4s" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* ScalaSQL */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🗃️</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/scalasql" target="_blank" rel="noopener noreferrer">scalasql</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Type-safe SQL DSL for Scala with compile-time query validation and database interactions</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/sql/">sql</a>
+              <a class="tag" href="/tags/database/">database</a>
+              <a class="tag" href="/tags/type-safety/">type safety</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/scalasql" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Compile-time Data Contracts */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">📊</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/compile-time-data-contracts" target="_blank" rel="noopener noreferrer">compile-time-data-contracts</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Enforcing compile‑time data contracts to data pipelines using Scala 3 macros</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala-3/">scala 3</a>
+              <a class="tag" href="/tags/macros/">macros</a>
+              <a class="tag" href="/tags/data-contracts/">data contracts</a>
+              <a class="tag" href="/tags/pipelines/">pipelines</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/compile-time-data-contracts" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Abortable Bytes */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">⏹️</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/abortable-bytes" target="_blank" rel="noopener noreferrer">abortable-bytes</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Graceful cancellation for file operations - because interrupted uploads shouldn't corrupt your data</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/concurrency/">concurrency</a>
+              <a class="tag" href="/tags/file-io/">file io</a>
+              <a class="tag" href="/tags/cats-effect/">cats effect</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/abortable-bytes" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* ZIO Spark */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">⚡</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/zio-spark" target="_blank" rel="noopener noreferrer">zio-spark</a>
+              </h3>
+            </div>
+            <p class="series-card-description">ZIO integration for Apache Spark with effect-safe data processing and functional programming patterns</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/zio/">zio</a>
+              <a class="tag" href="/tags/spark/">spark</a>
+              <a class="tag" href="/tags/functional-programming/">functional programming</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/zio-spark" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Valmuri */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🚀</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/valmuri" target="_blank" rel="noopener noreferrer">valmuri</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Full-stack Scala web framework that starts in 50ms with zero external dependencies</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/web-framework/">web framework</a>
+              <a class="tag" href="/tags/performance/">performance</a>
+              <a class="tag" href="/tags/zero-deps/">zero deps</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/valmuri" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* DataFusion */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🔥</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/datafusion" target="_blank" rel="noopener noreferrer">datafusion</a>
+              </h3>
+            </div>
+            <p class="series-card-description">High-performance query engine for analytical workloads with Arrow integration</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/rust/">rust</a>
+              <a class="tag" href="/tags/query-engine/">query engine</a>
+              <a class="tag" href="/tags/arrow/">arrow</a>
+              <a class="tag" href="/tags/analytics/">analytics</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/datafusion" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Data Pipelines Essentials Python */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🐍</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/datapipelines-essentials-python" target="_blank" rel="noopener noreferrer">datapipelines-essentials-python</a>
+              </h3>
+            </div>
+            <p class="series-card-description">ETL processes in Hadoop/Spark with SparkSession extensions and DataFrame validation</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/python/">python</a>
+              <a class="tag" href="/tags/spark/">spark</a>
+              <a class="tag" href="/tags/etl/">etl</a>
+              <a class="tag" href="/tags/data-pipelines/">data pipelines</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/datapipelines-essentials-python" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+          {{- /* DataEngineering Savvy */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🎯</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89/dataengineering-savvy" target="_blank" rel="noopener noreferrer">dataengineering-savvy</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Applying functional programming principles to data engineering with composable algorithm steps</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/functional-programming/">functional programming</a>
+              <a class="tag" href="/tags/data-engineering/">data engineering</a>
+              <a class="tag" href="/tags/algorithms/">algorithms</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89/dataengineering-savvy" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                View Repository →
+              </a>
+            </div>
+          </div>
+
+
+        </div>
+      </section>
+
+      {{- /* Professional Timeline - Cards Section */ -}}
+      <section class="series-index" id="professional-timeline">
+        <header class="series-header">
+          <h2>Professional Timeline</h2>
+          <p class="series-description">Career journey and professional milestones in data engineering and software development.</p>
+        </header>
+
+        <div class="series-content">
+          {{- /* Current Role Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🏢</div>
+              <h3 class="series-card-title">
+                <a href="/tags/walmart/">Staff Data Engineer - Walmart Global Tech</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Leading data architecture and engineering initiatives at enterprise scale, building systems that handle mind-boggling data volumes</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/walmart/">walmart</a>
+              <a class="tag" href="/tags/staff-engineer/">staff engineer</a>
+              <a class="tag" href="/tags/data-architecture/">data architecture</a>
+              <a class="tag" href="/tags/enterprise/">enterprise</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/walmart/" class="series-card-link">
+                View Work Experience →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Speaking Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🎤</div>
+              <h3 class="series-card-title">
+                <a href="/tags/speaking/">Technical Speaker & Educator</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Speaking at conferences and meetups across 6+ countries, sharing insights on functional programming and data engineering</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/speaking/">speaking</a>
+              <a class="tag" href="/tags/scala-days/">scala days</a>
+              <a class="tag" href="/tags/conferences/">conferences</a>
+              <a class="tag" href="/tags/education/">education</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/speaking/" class="series-card-link">
+                View Speaking Engagements →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Open Source Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🚀</div>
+              <h3 class="series-card-title">
+                <a href="/tags/gsoc/">GSoC Mentor & Open Source Leader</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Google Summer of Code mentor, active open source contributor, and maintainer of multiple Scala frameworks</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/gsoc/">gsoc</a>
+              <a class="tag" href="/tags/mentoring/">mentoring</a>
+              <a class="tag" href="/tags/open-source/">open source</a>
+              <a class="tag" href="/tags/community/">community</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/gsoc/" class="series-card-link">
+                View Open Source Work →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {{- /* Technical Skills - Cards Section */ -}}
+      <section class="series-index" id="technical-skills">
+        <header class="series-header">
+          <h2>Technical Arsenal (Battle-tested)</h2>
+          <p class="series-description">Because good tools matter when you're building things that actually need to work.</p>
+        </header>
+
+        <div class="series-content">
+          {{- /* Core Programming Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">⚡</div>
+              <h3 class="series-card-title">
+                <a href="/tags/scala/">Core Programming</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Primary expertise in functional programming with Scala, plus supporting languages for enterprise data systems</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala/">scala</a>
+              <a class="tag" href="/tags/functional-programming/">functional programming</a>
+              <a class="tag" href="/tags/python/">python</a>
+              <a class="tag" href="/tags/java/">java</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/scala/" class="series-card-link">
+                Explore Scala Posts →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Cloud & Distributed Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">☁️</div>
+              <h3 class="series-card-title">
+                <a href="/tags/gcp/">Cloud & Distributed Systems</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Expertise in cloud-native data architectures and distributed computing at enterprise scale</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/gcp/">gcp</a>
+              <a class="tag" href="/tags/aws/">aws</a>
+              <a class="tag" href="/tags/kafka/">kafka</a>
+              <a class="tag" href="/tags/kubernetes/">kubernetes</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/gcp/" class="series-card-link">
+                Explore Cloud Posts →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Data Engineering Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🚀</div>
+              <h3 class="series-card-title">
+                <a href="/tags/data-engineering/">Data Engineering</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Building scalable data pipelines, architectures, and modern cloud data systems with type safety</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/data-engineering/">data engineering</a>
+              <a class="tag" href="/tags/spark/">spark</a>
+              <a class="tag" href="/tags/pipelines/">pipelines</a>
+              <a class="tag" href="/tags/big-data/">big data</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/data-engineering/" class="series-card-link">
+                Explore Data Engineering →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Frameworks & SDKs Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🔧</div>
+              <h3 class="series-card-title">
+                <a href="/tags/cats-effect/">Effect Systems & Frameworks</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Type-safe design with effect systems, compile-time validation, and functional architecture patterns</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/cats-effect/">cats effect</a>
+              <a class="tag" href="/tags/zio/">zio</a>
+              <a class="tag" href="/tags/type-safety/">type safety</a>
+              <a class="tag" href="/tags/macros/">macros</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/cats-effect/" class="series-card-link">
+                Explore Effect Systems →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {{- /* Author Section - Cards Section */ -}}
+      <section class="series-index" id="author-section">
+        <header class="series-header">
+          <h2>About the Author</h2>
+          <p class="series-description">Professional expertise and contributions to the tech community.</p>
+        </header>
+
+        <div class="series-content">
+          {{- /* Professional Role Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🏆</div>
+              <h3 class="series-card-title">
+                <a href="/tags/career/">Staff Data Engineer</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Senior-level expertise in distributed systems and data architecture at Walmart Global Tech</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/career/">career</a>
+              <a class="tag" href="/tags/walmart/">walmart</a>
+              <a class="tag" href="/tags/architecture/">architecture</a>
+              <a class="tag" href="/tags/leadership/">leadership</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/career/" class="series-card-link">
+                View Career Posts →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Speaker & Educator Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🎓</div>
+              <h3 class="series-card-title">
+                <a href="/tags/speaking/">Technical Speaker & Educator</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Regular speaker at conferences and technical meetups across 6+ countries sharing functional programming insights</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/speaking/">speaking</a>
+              <a class="tag" href="/tags/conferences/">conferences</a>
+              <a class="tag" href="/tags/education/">education</a>
+              <a class="tag" href="/tags/mentoring/">mentoring</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/speaking/" class="series-card-link">
+                View Speaking →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Open Source Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🚀</div>
+              <h3 class="series-card-title">
+                <a href="/tags/open-source/">Open Source Contributor</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Active contributor to data engineering tools, GSoC mentor, and maintainer of functional programming frameworks</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/open-source/">open source</a>
+              <a class="tag" href="/tags/community/">community</a>
+              <a class="tag" href="/tags/gsoc/">gsoc</a>
+              <a class="tag" href="/tags/collaboration/">collaboration</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/open-source/" class="series-card-link">
+                Explore Open Source →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Philosophy Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🎯</div>
+              <h3 class="series-card-title">
+                <a href="/tags/philosophy/">Technical Philosophy</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Type safety first, pure functions, compile-time validation, and building tools that developers actually enjoy using</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/philosophy/">philosophy</a>
+              <a class="tag" href="/tags/best-practices/">best practices</a>
+              <a class="tag" href="/tags/developer-experience/">developer experience</a>
+              <a class="tag" href="/tags/productivity/">productivity</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/philosophy/" class="series-card-link">
+                Explore Philosophy →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Contact & Connect Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🌍</div>
+              <h3 class="series-card-title">
+                <a href="https://github.com/vim89" target="_blank" rel="noopener noreferrer">Let's Connect</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Based in Mumbai, India. Always up for discussions about functional programming, data engineering, and cutting chai</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/mumbai/">mumbai</a>
+              <a class="tag" href="/tags/networking/">networking</a>
+              <a class="tag" href="/tags/collaboration/">collaboration</a>
+              <a class="tag" href="/tags/coffee-chat/">coffee chat</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="https://github.com/vim89" class="series-card-link" target="_blank" rel="noopener noreferrer">
+                Connect on GitHub →
+              </a>
+            </div>
+          </div>
+
+          {{- /* Achievement Card */ -}}
+          <div class="series-card">
+            <div class="series-card-header">
+              <div class="topic-icon">🏅</div>
+              <h3 class="series-card-title">
+                <a href="/tags/achievements/">Recent Achievements</a>
+              </h3>
+            </div>
+            <p class="series-card-description">Scala Days speaker, GSoC mentor, conference talks across multiple countries, and active open source contributions</p>
+            <div class="series-article-tags">
+              <a class="tag" href="/tags/scala-days/">scala days</a>
+              <a class="tag" href="/tags/gsoc/">gsoc</a>
+              <a class="tag" href="/tags/awards/">awards</a>
+              <a class="tag" href="/tags/recognition/">recognition</a>
+            </div>
+            <div class="series-card-footer">
+              <a href="/tags/achievements/" class="series-card-link">
+                View Achievements →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    {{ partial "footer.html" . }}
+  </footer>
+
+  <style>
+  .series-index { width: 100%; padding: 1rem 2rem; }
+  .series-header { text-align: left; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border, #e1e5e9); padding-bottom: 1.5rem; }
+  .series-header h1 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--color-primary, #333); }
+  .series-description { font-size: 1.2rem; color: var(--color-text-secondary, #666); line-height: 1.6; max-width: none; }
+  .series-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem; line-height: 1.7; }
+  .series-content h2 { margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary, #333); border-bottom: 2px solid var(--color-accent, #007acc); padding-bottom: .5rem; }
+  .series-content h3 { margin-top: 1.5rem; margin-bottom: .75rem; }
+  /* Special styling for about personal content */
+  .about-personal-content { grid-column: 1 / -1; margin-bottom: 2rem; line-height: 1.7; max-width: none; }
+  .series-icon { font-size: 2rem; flex-shrink: 0; }
+
+  /* Full width sections using same grid layout */
+  .full-width-section { width: 100%; padding: 2rem; margin: 2rem 0; }
+  .full-width-section h2 { font-size: 2.2rem; margin-bottom: 1rem; color: var(--color-primary, #333); border-bottom: 2px solid var(--color-accent, #007acc); padding-bottom: .5rem; text-align: left; }
+  .section-subtitle { font-size: 1.1rem; color: var(--color-text-secondary, #666); margin-bottom: 2rem; text-align: left; }
+
+  /* Apply same grid layout to full-width sections */
+  .full-width-section .projects-showcase,
+  .full-width-section .technical-skills,
+  .full-width-section .author-eeat {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    line-height: 1.7;
+  }
+
+  /* Hide duplicate headings from partials */
+  .full-width-section .projects-showcase h2:first-child,
+  .full-width-section .technical-skills h2:first-child,
+  .full-width-section .author-eeat h2:first-child { display: none; }
+  .full-width-section .projects-showcase .showcase-subtitle,
+  .full-width-section .technical-skills .skills-intro,
+  .full-width-section .author-eeat .author-title { display: none; }
+
+  @media (max-width: 768px) {
+    .series-index { padding: 1rem }
+    .series-header h1 { font-size:2rem }
+    .series-description { font-size:1rem; }
+    .series-icon { font-size:1.5rem }
+    .full-width-section { padding: 1rem; }
+    .full-width-section h2 { font-size: 1.8rem; }
+  }
+  </style>
+
 </body>
 
 </html>
