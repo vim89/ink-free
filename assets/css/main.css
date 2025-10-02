@@ -245,6 +245,11 @@ ul {
     overflow-x: auto;
 }
 
+/* Keep article content full width within the TOC grid */
+/* (reverted) no article-specific max-width overrides */
+
+/* Removed article override; width now controlled by static TOC layout */
+
 .wrapper {
     max-width: 90%;
     margin: 0 auto;
@@ -706,6 +711,9 @@ nav {
     color: var(--accent-color);
     transition: all 50ms ease-in-out;
 }
+
+/* Align article header flush-left within floating TOC layout */
+/* (reverted) keep original post-header layout */
 
 .toc li::marker {
     color: var(--accent-color);
