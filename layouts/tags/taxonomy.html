@@ -25,17 +25,14 @@
 
         <section aria-labelledby="popular-tags-block" style="margin-bottom:2rem;">
           <h2 id="popular-tags-block">Most Popular Tags</h2>
-          <div class="series-article-tags">
+          <div class="series-article-tags" style="margin-bottom:.5rem;">
             {{ range first 24 .Data.Terms.ByCount }}
               {{ $cnt := .Count }}
               {{ $size := cond (ge $cnt 15) "1.25" (cond (ge $cnt 10) "1.15" (cond (ge $cnt 5) "1.05" "1.0")) }}
-              <a class="tag" href="{{ .Page.RelPermalink }}" title="{{ .Page.Title }} ({{ $cnt }} {{ if eq $cnt 1 }}post{{ else }}posts{{ end }})" style="font-size: {{ $size }}rem;">
-                {{ .Page.Title }}<sup class="tag-count">{{ $cnt }}</sup>
-              </a>
+              <a class="tag" href="{{ .Page.RelPermalink }}" title="{{ .Page.Title }} ({{ $cnt }} {{ if eq $cnt 1 }}post{{ else }}posts{{ end }})" style="font-size: {{ $size }}rem;">{{ .Page.Title }}<sup class="tag-count">{{ $cnt }}</sup></a>
             {{ end }}
           </div>
-
-          <div style="margin-top:1rem;">
+          <div>
             {{ range first 10 .Data.Terms.ByCount }}
               {{ $tag := . }}
               {{ $co := newScratch }}
