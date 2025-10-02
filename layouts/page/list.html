@@ -1,6 +1,6 @@
 {{ if eq .Section "topics" }}
 <!DOCTYPE html>
-<html {{- if (eq .Site.Params.mode "dark") -}}class="dark"{{ end }}>
+<html lang="{{ .Site.Language.Lang }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
 {{ partial "header.html" . }}
 
 <body>
@@ -49,7 +49,7 @@
 </html>
 {{ else }}
 <!DOCTYPE html>
-<html {{- if (eq .Site.Params.mode "dark") -}}class="dark"{{ end }}>
+<html lang="{{ .Site.Language.Lang }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
 {{ partial "header.html" . }}
 
 <body>

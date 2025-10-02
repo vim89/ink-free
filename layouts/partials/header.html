@@ -44,6 +44,16 @@
 	{{- end -}}
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{{- /* Meta description for SEO */ -}}
+	{{- if .IsHome -}}
+	<meta name="description" content="{{ .Site.Params.description }}">
+	{{- else if .Description -}}
+	<meta name="description" content="{{ .Description }}">
+	{{- else if .Summary -}}
+	<meta name="description" content="{{ .Summary | truncate 160 }}">
+	{{- else -}}
+	<meta name="description" content="{{ .Site.Params.description }}">
+	{{- end -}}
 	{{ with .OutputFormats.Get "rss" -}}
 	{{ printf `
 	<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
