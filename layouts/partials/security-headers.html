@@ -81,8 +81,12 @@
 {{- /* Build final CSP header */ -}}
 {{- $cspHeader := delimit $cspDirectives "; " -}}
 
-{{- /* Use Content-Security-Policy-Report-Only for initial deployment */ -}}
+{{- /* Use CSP Report-Only in development, enforcing in production */ -}}
+{{- if $isDevelopment -}}
 <meta http-equiv="Content-Security-Policy-Report-Only" content="{{ $cspHeader }}">
+{{- else -}}
+<meta http-equiv="Content-Security-Policy" content="{{ $cspHeader }}">
+{{- end -}}
 
 {{- /* Security Headers via meta tags (limited effectiveness, but better than nothing) */ -}}
 {{- /* X-Content-Type-Options */ -}}
