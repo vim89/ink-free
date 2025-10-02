@@ -6,7 +6,11 @@
   <div class="container wrapper tags">
     {{ partial "head.html" . }}
 
-    <h1 class="page-title">Tag: {{ .Title }}</h1>
+    <h1 class="page-title">Tag: {{ .Title }}
+      {{ with .OutputFormats.Get "rss" }}
+      <a href="{{ .Permalink }}" title="Subscribe to {{ $.Title }} RSS" class="rss-link" style="font-size:0.8rem; margin-left:0.5rem;">RSS</a>
+      {{ end }}
+    </h1>
 
     <ul class="posts flat">
       {{ range .Pages }}

@@ -8,7 +8,11 @@
 
     <article class="tags-list" id="main-content">
       <header class="tags-list-header">
-        <h1>Tags & Statistics</h1>
+        <h1>Tags & Statistics
+          {{ with .OutputFormats.Get "rss" }}
+          <a href="{{ .Permalink }}" title="Subscribe to all tags RSS" class="rss-link" style="font-size:0.8rem; margin-left:0.5rem;">RSS</a>
+          {{ end }}
+        </h1>
         <p class="tags-list-description">
           Explore content by topic tags and discover popular themes across all articles.
         </p>
@@ -16,49 +20,94 @@
 
       <div class="tags">
         {{ if .Data.Terms }}
-        <ul class="flat">
-          {{ range .Data.Terms.ByCount }}
-            {{ $tagCount := .Count }}
-            {{ $tagSize := cond (ge $tagCount 10) "tag-xl" (cond (ge $tagCount 5) "tag-lg" (cond (ge $tagCount 3) "tag-md" "tag-sm")) }}
-            <li class="tag-li">
-              <a href="{{ .Page.RelPermalink }}" class="tag-cloud-item {{ $tagSize }}" title="{{ .Page.Title }} ({{ $tagCount }} {{ if eq $tagCount 1 }}post{{ else }}posts{{ end }})">
-                <span class="tag-name">{{ .Page.Title }}</span>
-                <span class="tag-count">{{ $tagCount }}</span>
+
+        {{/* Removed Jump-to A–Z for cleaner layout */}}
+
+        <section aria-labelledby="popular-tags-block" style="margin-bottom:2rem;">
+          <h2 id="popular-tags-block">Most Popular Tags</h2>
+          <div class="series-article-tags">
+            {{ range first 24 .Data.Terms.ByCount }}
+              {{ $cnt := .Count }}
+              {{ $size := cond (ge $cnt 15) "1.25" (cond (ge $cnt 10) "1.15" (cond (ge $cnt 5) "1.05" "1.0")) }}
+              <a class="tag" href="{{ .Page.RelPermalink }}" title="{{ .Page.Title }} ({{ $cnt }} {{ if eq $cnt 1 }}post{{ else }}posts{{ end }})" style="font-size: {{ $size }}rem;">
+                {{ .Page.Title }}<sup class="tag-count">{{ $cnt }}</sup>
               </a>
-            </li>
+            {{ end }}
+          </div>
+
+          <div style="margin-top:1rem;">
+            {{ range first 10 .Data.Terms.ByCount }}
+              {{ $tag := . }}
+              {{ $co := newScratch }}
+              {{ range $tag.Pages }}
+                {{ with .Params.tags }}
+                  {{ range . }}
+                    {{ $name := . }}
+                    {{ if ne (lower $name) (lower $tag.Page.Title) }}
+                      {{ $key := printf "c:%s" $name }}
+                      {{ $prev := default 0 ($co.Get $key) }}
+                      {{ $co.Set $key (add $prev 1) }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+              <div style="margin:.35rem 0;">
+                <strong style="margin-right:.35rem;"><a href="{{ $tag.Page.RelPermalink }}">{{ $tag.Page.Title }}</a>:</strong>
+                {{ $printed := newScratch }}
+                {{ $printed.Set "i" 0 }}
+                <span class="series-article-tags" style="display:inline-flex;">
+                  {{ range $name, $_ := site.Taxonomies.tags }}
+                    {{ if lt ($printed.Get "i") 6 }}
+                      {{ $count := default 0 ($co.Get (printf "c:%s" $name)) }}
+                      {{ if gt $count 0 }}
+                        <a class="tag" href="{{ (printf "/tags/%s/" ($name | urlize)) | relLangURL }}" title="{{ $name }} ({{ $count }})" style="margin-right:.35rem;">{{ $name }}<sup class="tag-count">{{ $count }}</sup></a>
+                        {{ $printed.Set "i" (add ($printed.Get "i") 1) }}
+                      {{ end }}
+                    {{ end }}
+                  {{ end }}
+                </span>
+              </div>
+            {{ end }}
+          </div>
+        </section>
+
+        {{/* Recently Active Tags: sort by most recent post date for the term */}}
+        {{ $recent := slice }}
+        {{ range .Data.Terms.ByCount }}
+          {{ $last := time "1970-01-01" }}
+          {{ range .Pages }}
+            {{ if gt .Date $last }}{{ $last = .Date }}{{ end }}
           {{ end }}
-        </ul>
+          {{ $recent = $recent | append (dict "term" . "last" $last) }}
+        {{ end }}
+        {{ $recent = sort $recent "last" "desc" }}
+
+        <section aria-labelledby="recent-tags-block" style="margin-bottom:2rem;">
+          <h2 id="recent-tags-block">Recently Active Tags</h2>
+          <div class="series-article-tags">
+            {{ range first 24 $recent }}
+              {{ $t := .term }}
+              <a class="tag" href="{{ $t.Page.RelPermalink }}" title="{{ $t.Page.Title }} ({{ $t.Count }} {{ if eq $t.Count 1 }}post{{ else }}posts{{ end }})">{{ $t.Page.Title }}<sup class="tag-count">{{ $t.Count }}</sup></a>
+            {{ end }}
+          </div>
+        </section>
 
         <div class="tags-stats">
           <h2>Tag Statistics</h2>
-          <div class="stats-summary">
-            <div class="stat-item">
-              <span class="stat-number">{{ len .Data.Terms }}</span>
-              <span class="stat-label">Total Tags</span>
+          <div class="stats-summary" style="display:flex; flex-wrap:wrap; gap:.75rem;">
+            <div class="stat-item" style="background: var(--color-bg-secondary, #f8f9fa); border:1px solid var(--color-border, #e1e5e9); border-radius:10px; padding:.75rem 1rem; min-width:160px;">
+              <span class="stat-number" style="display:block; font-weight:700; font-size:1.35rem;">{{ len .Data.Terms }}</span>
+              <span class="stat-label" style="opacity:.8;">Total Tags</span>
             </div>
-            <div class="stat-item">
-              <span class="stat-number">{{ .Site.RegularPages | len }}</span>
-              <span class="stat-label">Total Posts</span>
+            <div class="stat-item" style="background: var(--color-bg-secondary, #f8f9fa); border:1px solid var(--color-border, #e1e5e9); border-radius:10px; padding:.75rem 1rem; min-width:160px;">
+              <span class="stat-number" style="display:block; font-weight:700; font-size:1.35rem;">{{ .Site.RegularPages | len }}</span>
+              <span class="stat-label" style="opacity:.8;">Total Posts</span>
             </div>
-            <div class="stat-item">
+            <div class="stat-item" style="background: var(--color-bg-secondary, #f8f9fa); border:1px solid var(--color-border, #e1e5e9); border-radius:10px; padding:.75rem 1rem; min-width:160px;">
               {{ $avg := div (add (.Site.RegularPages | len) 1) (add (len .Data.Terms) 1) }}
-              <span class="stat-number">{{ $avg }}</span>
-              <span class="stat-label">Avg Posts/Tag</span>
+              <span class="stat-number" style="display:block; font-weight:700; font-size:1.35rem;">{{ $avg }}</span>
+              <span class="stat-label" style="opacity:.8;">Avg Posts/Tag</span>
             </div>
-          </div>
-
-          <div class="popular-tags">
-            <h3>Most Popular Tags</h3>
-            <ul class="popular-tags-list">
-              {{ range first 10 .Data.Terms.ByCount }}
-              <li class="popular-tag-item">
-                <a href="{{ .Page.RelPermalink }}" class="popular-tag-link">
-                  <span class="popular-tag-name">{{ .Page.Title }}</span>
-                  <span class="popular-tag-count">{{ .Count }} {{ if eq .Count 1 }}post{{ else }}posts{{ end }}</span>
-                </a>
-              </li>
-              {{ end }}
-            </ul>
           </div>
         </div>
         {{ else }}
@@ -70,10 +119,10 @@
       </div>
 
       <footer class="tags-list-footer">
-        <div class="tags-navigation">
-          <a href="/topics/" class="related-link">Browse Topics</a>
-          <a href="/series/" class="related-link">Browse Series</a>
-          <a href="/posts/" class="related-link">All Posts</a>
+        <div class="tags-navigation" style="display:flex; gap:.5rem; flex-wrap:wrap;">
+          <a href="/topics/" class="series-card-link">Browse Topics</a>
+          <a href="/series/" class="series-card-link">Browse Series</a>
+          <a href="/posts/" class="series-card-link">All Posts</a>
         </div>
       </footer>
     </article>
