@@ -1,0 +1,39 @@
+{{- /*
+  Component: Difficulty Badge
+  Purpose: Display visual difficulty indicator for articles
+
+  Parameters:
+    - .difficulty (string): Difficulty level (beginner, intermediate, advanced, expert)
+
+  Usage:
+    {{ partial "components/ui/difficulty_badge.html" (dict "difficulty" "intermediate" "Site" .Site) }}
+*/ -}}
+
+{{- $difficulty := .difficulty | default "intermediate" -}}
+{{- $difficultyData := index .Site.Data.difficulty $difficulty -}}
+
+{{- if $difficultyData -}}
+<span
+  class="difficulty-badge difficulty-{{ $difficulty }}"
+  title="{{ $difficultyData.description }}"
+  aria-label="Difficulty level: {{ $difficultyData.name }}"
+  role="img"
+>
+  <span class="difficulty-icon" aria-hidden="true">{{ $difficultyData.icon }}</span>
+  <span class="difficulty-name">{{ $difficultyData.name }}</span>
+</span>
+
+<style>
+  .difficulty-badge.difficulty-{{ $difficulty }} {
+    background-color: {{ $difficultyData.bgColor }};
+    color: {{ $difficultyData.textColor }};
+    border-left-color: {{ $difficultyData.color }};
+  }
+
+  .dark .difficulty-badge.difficulty-{{ $difficulty }} {
+    background-color: {{ $difficultyData.darkBgColor }};
+    color: {{ $difficultyData.darkTextColor }};
+    border-left-color: {{ $difficultyData.color }};
+  }
+</style>
+{{- end -}}

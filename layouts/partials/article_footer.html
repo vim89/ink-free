@@ -13,9 +13,18 @@
     {{ end }}
 </div>
 
-{{- /* Related Content Section */ -}}
+{{- /* Author Bio Section */ -}}
+{{ if and (eq .Type "posts") (not .Params.hideAuthor) }}
+    {{- $authorId := .Params.author | default "vitthal-mirji" -}}
+    {{ partial "components/author/bio.html" (dict "authorId" $authorId "Site" .Site) }}
+{{ end }}
+
+{{- /* Social Sharing Section */ -}}
+{{ partial "social_share.html" . }}
+
+{{- /* Related Content Section (Advanced Algorithm) */ -}}
 {{ if and (eq .Type "posts") (gt .WordCount 200) }}
-    {{ partial "related_articles.html" . }}
+    {{ partial "related_articles_advanced.html" . }}
 {{ end }}
 
 {{ if isset .Site.Params "github" }}

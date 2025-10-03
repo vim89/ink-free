@@ -1,0 +1,74 @@
+{{- /*
+  Component: Prefetch Related Links
+  Purpose: Prefetch related articles on idle for instant navigation
+
+  Features:
+    - Uses requestIdleCallback for performance
+    - Prefetches top 5 related articles
+    - Falls back gracefully if API not supported
+    - No impact on page load performance
+
+  Usage:
+    {{ partial "prefetch_links.html" . }}
+
+  Browser Support:
+    - Chrome 47+
+    - Firefox 55+
+    - Safari: Not supported (falls back gracefully)
+    - Edge 79+
+*/ -}}
+
+{{- $related := .Site.RegularPages.Related . | first 5 -}}
+{{- if $related -}}
+<script>
+(function() {
+  'use strict';
+
+  // Check browser support for requestIdleCallback
+  if (!('requestIdleCallback' in window)) {
+    // Fallback: use setTimeout with long delay
+    if (typeof setTimeout !== 'undefined') {
+      setTimeout(function() {
+        prefetchRelatedArticles();
+      }, 3000);
+    }
+    return;
+  }
+
+  // Prefetch related articles when browser is idle
+  requestIdleCallback(function() {
+    prefetchRelatedArticles();
+  }, { timeout: 2000 });
+
+  function prefetchRelatedArticles() {
+    const relatedLinks = [
+      {{- range $related -}}
+      '{{ .RelPermalink }}',
+      {{- end -}}
+    ];
+
+    relatedLinks.forEach(function(url) {
+      // Check if already prefetched
+      const existing = document.querySelector('link[rel="prefetch"][href="' + url + '"]');
+      if (existing) {
+        return;
+      }
+
+      // Create prefetch link
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = url;
+      link.as = 'document';
+
+      // Add to head
+      document.head.appendChild(link);
+
+      // Debug logging (only in development)
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('[Prefetch] Queued:', url);
+      }
+    });
+  }
+})();
+</script>
+{{- end -}}

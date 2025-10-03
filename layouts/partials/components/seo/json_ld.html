@@ -1,0 +1,82 @@
+{{- /*
+  Component: JSON-LD Structured Data
+  Purpose: Generate Schema.org structured data for better SEO
+
+  Generates:
+    - Article schema for posts
+    - WebSite schema for homepage
+    - BreadcrumbList schema for navigation
+
+  Usage:
+    {{ partial "components/seo/json_ld.html" . }}
+*/ -}}
+
+{{- $authorId := .Params.author | default "vitthal-mirji" -}}
+{{- $author := index .Site.Data.authors $authorId -}}
+
+{{- if eq .Type "posts" -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ .Title | jsonify }},
+  "description": {{ with .Description }}{{ . | jsonify }}{{ else }}{{ .Summary | plainify | jsonify }}{{ end }},
+  "image": {{ with .Params.image }}{{ (. | absURL) | jsonify }}{{ else }}{{ "/images/default-og.png" | absURL | jsonify }}{{ end }},
+  "datePublished": {{ .Date.Format "2006-01-02T15:04:05Z07:00" | jsonify }},
+  {{- with .Lastmod -}}
+  "dateModified": {{ .Format "2006-01-02T15:04:05Z07:00" | jsonify }},
+  {{- end -}}
+  "author": {
+    "@type": "Person",
+    "name": {{ if $author }}{{ $author.fullName | default $author.name | jsonify }}{{ else }}"Vitthal Mirji"{{ end }},
+    {{- if and $author $author.website -}}
+    "url": {{ $author.website | jsonify }},
+    {{- end -}}
+    {{- if and $author $author.twitter -}}
+    "sameAs": [
+      {{ printf "https://twitter.com/%s" $author.twitter | jsonify }}
+    ],
+    {{- end -}}
+    "jobTitle": {{ if $author }}{{ $author.role | jsonify }}{{ else }}"Staff Data Engineer"{{ end }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ .Site.Title | jsonify }},
+    "url": {{ .Site.BaseURL | jsonify }},
+    "logo": {
+      "@type": "ImageObject",
+      "url": {{ "/images/logo.png" | absURL | jsonify }}
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ .Permalink | jsonify }}
+  },
+  {{- with .Params.tags -}}
+  "keywords": {{ delimit . ", " | jsonify }},
+  {{- end -}}
+  {{- with .WordCount -}}
+  "wordCount": {{ . }},
+  {{- end -}}
+  "articleSection": {{ with .Params.categories }}{{ index . 0 | jsonify }}{{ else }}"Technology"{{ end }}
+}
+</script>
+{{- else if .IsHome -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ .Site.Title | jsonify }},
+  "url": {{ .Site.BaseURL | jsonify }},
+  "description": {{ .Site.Params.description | jsonify }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": {{ printf "%s/search/?q={search_term_string}" .Site.BaseURL | jsonify }}
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+{{- end -}}

@@ -1,0 +1,157 @@
+{{- /*
+  Component: Advanced Related Content
+  Purpose: Multi-factor scoring algorithm for related articles
+
+  Algorithm:
+    - Tag matching: Jaccard similarity (intersection / union) × 100
+    - Category match: +80 points for exact match
+    - Series bonus: +150 points if same series
+    - Topic match: +40 points for each matching topic
+    - Recency boost: +20 to 0 points (within 90 days, linear decay)
+    - Threshold: 60 points minimum to be considered related
+
+  Parameters:
+    - Context: Page object (implicit)
+    - .Site.Params.relatedThreshold: Minimum score (default 60)
+
+  Usage:
+    {{ partial "related_articles_advanced.html" . }}
+*/ -}}
+
+{{- $threshold := .Site.Params.relatedThreshold | default 60 -}}
+{{- $related := slice -}}
+{{- $currentTags := .Params.tags | default (slice) -}}
+{{- $currentCategories := .Params.categories | default (slice) -}}
+{{- $currentSeries := .Params.series | default "" -}}
+{{- $currentTopics := .Params.topics | default (slice) -}}
+{{- $currentDate := .Date -}}
+
+{{- /* Score each candidate article */ -}}
+{{- range where .Site.RegularPages "Section" "posts" -}}
+  {{- if and (ne .Permalink $.Permalink) (not .Draft) -}}
+    {{- $score := 0 -}}
+    {{- $candidateTags := .Params.tags | default (slice) -}}
+    {{- $candidateCategories := .Params.categories | default (slice) -}}
+    {{- $candidateSeries := .Params.series | default "" -}}
+    {{- $candidateTopics := .Params.topics | default (slice) -}}
+
+    {{- /* 1. Tag Matching - Jaccard similarity */ -}}
+    {{- if and (gt (len $currentTags) 0) (gt (len $candidateTags) 0) -}}
+      {{- $commonTags := intersect $currentTags $candidateTags -}}
+      {{- $unionTags := union $currentTags $candidateTags -}}
+      {{- if gt (len $unionTags) 0 -}}
+        {{- $tagScore := div (mul (len $commonTags) 100) (len $unionTags) -}}
+        {{- $score = add $score $tagScore -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- /* 2. Category Exact Match */ -}}
+    {{- if and (gt (len $currentCategories) 0) (gt (len $candidateCategories) 0) -}}
+      {{- range $currentCategories -}}
+        {{- if in $candidateCategories . -}}
+          {{- $score = add $score 80 -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- /* 3. Series Bonus (very strong signal) */ -}}
+    {{- if and $currentSeries (eq $candidateSeries $currentSeries) -}}
+      {{- $score = add $score 150 -}}
+    {{- end -}}
+
+    {{- /* 4. Topic Match */ -}}
+    {{- if and (gt (len $currentTopics) 0) (gt (len $candidateTopics) 0) -}}
+      {{- $commonTopics := intersect $currentTopics $candidateTopics -}}
+      {{- $topicBonus := mul (len $commonTopics) 40 -}}
+      {{- $score = add $score $topicBonus -}}
+    {{- end -}}
+
+    {{- /* 5. Recency Boost (within 90 days, linear decay) */ -}}
+    {{- $daysDiff := div (sub $currentDate.Unix .Date.Unix) 86400 -}}
+    {{- if and (gt $daysDiff 0) (lt $daysDiff 90) -}}
+      {{- $recencyBoost := sub 20 (div $daysDiff 5) -}}
+      {{- if gt $recencyBoost 0 -}}
+        {{- $score = add $score (int $recencyBoost) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- /* Add to candidates if above threshold */ -}}
+    {{- if ge $score $threshold -}}
+      {{- $related = $related | append (dict "page" . "score" $score) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Sort by score descending */ -}}
+{{- $related = sort $related "score" "desc" -}}
+
+{{- /* Display top 5 with enhanced metadata */ -}}
+{{- if gt (len $related) 0 -}}
+<aside class="related-content-advanced" aria-label="Related articles">
+  <h3>Related Articles</h3>
+  <ul class="related-articles-list">
+    {{- range first 5 $related -}}
+      {{- $page := .page -}}
+      {{- $matchScore := .score -}}
+      <li class="related-article-item">
+        <article class="related-article">
+          <h4 class="related-article-title">
+            <a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a>
+          </h4>
+
+          {{- if $page.Description -}}
+          <p class="related-article-description">{{ $page.Description | truncate 120 }}</p>
+          {{- else if $page.Summary -}}
+          <p class="related-article-description">{{ $page.Summary | truncate 120 }}</p>
+          {{- end -}}
+
+          <div class="related-article-meta">
+            {{- if not $page.Date.IsZero -}}
+            <time datetime="{{ $page.Date.Format "2006-01-02" }}" class="related-article-date">
+              {{ $page.Date.Format "Jan 2, 2006" }}
+            </time>
+            {{- end -}}
+
+            {{- /* Show match strength indicator */ -}}
+            {{- if ge $matchScore 150 -}}
+            <span class="match-strength match-high" title="High relevance ({{ $matchScore }}% match)">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1l2.5 5 5.5.5-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-.5z"/>
+              </svg>
+              High Match
+            </span>
+            {{- else if ge $matchScore 100 -}}
+            <span class="match-strength match-medium" title="Medium relevance ({{ $matchScore }}% match)">
+              Medium Match
+            </span>
+            {{- else -}}
+            <span class="match-strength match-low" title="Related ({{ $matchScore }}% match)">
+              Related
+            </span>
+            {{- end -}}
+          </div>
+
+          {{- /* Show common tags */ -}}
+          {{- if $page.Params.tags -}}
+          <div class="related-article-tags">
+            {{- range first 3 $page.Params.tags -}}
+            <span class="related-tag">{{ . }}</span>
+            {{- end -}}
+          </div>
+          {{- end -}}
+        </article>
+      </li>
+    {{- end -}}
+  </ul>
+
+  {{- /* Fallback message if fewer than 5 results */ -}}
+  {{- if lt (len $related) 3 -}}
+  <p class="related-note">
+    Looking for more? Browse <a href="/posts/">all articles</a> or explore by <a href="/tags/">tags</a>.
+  </p>
+  {{- end -}}
+</aside>
+{{- else -}}
+  {{- /* Fallback to Hugo's basic related content if no matches */ -}}
+  {{- partial "related_articles.html" . -}}
+{{- end -}}

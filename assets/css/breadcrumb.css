@@ -1,0 +1,72 @@
+/* Breadcrumb Navigation Styling */
+
+.breadcrumb {
+  margin: 1rem 0 2rem 0;
+  padding: 0;
+}
+
+.breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: '›';
+  margin: 0 0.5rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  font-size: 1.2em;
+}
+
+.breadcrumb-item a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--accent-hover);
+  border-bottom: 1px solid var(--accent-color);
+}
+
+.breadcrumb-item.active span {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .breadcrumb {
+    margin: 0.75rem 0 1.5rem 0;
+  }
+
+  .breadcrumb-list {
+    font-size: 0.85rem;
+  }
+
+  .breadcrumb-item:not(:last-child)::after {
+    margin: 0 0.35rem;
+  }
+}
+
+/* Dark mode */
+.dark .breadcrumb-item.active span {
+  color: var(--text-muted);
+}
+
+/* Print styles */
+@media print {
+  .breadcrumb {
+    display: none;
+  }
+}

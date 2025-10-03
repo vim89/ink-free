@@ -12,6 +12,9 @@
 			{{ partial "head.html" . }}
 		</header>
 
+		{{- /* Breadcrumb Navigation */ -}}
+		{{ partial "components/navigation/breadcrumb.html" . }}
+
 		<main role="main" aria-label="Main content" id="main-content">
 			{{ partial "content_floating_toc.html" . }}
 		</main>
@@ -21,6 +24,9 @@
 		<header class="site-header">
 			{{ partial "head.html" . }}
 		</header>
+
+		{{- /* Breadcrumb Navigation */ -}}
+		{{ partial "components/navigation/breadcrumb.html" . }}
 
 		<main role="main" aria-label="Main content" id="main-content">
 			{{ partial "content_static.html" . }}
@@ -36,6 +42,9 @@
 	{{ end }}
 	{{- /* Load conditional scripts (Mermaid, PDF.js) only when needed */ -}}
 	{{ partial "conditional-scripts.html" . }}
+
+	{{- /* Prefetch related articles for instant navigation */ -}}
+	{{ partial "prefetch_links.html" . }}
 </body>
 
 </html>

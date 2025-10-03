@@ -1,0 +1,102 @@
+{{- /*
+  Component: Breadcrumb Navigation
+  Purpose: Display hierarchical navigation path with Schema.org markup
+
+  Usage:
+    {{ partial "components/navigation/breadcrumb.html" . }}
+*/ -}}
+
+{{- if not .IsHome -}}
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    {{- /* Home */ -}}
+    <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/" itemprop="item">
+        <span itemprop="name">Home</span>
+      </a>
+      <meta itemprop="position" content="1" />
+    </li>
+
+    {{- /* Build breadcrumb from page path */ -}}
+    {{- $position := 2 -}}
+    {{- with .CurrentSection -}}
+      {{- if .Parent -}}
+        {{- template "breadcrumb-parent" (dict "context" . "position" $position) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- /* Current page */ -}}
+    {{- if not .IsSection -}}
+    <li class="breadcrumb-item active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <span itemprop="name" aria-current="page">{{ .Title }}</span>
+      <meta itemprop="position" content="{{ add $position 1 }}" />
+    </li>
+    {{- end -}}
+  </ol>
+</nav>
+
+{{- /* JSON-LD for Breadcrumbs */ -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ .Site.BaseURL }}"
+    }
+    {{- $position := 2 -}}
+    {{- with .CurrentSection -}}
+      {{- if .Parent -}}
+        {{- template "breadcrumb-json-parent" (dict "context" . "position" $position "baseURL" $.Site.BaseURL) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if not .IsSection -}}
+    ,{
+      "@type": "ListItem",
+      "position": {{ add $position 1 }},
+      "name": {{ .Title | jsonify }},
+      "item": "{{ .Permalink }}"
+    }
+    {{- end -}}
+  ]
+}
+</script>
+{{- end -}}
+
+{{- /* Template for parent sections */ -}}
+{{- define "breadcrumb-parent" -}}
+  {{- $context := .context -}}
+  {{- $position := .position -}}
+  {{- with $context.Parent -}}
+    {{- if .Parent -}}
+      {{- template "breadcrumb-parent" (dict "context" . "position" $position) -}}
+    {{- end -}}
+  {{- end -}}
+  <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+    <a href="{{ $context.RelPermalink }}" itemprop="item">
+      <span itemprop="name">{{ $context.Title }}</span>
+    </a>
+    <meta itemprop="position" content="{{ $position }}" />
+  </li>
+{{- end -}}
+
+{{- /* Template for JSON-LD parent sections */ -}}
+{{- define "breadcrumb-json-parent" -}}
+  {{- $context := .context -}}
+  {{- $position := .position -}}
+  {{- $baseURL := .baseURL -}}
+  {{- with $context.Parent -}}
+    {{- if .Parent -}}
+      {{- template "breadcrumb-json-parent" (dict "context" . "position" $position "baseURL" $baseURL) -}}
+    {{- end -}}
+  {{- end -}}
+  ,{
+    "@type": "ListItem",
+    "position": {{ $position }},
+    "name": {{ $context.Title | jsonify }},
+    "item": "{{ $context.Permalink }}"
+  }
+{{- end -}}

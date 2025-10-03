@@ -1,0 +1,51 @@
+/* Difficulty Badge Styling */
+
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  border-left: 3px solid;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.difficulty-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.difficulty-name {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Hover effect */
+.difficulty-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .difficulty-badge {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .difficulty-icon {
+    font-size: 0.9rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .difficulty-badge {
+    border: 1px solid #ccc;
+    background: white !important;
+    color: black !important;
+  }
+}

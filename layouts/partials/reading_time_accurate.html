@@ -1,0 +1,64 @@
+{{- /*
+  Component: Accurate Reading Time Calculation
+  Purpose: Calculate reading time with code blocks and images factored in
+
+  Features:
+    - Base reading rate: 250 WPM (technical content)
+    - Code blocks: +30 seconds each
+    - Images: +12 seconds each
+    - Minimum display: 1 minute
+
+  Usage:
+    {{ partial "reading_time_accurate.html" . }}
+
+  Returns: Formatted reading time string (e.g., "5 min read")
+*/ -}}
+
+{{- $content := .Content -}}
+{{- $plainText := .Plain -}}
+{{- $wordCount := .WordCount -}}
+
+{{- /* Count code blocks separately (they're read slower) */ -}}
+{{- $codeBlockCount := 0 -}}
+{{- $rawContent := .RawContent | default "" -}}
+{{- if $rawContent -}}
+  {{- range findRE "```[\\s\\S]*?```" $rawContent -}}
+    {{- $codeBlockCount = add $codeBlockCount 1 -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Count images (fixed time per image for comprehension) */ -}}
+{{- $imageCount := 0 -}}
+{{- if $rawContent -}}
+  {{- range findRE "!\\[.*?\\]\\(.*?\\)" $rawContent -}}
+    {{- $imageCount = add $imageCount 1 -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Base reading time: 250 WPM for technical content (slower than average 200) */ -}}
+{{- $baseMinutes := 0 -}}
+{{- if gt $wordCount 0 -}}
+  {{- $baseMinutes = div $wordCount 250 -}}
+{{- end -}}
+
+{{- /* Add 30 seconds per code block (time to scan and understand) */ -}}
+{{- $codeSeconds := mul $codeBlockCount 30 -}}
+{{- $codeMinutes := div $codeSeconds 60 -}}
+
+{{- /* Add 12 seconds per image (time to view and process) */ -}}
+{{- $imageSeconds := mul $imageCount 12 -}}
+{{- $imageMinutes := div $imageSeconds 60 -}}
+
+{{- /* Calculate total reading time */ -}}
+{{- $totalMinutes := add $baseMinutes (add $codeMinutes $imageMinutes) -}}
+
+{{- /* Ensure minimum of 1 minute */ -}}
+{{- if lt $totalMinutes 1 -}}
+  {{- $totalMinutes = 1 -}}
+{{- end -}}
+
+<span class="reading-time" title="Estimated reading time: {{ $totalMinutes }} minutes ({{ $wordCount }} words, {{ $codeBlockCount }} code blocks, {{ $imageCount }} images)">
+  <i data-feather="clock" aria-hidden="true"></i>
+  <span class="sr-only">Reading time:</span>
+  {{ $totalMinutes }} min read
+</span>

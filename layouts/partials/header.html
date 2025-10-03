@@ -51,7 +51,9 @@
 	<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
 	{{ end -}}
 
-	{{- template "_internal/schema.html" . -}}
+	{{- /* SEO Components */ -}}
+	{{- partial "components/seo/canonical.html" . -}}
+	{{- partial "components/seo/json_ld.html" . -}}
 	{{- template "_internal/opengraph.html" . -}}
 	{{- template "_internal/twitter_cards.html" . -}}
 	{{- /* Hugo Pipes CSS with SRI */ -}}
@@ -60,8 +62,20 @@
 	{{- $markdown := resources.Get "css/github-markdown.css" -}}
 	{{- $codeblocks := resources.Get "css/github-codeblocks.css" -}}
 
+	{{- /* Social share CSS */ -}}
+	{{- $socialShareCSS := resources.Get "css/social-share.css" -}}
+
+	{{- /* Author bio CSS */ -}}
+	{{- $authorBioCSS := resources.Get "css/author-bio.css" -}}
+
+	{{- /* Advanced related content CSS */ -}}
+	{{- $relatedAdvancedCSS := resources.Get "css/related-content-advanced.css" -}}
+
+	{{- /* Breadcrumb CSS */ -}}
+	{{- $breadcrumbCSS := resources.Get "css/breadcrumb.css" -}}
+
 	{{- /* Bundle ALL CSS files to reduce render-blocking requests */ -}}
-	{{- $allCSS := slice $normalize $main $markdown $codeblocks -}}
+	{{- $allCSS := slice $normalize $main $markdown $codeblocks $socialShareCSS $authorBioCSS $relatedAdvancedCSS $breadcrumbCSS -}}
 
 	{{- /* Add tags CSS if on taxonomy pages */ -}}
 	{{- if or (eq .Kind "taxonomy") (eq .Kind "term") -}}

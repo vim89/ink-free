@@ -1,0 +1,134 @@
+{{- /*
+  Component: Author Bio
+  Purpose: Display author information with avatar, bio, and social links
+
+  Parameters:
+    - .authorId (string): Author ID from data/authors.yaml (defaults to "vitthal-mirji")
+
+  Usage:
+    {{ partial "components/author/bio.html" (dict "authorId" "vitthal-mirji") }}
+    {{ partial "components/author/bio.html" (dict "authorId" .Params.author) }}
+*/ -}}
+
+{{- $authorId := .authorId | default "vitthal-mirji" -}}
+{{- $author := index .Site.Data.authors $authorId -}}
+
+{{- if $author -}}
+<div class="author-bio" itemscope itemtype="https://schema.org/Person">
+  <div class="author-bio-header">
+    {{- if $author.avatar -}}
+    <img
+      src="{{ $author.avatar }}"
+      alt="{{ $author.avatarAlt | default (printf "%s profile photo" $author.name) }}"
+      class="author-avatar"
+      itemprop="image"
+      width="80"
+      height="80"
+      loading="lazy"
+    />
+    {{- end -}}
+
+    <div class="author-bio-info">
+      <h4 class="author-name" itemprop="name">{{ $author.fullName | default $author.name }}</h4>
+
+      {{- if or $author.role $author.company -}}
+      <p class="author-position">
+        {{- if $author.role -}}
+          <span itemprop="jobTitle">{{ $author.role }}</span>
+        {{- end -}}
+        {{- if and $author.role $author.company -}}
+          <span> @ </span>
+        {{- end -}}
+        {{- if $author.company -}}
+          <span itemprop="worksFor">{{ $author.company }}</span>
+        {{- end -}}
+      </p>
+      {{- end -}}
+
+      {{- if $author.location -}}
+      <p class="author-location">
+        <i data-feather="map-pin" aria-hidden="true"></i>
+        <span itemprop="address">{{ $author.location }}</span>
+      </p>
+      {{- end -}}
+    </div>
+  </div>
+
+  {{- if $author.bio -}}
+  <p class="author-bio-text" itemprop="description">{{ $author.bio }}</p>
+  {{- end -}}
+
+  {{- if or $author.twitter $author.github $author.linkedin $author.website -}}
+  <div class="author-social-links">
+    {{- if $author.twitter -}}
+    <a
+      href="https://twitter.com/{{ $author.twitter }}"
+      target="_blank"
+      rel="noopener noreferrer me"
+      class="author-social-link"
+      aria-label="Twitter profile"
+      itemprop="sameAs"
+    >
+      <i data-feather="twitter" aria-hidden="true"></i>
+      <span>Twitter</span>
+    </a>
+    {{- end -}}
+
+    {{- if $author.github -}}
+    <a
+      href="https://github.com/{{ $author.github }}"
+      target="_blank"
+      rel="noopener noreferrer me"
+      class="author-social-link"
+      aria-label="GitHub profile"
+      itemprop="sameAs"
+    >
+      <i data-feather="github" aria-hidden="true"></i>
+      <span>GitHub</span>
+    </a>
+    {{- end -}}
+
+    {{- if $author.linkedin -}}
+    <a
+      href="https://www.linkedin.com/in/{{ $author.linkedin }}"
+      target="_blank"
+      rel="noopener noreferrer me"
+      class="author-social-link"
+      aria-label="LinkedIn profile"
+      itemprop="sameAs"
+    >
+      <i data-feather="linkedin" aria-hidden="true"></i>
+      <span>LinkedIn</span>
+    </a>
+    {{- end -}}
+
+    {{- if $author.website -}}
+    <a
+      href="{{ $author.website }}"
+      target="_blank"
+      rel="noopener noreferrer me"
+      class="author-social-link"
+      aria-label="Website"
+      itemprop="url"
+    >
+      <i data-feather="globe" aria-hidden="true"></i>
+      <span>Website</span>
+    </a>
+    {{- end -}}
+  </div>
+  {{- end -}}
+
+  {{- if $author.expertise -}}
+  <div class="author-expertise">
+    <h5>Expertise</h5>
+    <ul class="expertise-tags">
+      {{- range $author.expertise -}}
+      <li><span class="expertise-tag">{{ . }}</span></li>
+      {{- end -}}
+    </ul>
+  </div>
+  {{- end -}}
+
+  <meta itemprop="name" content="{{ $author.fullName | default $author.name }}" />
+</div>
+{{- end -}}
