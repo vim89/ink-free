@@ -156,8 +156,7 @@
 	.dark .site-title a{color:#e0e0e0}
 	</style>
 
-	<link rel="preload" href="{{ $bundledCSS.RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'" integrity="{{ $bundledCSS.Data.Integrity }}">
-	<noscript><link rel="stylesheet" href="{{ $bundledCSS.RelPermalink }}" integrity="{{ $bundledCSS.Data.Integrity }}"></noscript>
+	<link rel="stylesheet" href="{{ $bundledCSS.RelPermalink }}" integrity="{{ $bundledCSS.Data.Integrity }}">
 
 	{{- $enableUmami := and (isset .Site.Params "enableumami") (.Site.Params.enableUmami) -}}
 	{{- $hasURL := isset .Site.Params "umamiurl" -}}
