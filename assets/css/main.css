@@ -660,7 +660,7 @@ code {
     .article-nav {
         display: grid;
         grid-template-columns: 1fr 15em;
-        max-width: 80%;
+        max-width: 100%;
         width: 100%;
     }
 }
