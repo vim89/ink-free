@@ -1,5 +1,25 @@
 /* Accessibility Enhancements */
 
+/* Skip Link - WCAG 2.2 Level A (2.4.1 Bypass Blocks) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-accent, #007acc);
+  color: #ffffff;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-weight: 600;
+  z-index: 10000;
+  border-radius: 0 0 4px 0;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
 
 /* Enhanced Focus States */
 a:focus,

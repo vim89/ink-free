@@ -1,0 +1,26 @@
+{{- /* Related Content - Uses Hugo's built-in related content engine */ -}}
+{{- $related := .Site.RegularPages.Related . | first 5 -}}
+{{- if $related -}}
+<aside class="related-content" aria-label="Related articles">
+  <h3>Related Articles</h3>
+  <ul>
+    {{- range $related -}}
+      <li>
+        <a href="{{ .RelPermalink }}" title="{{ .Title }}">
+          {{ .Title }}
+        </a>
+        {{- if .Description -}}
+          <p class="related-description">{{ .Description | truncate 100 }}</p>
+        {{- else if .Summary -}}
+          <p class="related-description">{{ .Summary | truncate 100 }}</p>
+        {{- end -}}
+        {{- if not .Date.IsZero -}}
+          <time datetime="{{ .Date.Format "2006-01-02" }}" class="related-date">
+            {{ .Date.Format "January 2, 2006" }}
+          </time>
+        {{- end -}}
+      </li>
+    {{- end -}}
+  </ul>
+</aside>
+{{- end -}}

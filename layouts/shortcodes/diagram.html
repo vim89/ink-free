@@ -1,3 +1,5 @@
+{{- /* Mark that this page uses Mermaid */ -}}
+{{- .Page.Scratch.Set "usesMermaid" true -}}
 {{ $diagram := .Inner | safeHTML }}
 <div class="mermaid">
     {{ $diagram }}

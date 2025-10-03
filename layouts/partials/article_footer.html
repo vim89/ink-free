@@ -13,6 +13,11 @@
     {{ end }}
 </div>
 
+{{- /* Related Content Section */ -}}
+{{ if and (eq .Type "posts") (gt .WordCount 200) }}
+    {{ partial "related_articles.html" . }}
+{{ end }}
+
 {{ if isset .Site.Params "github" }}
 <div class="back">
     <a href="{{ .Site.Params.github }}/blob/master/content/{{ .File.Path }}" title="github"><i

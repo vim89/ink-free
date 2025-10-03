@@ -1,3 +1,5 @@
+{{- /* Mark that this page uses PDF.js */ -}}
+{{- .Page.Scratch.Set "usesPDF" true -}}
 {{ $path := .Get "path" }}
 {{ $pdf := .Page.Resources.GetMatch $path }}
 {{ if $pdf }}

@@ -11,15 +11,14 @@
 
 {{- /* script-src: JavaScript sources */ -}}
 {{- $scriptSrc := slice "'self'" -}}
-{{- /* Allow inline scripts for theme functionality and search */ -}}
-{{- $scriptSrc = $scriptSrc | append "'unsafe-inline'" -}}
+{{- /* Removed unsafe-inline for better security - all scripts are external with SRI */ -}}
 {{- /* Allow Plausible analytics if enabled */ -}}
 {{- if .Site.Params.plausibleDomain -}}
 {{- $scriptSrc = $scriptSrc | append "plausible.io" -}}
 {{- end -}}
 {{- /* Allow livereload in development */ -}}
 {{- if $isDevelopment -}}
-{{- $scriptSrc = $scriptSrc | append "'unsafe-eval'" -}}
+{{- $scriptSrc = $scriptSrc | append "'unsafe-eval'" "'unsafe-inline'" -}}
 {{- end -}}
 {{- $cspDirectives = $cspDirectives | append (printf "script-src %s" (delimit $scriptSrc " ")) -}}
 

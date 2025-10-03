@@ -1,0 +1,53 @@
+{{- /*
+Open Graph Image Handler
+Provides fallback and automatic image discovery for social media previews
+Priority:
+1. Front matter 'image' or 'images' parameter
+2. First image in page bundle (page resources)
+3. First image in content
+4. Site-wide default OG image
+*/ -}}
+
+{{- $ogImage := "" -}}
+{{- $absURL := .Site.BaseURL | strings.TrimSuffix "/" -}}
+
+{{- /* Priority 1: Front matter image */ -}}
+{{- with .Params.image -}}
+  {{- if hasPrefix . "http" -}}
+    {{- $ogImage = . -}}
+  {{- else -}}
+    {{- $ogImage = printf "%s%s" $absURL (. | absURL) -}}
+  {{- end -}}
+{{- else with .Params.images -}}
+  {{- $ogImage = index . 0 -}}
+  {{- if not (hasPrefix $ogImage "http") -}}
+    {{- $ogImage = printf "%s%s" $absURL ($ogImage | absURL) -}}
+  {{- end -}}
+{{- else -}}
+  {{- /* Priority 2: Page resources (page bundle images) */ -}}
+  {{- with .Resources.ByType "image" -}}
+    {{- with index . 0 -}}
+      {{- $ogImage = printf "%s%s" $absURL .RelPermalink -}}
+    {{- end -}}
+  {{- else -}}
+    {{- /* Priority 3: First image in content */ -}}
+    {{- $images := findRE "<img.*?src=\"([^\"]*)\"" .Content 1 -}}
+    {{- if $images -}}
+      {{- $src := index (findRE "src=\"([^\"]*)\"" (index $images 0) 1) 0 -}}
+      {{- $src = replaceRE "src=\"(.*)\"" "$1" $src -}}
+      {{- if not (hasPrefix $src "http") -}}
+        {{- $ogImage = printf "%s%s" $absURL ($src | absURL) -}}
+      {{- else -}}
+        {{- $ogImage = $src -}}
+      {{- end -}}
+    {{- else -}}
+      {{- /* Priority 4: Site default */ -}}
+      {{- with .Site.Params.defaultOGImage -}}
+        {{- $ogImage = printf "%s%s" $absURL (. | absURL) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Output for debugging/template usage */ -}}
+{{- return $ogImage -}}

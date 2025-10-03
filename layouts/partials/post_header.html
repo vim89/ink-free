@@ -6,6 +6,15 @@
             <span class="rest">{{ if $.Site.Data.month }}{{ index $.Site.Data.month (printf "%d"
                 .Date.Month) }} {{ .Date.Year }}{{ else }}{{ dateFormat "Jan 2006" .Date }}{{ end }}</span>
         </div>
+        {{- /* Show last modified date if different from publish date */ -}}
+        {{- if and .Lastmod (ne .Date.Unix .Lastmod.Unix) (gt (.Lastmod.Sub .Date).Hours 24) -}}
+        <div class="lastmod">
+            <span class="lastmod-label">Updated:</span>
+            <time datetime="{{ .Lastmod.Format "2006-01-02" }}">
+                {{ .Lastmod.Format "Jan 2, 2006" }}
+            </time>
+        </div>
+        {{- end -}}
     </div>
     {{ end }}
     <div class="matter">

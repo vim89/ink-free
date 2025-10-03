@@ -1,8 +1,135 @@
-{{ if .Title }}
+{{- /*
+Responsive Image Render Hook with WebP/AVIF Support
+Generates modern image formats with fallbacks for maximum browser compatibility
+*/ -}}
+
+{{- $img := "" -}}
+{{- $alt := .Text -}}
+{{- $title := .Title -}}
+
+{{- /* Try to get image as a page resource first */ -}}
+{{- with .Page.Resources.GetMatch .Destination -}}
+  {{- $img = . -}}
+{{- else -}}
+  {{- /* Try as global resource */ -}}
+  {{- with resources.Get .Destination -}}
+    {{- $img = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $img -}}
+  {{- /* Check if image is SVG - handle separately */ -}}
+  {{- if eq $img.MediaType.SubType "svg" -}}
+    {{- /* SVG images don't need processing */ -}}
+    {{- if $title -}}
+    <figure>
+      <img src="{{ $img.RelPermalink }}" alt="{{ $alt }}" loading="lazy" class="figcaption-img">
+      <figcaption>{{ $title }}</figcaption>
+    </figure>
+    {{- else -}}
+    <img src="{{ $img.RelPermalink }}" alt="{{ $alt }}" loading="lazy">
+    {{- end -}}
+  {{- else -}}
+    {{- /* Generate responsive images for raster formats */ -}}
+    {{- $widths := slice 400 800 1200 1600 -}}
+    {{- $format := "jpg" -}}
+
+    {{- /* Determine original format */ -}}
+    {{- if in $img.RelPermalink ".png" -}}
+      {{- $format = "png" -}}
+    {{- else if in $img.RelPermalink ".webp" -}}
+      {{- $format = "webp" -}}
+    {{- end -}}
+
+    {{- /* Only process if image is large enough */ -}}
+    {{- if ge $img.Width 400 -}}
+    {{- /* Generate AVIF sources */ -}}
+    {{- $avifSrcset := slice -}}
+    {{- range $widths -}}
+      {{- if le . $img.Width -}}
+        {{- $resized := $img.Resize (printf "%dx avif q85" .) -}}
+        {{- $avifSrcset = $avifSrcset | append (printf "%s %dw" $resized.RelPermalink .) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- /* Generate WebP sources */ -}}
+    {{- $webpSrcset := slice -}}
+    {{- range $widths -}}
+      {{- if le . $img.Width -}}
+        {{- $resized := $img.Resize (printf "%dx webp q85" .) -}}
+        {{- $webpSrcset = $webpSrcset | append (printf "%s %dw" $resized.RelPermalink .) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- /* Generate fallback images */ -}}
+    {{- $fallbackSrcset := slice -}}
+    {{- range $widths -}}
+      {{- if le . $img.Width -}}
+        {{- $resized := $img.Resize (printf "%dx %s q85" . $format) -}}
+        {{- $fallbackSrcset = $fallbackSrcset | append (printf "%s %dw" $resized.RelPermalink .) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- /* Use 800px as default size */ -}}
+    {{- $default := $img.Resize "800x jpg q85" -}}
+
+    {{- if $title -}}
+    <figure>
+      <picture>
+        {{- if gt (len $avifSrcset) 0 -}}
+        <source type="image/avif" srcset="{{ delimit $avifSrcset ", " }}" sizes="(max-width: 800px) 100vw, 800px">
+        {{- end -}}
+        {{- if gt (len $webpSrcset) 0 -}}
+        <source type="image/webp" srcset="{{ delimit $webpSrcset ", " }}" sizes="(max-width: 800px) 100vw, 800px">
+        {{- end -}}
+        {{- if gt (len $fallbackSrcset) 0 -}}
+        <source type="image/{{ $format }}" srcset="{{ delimit $fallbackSrcset ", " }}" sizes="(max-width: 800px) 100vw, 800px">
+        {{- end -}}
+        <img src="{{ $default.RelPermalink }}" alt="{{ $alt }}" loading="lazy" width="{{ $default.Width }}" height="{{ $default.Height }}" class="figcaption-img">
+      </picture>
+      <figcaption>{{ $title }}</figcaption>
+    </figure>
+    {{- else -}}
+    <picture>
+      {{- if gt (len $avifSrcset) 0 -}}
+      <source type="image/avif" srcset="{{ delimit $avifSrcset ", " }}" sizes="(max-width: 800px) 100vw, 800px">
+      {{- end -}}
+      {{- if gt (len $webpSrcset) 0 -}}
+      <source type="image/webp" srcset="{{ delimit $webpSrcset ", " }}" sizes="(max-width: 800px) 100vw, 800px">
+      {{- end -}}
+      {{- if gt (len $fallbackSrcset) 0 -}}
+      <source type="image/{{ $format }}" srcset="{{ delimit $fallbackSrcset ", " }}" sizes="(max-width: 800px) 100vw, 800px">
+      {{- end -}}
+      <img src="{{ $default.RelPermalink }}" alt="{{ $alt }}" loading="lazy" width="{{ $default.Width }}" height="{{ $default.Height }}">
+    </picture>
+    {{- end -}}
+  {{- else -}}
+    {{- /* Small images: just convert format without resize */ -}}
+    {{- $webp := $img.Resize (printf "%dx%d webp q85" $img.Width $img.Height) -}}
+    {{- if $title -}}
+    <figure>
+      <picture>
+        <source type="image/webp" srcset="{{ $webp.RelPermalink }}">
+        <img src="{{ $img.RelPermalink }}" alt="{{ $alt }}" loading="lazy" width="{{ $img.Width }}" height="{{ $img.Height }}" class="figcaption-img">
+      </picture>
+      <figcaption>{{ $title }}</figcaption>
+    </figure>
+    {{- else -}}
+    <picture>
+      <source type="image/webp" srcset="{{ $webp.RelPermalink }}">
+      <img src="{{ $img.RelPermalink }}" alt="{{ $alt }}" loading="lazy" width="{{ $img.Width }}" height="{{ $img.Height }}">
+    </picture>
+    {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- else -}}
+  {{- /* Fallback for external images or images not found as resources */ -}}
+  {{- if $title -}}
   <figure>
-    <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" loading="lazy" class="figcaption-img">
-    <figcaption>{{ .Title }}</figcaption>
+    <img src="{{ .Destination | safeURL }}" alt="{{ $alt }}" loading="lazy" class="figcaption-img">
+    <figcaption>{{ $title }}</figcaption>
   </figure>
-{{ else }}
-  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" loading="lazy">
-{{ end }}
+  {{- else -}}
+  <img src="{{ .Destination | safeURL }}" alt="{{ $alt }}" loading="lazy">
+  {{- end -}}
+{{- end -}}

@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.Language.Lang }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
+<html lang="{{ .Site.Language.Lang }}" data-theme-mode="{{ .Site.Params.mode | default "auto" }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
 {{ partial "header.html" . }}
 
 <body>
+	{{- /* WCAG 2.2 Level A: Skip link for keyboard navigation */ -}}
+	<a href="#main-content" class="skip-link">Skip to main content</a>
+
 	{{ if and (gt .WordCount 400 ) (or (eq .Site.Params.toc "floating") (eq .Site.Params.toc "both") )}}
 	<div class="container-wide wrapper">
 		<header class="site-header">
 			{{ partial "head.html" . }}
 		</header>
 
-		<main role="main" aria-label="Main content">
+		<main role="main" aria-label="Main content" id="main-content">
 			{{ partial "content_floating_toc.html" . }}
 		</main>
 	</div>
@@ -19,7 +22,7 @@
 			{{ partial "head.html" . }}
 		</header>
 
-		<main role="main" aria-label="Main content">
+		<main role="main" aria-label="Main content" id="main-content">
 			{{ partial "content_static.html" . }}
 		</main>
 	</div>
@@ -31,6 +34,8 @@
 	{{ if and (gt .WordCount 400 ) (or (eq .Site.Params.toc "floating") (eq .Site.Params.toc "both") )}}
 	{{ partial "toc_script.html" . }}
 	{{ end }}
+	{{- /* Load conditional scripts (Mermaid, PDF.js) only when needed */ -}}
+	{{ partial "conditional-scripts.html" . }}
 </body>
 
 </html>

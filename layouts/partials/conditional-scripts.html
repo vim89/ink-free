@@ -1,0 +1,15 @@
+{{- /* Load Mermaid only on pages that use the diagram shortcode */ -}}
+{{- if .Page.Scratch.Get "usesMermaid" -}}
+  {{- if .Site.Params.mermaidCDN -}}
+  <script type="module">
+    import mermaid from '{{ .Site.Params.mermaidCDN }}';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default'
+    });
+  </script>
+  {{- end -}}
+{{- end -}}
+
+{{- /* PDF.js is loaded via iframe src, no additional script needed */ -}}
+{{- /* The 9MB pdfjs folder in static/ is only accessed when PDF shortcode is used */ -}}
