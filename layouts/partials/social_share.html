@@ -35,14 +35,14 @@
 <aside class="social-share" aria-label="Share this article">
   <h3>Share This Article</h3>
   <div class="social-share-buttons">
-    {{- /* Twitter/X */ -}}
+    {{- /* Twitter (X) */ -}}
     <a
       href="https://twitter.com/intent/tweet?text={{ $title | urlquery }}&url={{ $url | urlquery }}{{ if $hashtagString }}&hashtags={{ $hashtagString }}{{ end }}"
       target="_blank"
       rel="noopener noreferrer"
       class="share-button share-twitter"
-      aria-label="Share on Twitter"
-      title="Share on Twitter"
+      aria-label="Post on X (Twitter)"
+      title="Post on X (Twitter)"
     >
       <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
         <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
@@ -95,20 +95,7 @@
       <span>Reddit</span>
     </a>
 
-    {{- /* Pocket */ -}}
-    <a
-      href="https://getpocket.com/edit?url={{ $url | urlquery }}&title={{ $title | urlquery }}"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="share-button share-pocket"
-      aria-label="Save to Pocket"
-      title="Save to Pocket"
-    >
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-        <path d="M18.813 10l-5.667 5.667a1.487 1.487 0 01-2.146 0L5.333 10A1.48 1.48 0 013.667 8C3.667 7.264 4.264 6.667 5 6.667h14c.736 0 1.333.597 1.333 1.333 0 .353-.14.692-.387.94l-.133.06zM24 4.5v8.5a10 10 0 01-20 0V4.5C4 2.015 6.015 0 8.5 0h11C21.985 0 24 2.015 24 4.5z"/>
-      </svg>
-      <span>Pocket</span>
-    </a>
+    {{- /* Pocket removed: service shut down July 8, 2025 (export-only until Oct 8, 2025) */ -}}
   </div>
 </aside>
 {{- end -}}

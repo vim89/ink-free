@@ -112,19 +112,7 @@
   box-shadow: 0 4px 12px rgba(255, 69, 0, 0.2);
 }
 
-.share-pocket {
-  background: transparent;
-  color: #EF3F56;
-  border: 2px solid #EF3F56;
-}
-
-.share-pocket:hover {
-  background: rgba(239, 63, 86, 0.1);
-  color: #d9354a;
-  border-color: #d9354a;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(239, 63, 86, 0.2);
-}
+/* Pocket removed: service sunset */
 
 /* Responsive design - mobile first */
 @media (max-width: 768px) {
