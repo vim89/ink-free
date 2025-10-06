@@ -1,14 +1,16 @@
-{{- /* Load Mermaid only on pages that use the diagram shortcode */ -}}
-{{- if .Page.Scratch.Get "usesMermaid" -}}
-  {{- if .Site.Params.mermaidCDN -}}
-  <script type="module">
-    import mermaid from '{{ .Site.Params.mermaidCDN }}';
+{{- /* Load Mermaid only on pages that have mermaid diagrams */ -}}
+{{- if or (.Page.Scratch.Get "hasMermaid") (.Page.Scratch.Get "usesMermaid") -}}
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  (function() {
+    const isDark = document.documentElement.classList.contains('dark') ||
+                   (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
     mermaid.initialize({
       startOnLoad: true,
-      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default'
+      theme: isDark ? 'dark' : 'default'
     });
-  </script>
-  {{- end -}}
+  })();
+</script>
 {{- end -}}
 
 {{- /* PDF.js is loaded via iframe src, no additional script needed */ -}}
