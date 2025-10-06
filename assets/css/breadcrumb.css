@@ -6,8 +6,9 @@
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  position: relative;
-  z-index: 2; /* ensure it sits above decorative elements behind */
+  position: sticky;
+  top: 12px;
+  z-index: 2; /* ensure it sits above underlying header/date */
   box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
 
