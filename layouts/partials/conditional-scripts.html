@@ -1,16 +1,21 @@
 {{- /* Load Mermaid only on pages that have mermaid diagrams */ -}}
-{{- if or (.Page.Scratch.Get "hasMermaid") (.Page.Scratch.Get "usesMermaid") -}}
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-  (function() {
-    const isDark = document.documentElement.classList.contains('dark') ||
-                   (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: isDark ? 'dark' : 'default'
-    });
-  })();
-</script>
+{{- if or (.Page.Store.Get "hasMermaid") (.Page.Scratch.Get "usesMermaid") -}}
+  {{- /* Determine Mermaid source; allow override via .Site.Params.mermaidURL */ -}}
+  {{- $defaultMermaidURL := "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" -}}
+  {{- $mermaidURL := (cond (isset .Site.Params "mermaidURL") .Site.Params.mermaidURL $defaultMermaidURL) -}}
+  {{- /* Fetch Mermaid at build time and serve locally for CSP compliance */ -}}
+  {{- $mermaidRemote := resources.GetRemote $mermaidURL -}}
+  {{- if $mermaidRemote -}}
+    {{- $mermaidLocal := $mermaidRemote | resources.Fingerprint -}}
+    <script src="{{ $mermaidLocal.RelPermalink }}" integrity="{{ $mermaidLocal.Data.Integrity }}" defer></script>
+  {{- end -}}
+
+  {{- /* External init script to avoid inline JS blocked by CSP */ -}}
+  {{- $mermaidInit := resources.Get "js/mermaid-init.js" -}}
+  {{- if $mermaidInit -}}
+    {{- $mermaidInitBuilt := $mermaidInit | resources.Minify | resources.Fingerprint -}}
+    <script src="{{ $mermaidInitBuilt.RelPermalink }}" integrity="{{ $mermaidInitBuilt.Data.Integrity }}" defer></script>
+  {{- end -}}
 {{- end -}}
 
 {{- /* PDF.js is loaded via iframe src, no additional script needed */ -}}
