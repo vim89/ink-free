@@ -18,7 +18,10 @@
 
 {{- $title := .Title -}}
 {{- $description := .Description | default .Summary | plainify | truncate 200 -}}
-{{- $url := .Permalink -}}
+{{- /* Force canonical URL using config baseURL + RelPermalink to avoid localhost in dev */ -}}
+{{- $base := .Site.BaseURL | strings.TrimSuffix "/" -}}
+{{- $rel := .RelPermalink -}}
+{{- $url := printf "%s%s" $base $rel -}}
 {{- $hashtags := slice -}}
 
 {{- /* Generate hashtags from first 3 tags (remove special chars, title case) */ -}}
@@ -51,7 +54,7 @@
 
     {{- /* Twitter (X) */ -}}
     <a
-      href="https://twitter.com/intent/tweet?text={{ $title | urlquery }}&url={{ $url | urlquery }}{{ if $hashtagString }}&hashtags={{ $hashtagString }}{{ end }}"
+      href="https://twitter.com/intent/tweet?text={{ $title | urlquery }}&url={{ $url | urlquery }}{{ if $hashtagString }}&hashtags={{ $hashtagString | urlquery }}{{ end }}"
       target="_blank"
       rel="noopener noreferrer"
       class="share-button share-twitter"
