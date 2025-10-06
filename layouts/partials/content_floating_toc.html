@@ -2,6 +2,8 @@
 <div class="article-nav" id="article-nav-id">
     <div class="post" id="main-content">
         {{ partial "post_header.html" . }}
+        {{- /* Breadcrumb below header to avoid overlapping the date block */ -}}
+        {{ partial "components/navigation/breadcrumb.html" . }}
 
         <!-- The TOC will be static on mobile decides -->
         {{ if and (gt .WordCount 400 ) (eq .Site.Params.toc "both") }}
