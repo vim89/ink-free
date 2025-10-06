@@ -16,6 +16,12 @@
   max-width: 100%;
 }
 
+/* Light mode: subtle brand tint */
+html:not(.dark) .highlight {
+  background-color: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
 /* Overlay tools inserted by render hook */
 .highlight { position: relative; }
 .highlight .code-tools { position: absolute; top: 8px; left: 8px; right: 8px; z-index: 1; }
