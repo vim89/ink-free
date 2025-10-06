@@ -2,7 +2,13 @@
 
 .breadcrumb {
   margin: 1rem 0 2rem 0;
-  padding: 0;
+  padding: 6px 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  position: relative;
+  z-index: 2; /* ensure it sits above decorative elements behind */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
 
 .breadcrumb-list {
@@ -48,6 +54,7 @@
 @media (max-width: 640px) {
   .breadcrumb {
     margin: 0.75rem 0 1.5rem 0;
+    padding: 6px 8px;
   }
 
   .breadcrumb-list {
