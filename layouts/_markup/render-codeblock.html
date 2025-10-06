@@ -1,18 +1,10 @@
 {{- $lang := .Type | default "text" -}}
 {{- $options := .Attributes -}}
 
-{{- /* Minimal GitHub-style code block: rely on Chroma HTML only */ -}}
-{{- highlight .Inner $lang (dict "style" "github" "lineNos" (index $options "lineNos") "hl_lines" (index $options "hl_lines") "lineNumbersInTable" true) | safeHTML -}}
+{{- /* Produce highlight HTML */ -}}
+{{- $html := highlight .Inner $lang (dict "style" "github" "lineNos" (index $options "lineNos") "hl_lines" (index $options "hl_lines") "lineNumbersInTable" true) -}}
 
-<script class="cb-init" data-lang="{{ $lang }}">
-(function(){
-  var s=document.currentScript; var h=s.previousElementSibling;
-  if(!h||!h.classList||!h.classList.contains('highlight')){ return; }
-  h.style.position='relative';
-  var tools=document.createElement('div'); tools.className='code-tools';
-  var lang=s.getAttribute('data-lang');
-  if(lang){ var lg=document.createElement('span'); lg.className='code-lang'; lg.textContent=lang; tools.appendChild(lg); }
-  h.insertBefore(tools, h.firstChild);
-  s.remove();
-})();
-</script>
+{{- /* Inject language metadata on the wrapper for CSP-friendly enhancement */ -}}
+{{- $withData := replaceRE `<div class="highlight"` (printf `<div class="highlight highlight-%s" data-lang="%s"` $lang $lang) $html -}}
+
+{{- $withData | safeHTML -}}

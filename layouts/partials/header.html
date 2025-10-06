@@ -187,6 +187,13 @@
 		<script src="{{ $mainJSProcessed.RelPermalink }}" integrity="{{ $mainJSProcessed.Data.Integrity }}" defer></script>
 	{{- end -}}
 
+	{{- /* Codeblock initializer (CSP-safe): adds language pill, tools */ -}}
+	{{- $cbInit := resources.Get "js/codeblock-init.js" -}}
+	{{- if $cbInit -}}
+		{{- $cbInitProcessed := $cbInit | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $cbInitProcessed.RelPermalink }}" integrity="{{ $cbInitProcessed.Data.Integrity }}" defer></script>
+	{{- end -}}
+
 	{{- /* Custom JavaScript if defined */ -}}
 	{{- if isset .Site.Params "customjs" -}}
 		{{- range .Site.Params.customJS -}}
