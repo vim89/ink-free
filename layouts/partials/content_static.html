@@ -1,7 +1,7 @@
 <div class="post" id="main-content">
-    {{ partial "post_header.html" . }}
-    {{- /* Breadcrumb below header to avoid overlapping the date block */ -}}
+    {{- /* Breadcrumb first so it can float above content while scrolling */ -}}
     {{ partial "components/navigation/breadcrumb.html" . }}
+    {{ partial "post_header.html" . }}
 
     <!-- Inline TOC -->
     {{ if and (gt .WordCount 400 ) (or (eq .Site.Params.toc "static") (eq .Site.Params.toc "true") )}}
