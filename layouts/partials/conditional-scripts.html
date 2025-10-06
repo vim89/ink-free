@@ -1,13 +1,12 @@
 {{- /* Load Mermaid only on pages that have mermaid diagrams */ -}}
 {{- if or (.Page.Store.Get "hasMermaid") (.Page.Scratch.Get "usesMermaid") -}}
-  {{- /* Determine Mermaid source; allow override via .Site.Params.mermaidURL */ -}}
-  {{- $defaultMermaidURL := "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" -}}
-  {{- $mermaidURL := (cond (isset .Site.Params "mermaidURL") .Site.Params.mermaidURL $defaultMermaidURL) -}}
-  {{- /* Fetch Mermaid at build time and serve locally for CSP compliance */ -}}
-  {{- $mermaidRemote := resources.GetRemote $mermaidURL -}}
-  {{- if $mermaidRemote -}}
-    {{- $mermaidLocal := $mermaidRemote | resources.Fingerprint -}}
-    <script src="{{ $mermaidLocal.RelPermalink }}" integrity="{{ $mermaidLocal.Data.Integrity }}" defer></script>
+  {{- /* Prefer vendored Mermaid if present; avoid GetRemote to keep builds hermetic */ -}}
+  {{- $vendored := resources.Get "js/vendor/mermaid.min.js" -}}
+  {{- with $vendored -}}
+    {{- $merm := . | resources.Fingerprint -}}
+    <script src="{{ $merm.RelPermalink }}" integrity="{{ $merm.Data.Integrity }}" defer></script>
+  {{- else -}}
+    {{- /* No vendored Mermaid found; skip including library to avoid build-time network fetch. */ -}}
   {{- end -}}
 
   {{- /* External init script to avoid inline JS blocked by CSP */ -}}
