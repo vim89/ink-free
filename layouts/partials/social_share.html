@@ -22,6 +22,12 @@
 {{- $base := .Site.BaseURL | strings.TrimSuffix "/" -}}
 {{- $rel := .RelPermalink -}}
 {{- $url := printf "%s%s" $base $rel -}}
+
+{{- /* Prefer Bitly short URL from data/shortlinks.json if available */ -}}
+{{- $relTrim := strings.TrimSuffix $rel "/" -}}
+{{- $short1 := index .Site.Data.shortlinks $rel -}}
+{{- $short2 := index .Site.Data.shortlinks $relTrim -}}
+{{- $shareURL := cond (or $short1 $short2) (default $short2 $short1) $url -}}
 {{- $hashtags := slice -}}
 
 {{- /* Generate hashtags from first 3 tags (remove special chars, title case) */ -}}
@@ -54,7 +60,7 @@
 
     {{- /* Twitter (X) */ -}}
     <a
-      href="https://twitter.com/intent/tweet?text={{ $title | urlquery }}&url={{ $url | urlquery }}{{ if $hashtagString }}&hashtags={{ $hashtagString | urlquery }}{{ end }}"
+      href="https://twitter.com/intent/tweet?text={{ $title | urlquery }}&url={{ $shareURL | urlquery }}{{ if $hashtagString }}&hashtags={{ $hashtagString | urlquery }}{{ end }}"
       target="_blank"
       rel="noopener noreferrer"
       class="share-button share-twitter"
@@ -69,7 +75,7 @@
 
     {{- /* LinkedIn */ -}}
     <a
-      href="https://www.linkedin.com/sharing/share-offsite/?url={{ $url | urlquery }}"
+      href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareURL | urlquery }}"
       target="_blank"
       rel="noopener noreferrer"
       class="share-button share-linkedin"
@@ -84,7 +90,7 @@
 
     {{- /* Facebook */ -}}
     <a
-      href="https://www.facebook.com/sharer/sharer.php?u={{ $url | urlquery }}"
+      href="https://www.facebook.com/sharer/sharer.php?u={{ $shareURL | urlquery }}"
       target="_blank"
       rel="noopener noreferrer"
       class="share-button share-facebook"
@@ -99,7 +105,7 @@
 
     {{- /* Reddit */ -}}
     <a
-      href="https://reddit.com/submit?url={{ $url | urlquery }}&title={{ $title | urlquery }}"
+      href="https://reddit.com/submit?url={{ $shareURL | urlquery }}&title={{ $title | urlquery }}"
       target="_blank"
       rel="noopener noreferrer"
       class="share-button share-reddit"
@@ -126,7 +132,7 @@
     {{- end -}}
     {{- if $isScala -}}
     <a
-      href="https://www.reddit.com/r/scala/submit?url={{ $url | urlquery }}&title={{ $title | urlquery }}"
+      href="https://www.reddit.com/r/scala/submit?url={{ $shareURL | urlquery }}&title={{ $title | urlquery }}"
       target="_blank"
       rel="noopener noreferrer"
       class="share-button share-reddit-scala"
