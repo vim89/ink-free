@@ -20,6 +20,13 @@
 {{- if $isDevelopment -}}
 {{- $scriptSrc = $scriptSrc | append "'unsafe-eval'" "'unsafe-inline'" -}}
 {{- end -}}
+{{- /* If this page uses Mermaid and we didn't vendor it, allow jsdelivr */ -}}
+{{- if or (.Page.Store.Get "hasMermaid") (.Page.Scratch.Get "usesMermaid") -}}
+  {{- $vendored := resources.Get "js/vendor/mermaid.min.js" -}}
+  {{- if not $vendored -}}
+    {{- $scriptSrc = $scriptSrc | append "cdn.jsdelivr.net" -}}
+  {{- end -}}
+{{- end -}}
 {{- $cspDirectives = $cspDirectives | append (printf "script-src %s" (delimit $scriptSrc " ")) -}}
 
 {{- /* style-src: CSS sources */ -}}
