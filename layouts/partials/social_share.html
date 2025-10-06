@@ -108,7 +108,19 @@
       <span>Reddit</span>
     </a>
 
-    {{- /* Reddit r/scala */ -}}
+    {{- /* Reddit r/scala (conditional on scala-related taxonomy) */ -}}
+    {{- $labels := slice -}}
+    {{- with .Params.tags -}}{{- range . -}}{{- $labels = $labels | append . -}}{{- end -}}{{- end -}}
+    {{- with .Params.categories -}}{{- range . -}}{{- $labels = $labels | append . -}}{{- end -}}{{- end -}}
+    {{- with .Params.series -}}{{- range . -}}{{- $labels = $labels | append . -}}{{- end -}}{{- end -}}
+    {{- $isScala := false -}}
+    {{- range $labels -}}
+      {{- $norm := . | lower | replaceRE "[\\s_]+" "-" | replaceRE "[^a-z0-9-]" "" -}}
+      {{- if or (eq $norm "scala") (eq $norm "scala2") (eq $norm "scala3") (eq $norm "scala-2") (eq $norm "scala-3") -}}
+        {{- $isScala = true -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if $isScala -}}
     <a
       href="https://www.reddit.com/r/scala/submit?url={{ $url | urlquery }}&title={{ $title | urlquery }}"
       target="_blank"
@@ -122,6 +134,7 @@
       </svg>
       <span>r/scala</span>
     </a>
+    {{- end -}}
 
     {{- /* Pocket removed: service shut down July 8, 2025 (export-only until Oct 8, 2025) */ -}}
   </div>
