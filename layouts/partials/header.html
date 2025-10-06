@@ -187,6 +187,13 @@
 		<script src="{{ $mainJSProcessed.RelPermalink }}" integrity="{{ $mainJSProcessed.Data.Integrity }}" defer></script>
 	{{- end -}}
 
+	{{- /* Social share initializer (copy link) */ -}}
+	{{- $shareInit := resources.Get "js/share-init.js" -}}
+	{{- if $shareInit -}}
+		{{- $shareInitProcessed := $shareInit | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $shareInitProcessed.RelPermalink }}" integrity="{{ $shareInitProcessed.Data.Integrity }}" defer></script>
+	{{- end -}}
+
 	{{- /* Codeblock initializer (CSP-safe): adds language pill, tools */ -}}
 	{{- $cbInit := resources.Get "js/codeblock-init.js" -}}
 	{{- if $cbInit -}}
