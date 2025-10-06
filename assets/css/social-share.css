@@ -142,20 +142,7 @@
   box-shadow: 0 4px 12px rgba(147, 117, 253, 0.18);
 }
 
-/* Discord (uses Web Share API; brand color) */
-.share-discord {
-  background: transparent;
-  color: #5865F2; /* Discord blurple */
-  border: 2px solid #5865F2;
-}
-
-.share-discord:hover {
-  background: rgba(88, 101, 242, 0.1);
-  color: #4752C4;
-  border-color: #4752C4;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
-}
+/* Discord share removed at user's request */
 
 /* Pocket removed: service sunset */
 
