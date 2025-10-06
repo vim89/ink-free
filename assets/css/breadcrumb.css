@@ -1,13 +1,13 @@
 /* Breadcrumb Navigation Styling */
 
-.breadcrumb {
+.post > .breadcrumb {
   margin: 1rem 0 2rem 0;
   padding: 6px 10px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   position: sticky;
-  top: 12px;
+  top: 12px; /* adjust if your header height changes */
   z-index: 2; /* sits above content while scrolling */
   box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }

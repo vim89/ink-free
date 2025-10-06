@@ -761,7 +761,8 @@ code {
     /* Ensure code blocks don't break grid layout */
     .article-nav .post {
         min-width: 0;
-        overflow-x: hidden;
+        /* Avoid overflow constraints so sticky children (breadcrumb) work across browsers */
+        overflow: visible;
     }
 }
 
