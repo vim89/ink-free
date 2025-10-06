@@ -26,9 +26,30 @@
   }
 
   function init(){
-    var buttons = document.querySelectorAll('.social-share .share-copy');
-    for (var i=0;i<buttons.length;i++){
-      buttons[i].addEventListener('click', onCopyClick);
+    var copyBtns = document.querySelectorAll('.social-share .share-copy');
+    for (var i=0;i<copyBtns.length;i++){
+      copyBtns[i].addEventListener('click', onCopyClick);
+    }
+
+    var shareBtns = document.querySelectorAll('.social-share .share-discord');
+    var shareHandler = function(e){
+      var btn = e.currentTarget;
+      var title = btn.getAttribute('data-share-title') || document.title;
+      var text = btn.getAttribute('data-share-text') || '';
+      var url = btn.getAttribute('data-share-url') || window.location.href;
+      if (navigator.share) {
+        navigator.share({ title: title, text: text, url: url }).catch(function(){});
+      } else {
+        // Fallback: copy link and prompt user to paste into Discord
+        var temp = document.createElement('textarea');
+        temp.value = url; document.body.appendChild(temp); temp.select();
+        try { document.execCommand('copy'); } catch(_){}
+        document.body.removeChild(temp);
+        btn.title = 'Link copied — paste in Discord';
+      }
+    };
+    for (var j=0;j<shareBtns.length;j++){
+      shareBtns[j].addEventListener('click', shareHandler);
     }
   }
 
@@ -38,4 +59,3 @@
     init();
   }
 })();
-
