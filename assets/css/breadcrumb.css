@@ -1,7 +1,10 @@
 /* Breadcrumb Navigation Styling */
 
 .breadcrumb {
+  /* Align with post title column (date column is 64px + 25px gap) */
+  --post-date-offset: 89px;
   margin: 1rem 0 2rem 0;
+  margin-left: var(--post-date-offset);
   padding: 6px 10px;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
@@ -10,6 +13,8 @@
   top: 12px;
   z-index: 2; /* ensure it sits above underlying header/date */
   box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  display: inline-flex;
+  max-width: calc(100% - var(--post-date-offset));
 }
 
 .breadcrumb-list {
@@ -55,7 +60,9 @@
 @media (max-width: 640px) {
   .breadcrumb {
     margin: 0.75rem 0 1.5rem 0;
+    margin-left: 0; /* On small screens, don't offset */
     padding: 6px 8px;
+    max-width: 100%;
   }
 
   .breadcrumb-list {
