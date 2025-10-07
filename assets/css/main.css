@@ -562,9 +562,10 @@ ul {
     display: inline-block;
     border: 1px solid var(--accent-color);
     border-radius: 3px;
-    padding: 0 6px;
+    padding: 2px 8px; /* Increased from 0 6px for better touch targets */
     color: var(--accent-color);
     line-height: 20px;
+    min-height: 24px; /* WCAG 2.2 Level AA minimum touch target size */
     font-size: 0.85em;
     text-decoration: none;
     margin: 0 10px 0 0;
@@ -578,7 +579,7 @@ ul {
 .footer {
     text-align: right;
     font-size: 0.75em;
-    color: #999;
+    color: #767676; /* Changed from #999 for WCAG AA contrast ratio 4.5:1 */
     border-top: 1px solid #f4f4f4;
     margin-top: 40px;
     padding: 15px 0;

@@ -22,7 +22,9 @@
 				{{- end -}}
 
 				{{- if or (eq .Site.Params.mode "auto") (eq .Site.Params.mode "dark") -}}
-                			<span class="scheme-toggle"><a href="#" id="scheme-toggle" aria-label="Toggle dark/light theme" role="button"></a>
+ 				<li>
+					<span class="scheme-toggle"><a href="#" id="scheme-toggle" aria-label="Toggle dark/light theme" role="button"></a></span>
+				</li>
 				{{- end -}}
 			</ul>
 		</nav>
