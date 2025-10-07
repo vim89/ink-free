@@ -16,6 +16,8 @@
 {{- if .Site.Params.plausibleDomain -}}
 {{- $scriptSrc = $scriptSrc | append "plausible.io" -}}
 {{- end -}}
+{{- /* Allow Cloudflare Insights (analytics/RUM) */ -}}
+{{- $scriptSrc = $scriptSrc | append "static.cloudflareinsights.com" -}}
 {{- /* Allow livereload in development */ -}}
 {{- if $isDevelopment -}}
 {{- $scriptSrc = $scriptSrc | append "'unsafe-eval'" "'unsafe-inline'" -}}
@@ -68,7 +70,8 @@
 {{- $cspDirectives = $cspDirectives | append "form-action 'self'" -}}
 
 {{- /* frame-ancestors: Embedding in frames */ -}}
-{{- $cspDirectives = $cspDirectives | append "frame-ancestors 'none'" -}}
+{{- /* NOTE: frame-ancestors is ignored when CSP is delivered via meta tag */ -}}
+{{- /* It MUST be set via HTTP headers (see static/_headers or server config) */ -}}
 
 {{- /* worker-src: Web Workers, Service Workers */ -}}
 {{- $cspDirectives = $cspDirectives | append "worker-src 'self'" -}}
@@ -98,8 +101,8 @@
 {{- /* X-Content-Type-Options */ -}}
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
-{{- /* X-Frame-Options */ -}}
-<meta http-equiv="X-Frame-Options" content="DENY">
+{{- /* X-Frame-Options: CANNOT be set via meta tag - must use HTTP headers */ -}}
+{{- /* See static/_headers or server configuration for X-Frame-Options */ -}}
 
 {{- /* X-XSS-Protection (legacy but still useful) */ -}}
 <meta http-equiv="X-XSS-Protection" content="1; mode=block">

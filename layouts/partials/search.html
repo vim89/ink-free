@@ -1,6 +1,7 @@
 {{- if .Site.Params.enablePagefind -}}
 <div class="search-container">
   <div class="search-input-wrapper">
+    <label for="search" class="visually-hidden">Search posts and pages</label>
     <input
       type="search"
       id="search"
@@ -8,18 +9,21 @@
       placeholder="Search posts and pages..."
       autocomplete="off"
       spellcheck="false"
+      aria-label="Search posts and pages"
     >
     <div class="search-loading" id="search-loading" style="display: none;">
       <span>Searching...</span>
     </div>
   </div>
 
-  <div class="search-results" id="search-results"></div>
+  <div class="search-results" id="search-results" role="region" aria-live="polite" aria-label="Search results"></div>
 
   <div class="search-message" id="search-message" style="display: none;">
     <p>Start typing to search through {{ .Site.Title }}'s content.</p>
   </div>
 </div>
+
+<div id="search-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 {{- if not (.Page.Scratch.Get "pagefind-loaded") -}}

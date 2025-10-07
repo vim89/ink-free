@@ -22,7 +22,24 @@
 		{{ end }}
 
 		<ul class="posts flat">
-			{{- range .Data.Pages -}}
+			{{- /* Separate pinned and regular posts */ -}}
+			{{ $pinnedPages := where .Data.Pages "Params.pinned" true }}
+			{{ $regularPages := where .Data.Pages "Params.pinned" "ne" true }}
+
+			{{- /* Sort both by date */ -}}
+			{{ $sortedPinned := $pinnedPages.ByDate.Reverse }}
+			{{ $sortedRegular := $regularPages.ByDate.Reverse }}
+
+			{{- /* Combine: pinned first, then regular */ -}}
+			{{ $allPages := slice }}
+			{{ range $sortedPinned }}
+				{{ $allPages = $allPages | append . }}
+			{{ end }}
+			{{ range $sortedRegular }}
+				{{ $allPages = $allPages | append . }}
+			{{ end }}
+
+			{{- range $allPages -}}
 			{{- if (in (.Site.Params.excludedTypes | default (slice "page")) .Type) -}}
 			{{- else -}}
 			<li class="post">
@@ -35,7 +52,7 @@
 					</div>
 					<div class="matter">
 						<h3 class="title small">
-							<a href="{{ .RelPermalink }}">{{.Title}}{{ if .Draft }}<sup class="draft-label">DRAFT</sup>{{ end }}</a>
+							<a href="{{ .RelPermalink }}">{{ if .Params.pinned }}<span class="pinned-icon" title="Pinned Post">📌</span> {{ end }}{{.Title}}{{ if .Draft }}<sup class="draft-label">DRAFT</sup>{{ end }}</a>
 						</h3>
 						<span class="description">
 							{{ if isset .Params "description" }}

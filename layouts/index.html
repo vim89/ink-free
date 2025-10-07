@@ -16,7 +16,26 @@
 				<h1 class="visually-hidden">Recent Posts</h1>
 				<div class="posts">
 					{{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
-					{{ $paginator := .Paginate (where $pages "Params.hidden" "ne" true) }}
+					{{ $filteredPages := where $pages "Params.hidden" "ne" true }}
+
+					{{- /* Separate pinned and regular posts */ -}}
+					{{ $pinnedPages := where $filteredPages "Params.pinned" true }}
+					{{ $regularPages := where $filteredPages "Params.pinned" "ne" true }}
+
+					{{- /* Sort both by date, but keep them separate */ -}}
+					{{ $sortedPinned := $pinnedPages.ByDate.Reverse }}
+					{{ $sortedRegular := $regularPages.ByDate.Reverse }}
+
+					{{- /* Combine: pinned first, then regular */ -}}
+					{{ $combinedPages := slice }}
+					{{ range $sortedPinned }}
+						{{ $combinedPages = $combinedPages | append . }}
+					{{ end }}
+					{{ range $sortedRegular }}
+						{{ $combinedPages = $combinedPages | append . }}
+					{{ end }}
+
+					{{ $paginator := .Paginate $combinedPages }}
 					{{ range $paginator.Pages }}
 				<div class="post">
 					<div class="post-header">
@@ -30,7 +49,7 @@
 						</div>
 						<div class="matter">
 							<h2 class="title small">
-								<a href="{{ .RelPermalink }}">{{.Title}}{{ if .Draft }}<sup
+								<a href="{{ .RelPermalink }}">{{ if .Params.pinned }}<span class="pinned-icon" title="Pinned Post">📌</span> {{ end }}{{.Title}}{{ if .Draft }}<sup
 										class="draft-label">DRAFT</sup>{{ end }}</a>
 							</h2>
 							{{ $wordCountNoCode := replaceRE `(?s)<div class="highlight">.*?</div>` "" .Content |

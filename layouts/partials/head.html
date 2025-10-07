@@ -11,24 +11,24 @@
 		{{- if isset .Site.Params "subtitle" -}}
 		<p>{{ .Site.Params.Subtitle | markdownify }}</p>
 		{{- end -}}
-		<nav class="nav social">
+		<nav class="nav social" aria-label="Social media links">
 			<ul class="flat">
 				{{- range $index, $key := .Site.Params.Social -}}
 					<li>
-						<a href="{{ $key.url }}" title="{{ $key.name }}" target="_blank" rel="nofollow noopener noreferrer">
-							<i class="fab fa-{{ .icon }}" data-feather="{{ $key.icon }}"></i>
+						<a href="{{ $key.url }}" title="{{ $key.name }}" aria-label="{{ $key.name }}" target="_blank" rel="nofollow noopener noreferrer">
+							<i class="fab fa-{{ .icon }}" data-feather="{{ $key.icon }}" aria-hidden="true"></i>
 						</a>
 					</li>
 				{{- end -}}
 
 				{{- if or (eq .Site.Params.mode "auto") (eq .Site.Params.mode "dark") -}}
-                			<span class="scheme-toggle"><a href="#" id="scheme-toggle"></a>
+                			<span class="scheme-toggle"><a href="#" id="scheme-toggle" aria-label="Toggle dark/light theme" role="button"></a>
 				{{- end -}}
 			</ul>
 		</nav>
 	</div>
 
-	<nav class="nav">
+	<nav class="nav" aria-label="Main navigation">
 		<ul class="flat">
 			{{ range .Site.Menus.main }}
 			<li>

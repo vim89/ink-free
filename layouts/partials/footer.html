@@ -1,9 +1,9 @@
-<div class="footer wrapper">
-	<nav class="nav">
+<footer class="footer wrapper" role="contentinfo">
+	<nav class="nav" aria-label="Footer navigation">
 		<div>{{ default 2024 .Date.Year}} {{ with .Site.Copyright }} {{ . | safeHTML }} {{ end }}</div>
 		<!-- <a href="https://github.com/chollinger93/ink-free">ink-free</a> theme on <a href="https://gohugo.io">Hugo</a></div> -->
 	</nav>
-</div>
+</footer>
 
 {{- with .Site.Params.Social -}}
 <script>feather.replace()</script>

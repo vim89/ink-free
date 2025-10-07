@@ -537,6 +537,27 @@ ul {
     background-color: #f9f2f4;
 }
 
+.post .updated-badge {
+    font-size: 0.75em;
+    color: #0066cc;
+    background-color: #e6f2ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-weight: 500;
+    cursor: help;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.post .pinned-icon {
+    font-size: 0.9em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 4px;
+    opacity: 0.8;
+}
+
 .post .tags a {
     display: inline-block;
     border: 1px solid var(--accent-color);
