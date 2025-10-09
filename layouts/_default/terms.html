@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.Language.Lang }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
-
+{{ partial "header.html" . }}
 
 <body>
 <div class="container wrapper tags">
     {{ partial "head.html" . }}
-
-    {{ partial "header.html" . }}
 
     {{ if .Site.Params.statisticsEnabled }}
     {{ partial "statistics.html" . }}

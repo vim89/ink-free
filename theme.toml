@@ -6,8 +6,8 @@ license = "MIT"
 licenselink = "https://github.com/vim89/ink-free/blob/master/LICENSE.md"
 description = "Crisp, minimal, personal website and blog theme for Hugo."
 homepage = "https://github.com/vim89/ink-free"
-tags = ["minimal", "clean", "blog", "responsive", "personal", "simple", "minimalist", "portfolio", "dark", "privacy", "tech", "reading time", "statistics"]
-features = ["blog", "Clean and minimal", "Responsive", "Social media links", "Syntax highlighting", "Privacy", "GitHub integration", "Random Footers", "Reading Time", "Floating Table of Contents", "Statistics"]
+tags = ["minimal", "clean", "blog", "responsive", "personal", "simple", "minimalist", "portfolio", "dark", "privacy", "tech", "reading time", "statistics", "mermaid", "accessibility"]
+features = ["blog", "Clean and minimal", "Responsive", "Social media links", "Syntax highlighting", "Privacy", "GitHub integration", "Random Footers", "Reading Time", "Floating Table of Contents", "Statistics", "Mermaid diagrams", "Search integration"]
 min_version = "0.87.0"
 
 [fork-author]

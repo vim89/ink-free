@@ -2,7 +2,8 @@ baseURL = "http://example.org/"
 languageCode = "en-us"
 title = "Ink-Free"
 theme = "ink-free"
-paginate = 5
+[pagination]
+  pagerSize = 5
 
 copyright = "© Copyright notice"
 # Demo only

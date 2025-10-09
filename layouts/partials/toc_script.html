@@ -1,6 +1,6 @@
 <script>
-    var enableTruncate = {{ site.Params.enableTocTrunate | default true }}
-    var filterDepth = false;
+    const enableTruncate = {{ site.Params.enableTocTrunate | default true }};
+    let filterDepth = false;
     const MAX_DEPTH = 9; // Only H2
 
     // Highlight sidebar items
@@ -8,43 +8,44 @@
         const observerForTableOfContentActiveState = new IntersectionObserver(entries => {
             entries.reverse().forEach(entry => {
                 const id = entry.target.getAttribute('id');
-                if (entry.intersectionRatio > 0) {
-                    var selected = document.querySelectorAll(`nav li a[href="#${id}"]`)
-                    if (selected != null) {
-                        selected.forEach(s => {
-                            if (s != null) {
-                                var depth = getDepth(s.parentElement);
-                                if (filterDepth && depth <= MAX_DEPTH) {
-                                    clearActiveStatesInTableOfContents();
-                                    s.parentElement.classList.add('active')
-                                    centerActiveIntoView(s);
-                                    updateTocProgress();
-                                }
-                            } else if (!filterDepth) {
-                                clearActiveStatesInTableOfContents();
-                                s.parentElement.classList.add('active');
-                                centerActiveIntoView(s);
-                                updateTocProgress();
-                            }
-                        }
-                        )
-                    }
-
+                if (entry.intersectionRatio <= 0) {
+                    return;
                 }
+                const selected = document.querySelectorAll(`nav li a[href="#${id}"]`);
+                if (!selected) {
+                    return;
+                }
+                selected.forEach(link => {
+                    if (!link) {
+                        return;
+                    }
+                    const depth = getDepth(link.parentElement);
+                    if (filterDepth && depth > MAX_DEPTH) {
+                        return;
+                    }
+                    clearActiveStatesInTableOfContents();
+                    link.parentElement.classList.add('active');
+                    centerActiveIntoView(link);
+                    updateTocProgress();
+                });
             });
         });
-        document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]').forEach((section) => {
+        document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]').forEach(section => {
             observerForTableOfContentActiveState.observe(section);
         });
 
         // Smooth scroll honoring CSS scroll-margin-top
         const toc = document.querySelector('.section-nav') || document.querySelector('aside.toc');
         if (toc) {
-            toc.addEventListener('click', function (e) {
-                const a = e.target.closest('a[href^="#"]');
-                if (!a) return;
-                const target = document.getElementById(a.getAttribute('href').slice(1));
-                if (!target) return;
+            toc.addEventListener('click', e => {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) {
+                    return;
+                }
+                const target = document.getElementById(anchor.getAttribute('href').slice(1));
+                if (!target) {
+                    return;
+                }
                 e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
@@ -58,45 +59,42 @@
             updateTocProgress();
             window.addEventListener('scroll', updateTocProgress, { passive: true });
         }
-
     });
 
     // https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
     function isVisible(elem) {
-        if (!(elem instanceof Element)) return false; // throw Error('DomUtil: elem is not an element.');
+        if (!(elem instanceof Element)) return false;
         const style = getComputedStyle(elem);
         if (style.display === 'none') return false;
         if (style.visibility !== 'visible') return false;
         if (style.opacity < 0.1) return false;
-        if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
-            elem.getBoundingClientRect().width === 0) {
-            return false;
-        }
+        const rect = elem.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0) return false;
         const elemCenter = {
-            x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
-            y: elem.getBoundingClientRect().top + elem.offsetHeight / 2
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
         };
         if (elemCenter.x < 0) return false;
         if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
         if (elemCenter.y < 0) return false;
         if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
         let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
-        do {
+        while (pointContainer) {
             if (pointContainer === elem) return true;
-        } while (pointContainer = pointContainer.parentNode);
+            pointContainer = pointContainer.parentNode;
+        }
         return false;
     }
 
-
     function clearActiveStatesInTableOfContents() {
-        document.querySelectorAll('nav li').forEach((section) => {
+        document.querySelectorAll('nav li').forEach(section => {
             section.classList.remove('active');
         });
     }
 
     function getDepth(parentElement) {
-        var depth = 0;
-        while (parentElement !== null && parentElement.tagName.toLowerCase() !== 'ul') {
+        let depth = 0;
+        while (parentElement && parentElement.tagName.toLowerCase() !== 'ul') {
             depth++;
             parentElement = parentElement.parentElement;
         }
@@ -104,36 +102,30 @@
     }
 
     function navItems() {
-        // Only sidebar nav is nested twice
-        var nestedListItems = document.querySelectorAll('nav nav li a');
+        const nestedListItems = document.querySelectorAll('nav nav li a');
         return Array.from(nestedListItems).filter(listItem =>
-            listItem.href != null && listItem.hash.startsWith("#")
-        )
+            listItem.href && listItem.hash && listItem.hash.startsWith('#')
+        );
     }
 
-    function lasItemInNavBarVisible() {
-        var lastItem = navItems().slice(-1)[0]
-        return isVisible(lastItem)
+    function lastItemInNavBarVisible() {
+        const items = navItems();
+        if (items.length === 0) return true;
+        return isVisible(items[items.length - 1]);
     }
-
 
     // If the last element of the side navigation isn't visible, filter by depth
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
         if (!enableTruncate) return;
-        var navBar = navItems()
-        console.log(navBar)
-        if (!lasItemInNavBarVisible()) {
+        if (!lastItemInNavBarVisible()) {
             filterDepth = true;
-            //console.log("Filtering nav bar")
-            navBar.forEach(function (listItem) {
-                var depth = getDepth(listItem.parentElement);
-
+            navItems().forEach(listItem => {
+                const depth = getDepth(listItem.parentElement);
                 if (depth > MAX_DEPTH) {
                     listItem.parentElement.classList.add('depth-nested');
                 }
             });
         }
-
     });
 
     function centerActiveIntoView(anchor) {
@@ -152,14 +144,20 @@
         const bar = toc && toc.querySelector('.toc-progress');
         if (!toc || !bar) return;
         const headings = Array.from(document.querySelectorAll('h1[id],h2[id],h3[id],h4[id]'));
-        if (headings.length === 0) { bar.style.height = '0%'; return; }
+        if (headings.length === 0) {
+            bar.style.height = '0%';
+            return;
+        }
         const mid = window.innerHeight * 0.35;
         let idx = 0;
         for (let i = 0; i < headings.length; i++) {
-            if (headings[i].getBoundingClientRect().top - mid <= 0) idx = i; else break;
+            if (headings[i].getBoundingClientRect().top - mid <= 0) {
+                idx = i;
+            } else {
+                break;
+            }
         }
         const progress = (idx / Math.max(1, headings.length - 1)) * 100;
         bar.style.height = progress + '%';
     }
-
 </script>

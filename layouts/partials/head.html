@@ -16,13 +16,13 @@
 				{{- range $index, $key := .Site.Params.Social -}}
 					<li>
 						<a href="{{ $key.url }}" title="{{ $key.name }}" aria-label="{{ $key.name }}" target="_blank" rel="nofollow noopener noreferrer">
-							<i class="fab fa-{{ .icon }}" data-feather="{{ $key.icon }}" aria-hidden="true"></i>
+							<i data-feather="{{ $key.icon }}" aria-hidden="true"></i>
 						</a>
 					</li>
 				{{- end -}}
 
 				{{- if or (eq .Site.Params.mode "auto") (eq .Site.Params.mode "dark") -}}
- 				<li>
+				<li>
 					<span class="scheme-toggle"><a href="#" id="scheme-toggle" aria-label="Toggle dark/light theme" role="button"></a></span>
 				</li>
 				{{- end -}}

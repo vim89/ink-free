@@ -44,13 +44,13 @@
 								<span class="day">{{ dateFormat "02" .Date }}</span>
 								<span class="rest">{{ if $.Site.Data.month }}{{ index $.Site.Data.month (printf "%d"
 									.Date.Month) }} {{ .Date.Year }}{{ else }}{{ dateFormat "Jan 2006" .Date }}{{ end
-									}}</span>
+								}}</span>
 							</div>
 						</div>
 						<div class="matter">
 							<h2 class="title small">
 								<a href="{{ .RelPermalink }}">{{ if .Params.pinned }}<span class="pinned-icon" title="Pinned Post">📌</span> {{ end }}{{.Title}}{{ if .Draft }}<sup
-										class="draft-label">DRAFT</sup>{{ end }}</a>
+									class="draft-label">DRAFT</sup>{{ end }}</a>
 							</h2>
 							{{ $wordCountNoCode := replaceRE `(?s)<div class="highlight">.*?</div>` "" .Content |
 							countwords }}
