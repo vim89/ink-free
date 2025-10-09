@@ -2,24 +2,20 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-	{{- /* Theme initialization moved to external JS file for CSP compliance */ -}}
-	{{- $themeInit := resources.Get "js/theme-init.js" -}}
-	{{- if $themeInit -}}
-		{{- $themeInitProcessed := $themeInit | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $themeInitProcessed.RelPermalink }}" integrity="{{ $themeInitProcessed.Data.Integrity }}"></script>
+	{{- with resources.Get "js/theme-init.js" -}}
+		{{- $themeInit := . | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $themeInit.RelPermalink }}" integrity="{{ $themeInit.Data.Integrity }}"></script>
 	{{- end -}}
 
-	{{- /* Security Headers and CSP */ -}}
 	{{- partial "security-headers.html" . -}}
-	{{- $title := ( .Title ) -}}
-	{{- $siteTitle := ( .Site.Title ) -}}
+	{{- $title := .Title -}}
+	{{- $siteTitle := .Site.Title -}}
 	{{- if .IsHome -}}
-	<title>{{ $siteTitle }} {{ if isset .Site.Params "subtitle" }}- {{ .Site.Params.Subtitle }}{{ end }} </title>
+	<title>{{ $siteTitle }}{{ with .Site.Params.subtitle }} - {{ . }}{{ end }}</title>
 	{{- else -}}
 	<title>{{ $title }} - {{ $siteTitle }}</title>
 	{{- end -}}
 
-	{{- /* Modern Favicon Implementation */ -}}
 	{{- if isset .Site.Params "favicon" -}}
 		<link rel="icon" type="image/x-icon" href="/{{ .Site.Params.favicon }}">
 		<link rel="shortcut icon" type="image/x-icon" href="/{{ .Site.Params.favicon }}">
@@ -36,13 +32,12 @@
 	{{- end -}}
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	{{- /* Meta description for SEO */ -}}
 	{{- if .IsHome -}}
 	<meta name="description" content="{{ .Site.Params.description }}">
 	{{- else if .Description -}}
 	<meta name="description" content="{{ .Description }}">
 	{{- else if .Summary -}}
-	<meta name="description" content="{{ .Summary | truncate 160 }}">
+	<meta name="description" content="{{ .Summary | plainify | truncate 160 }}">
 	{{- else -}}
 	<meta name="description" content="{{ .Site.Params.description }}">
 	{{- end -}}
@@ -51,101 +46,69 @@
 	<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
 	{{ end -}}
 
-	{{- /* SEO Components */ -}}
 	{{- partial "components/seo/canonical.html" . -}}
 	{{- partial "components/seo/json_ld.html" . -}}
 	{{- template "_internal/opengraph.html" . -}}
 	{{- template "_internal/twitter_cards.html" . -}}
-	{{- /* Hugo Pipes CSS with SRI */ -}}
-	{{- $normalize := resources.Get "css/normalize.css" -}}
-	{{- $main := resources.Get "css/main.css" -}}
-	{{- $markdown := resources.Get "css/github-markdown.css" -}}
-	{{- $codeblocks := resources.Get "css/github-codeblocks.css" -}}
 
-	{{- /* Social share CSS */ -}}
-	{{- $socialShareCSS := resources.Get "css/social-share.css" -}}
-
-	{{- /* Author bio CSS */ -}}
-	{{- $authorBioCSS := resources.Get "css/author-bio.css" -}}
-
-	{{- /* Advanced related content CSS */ -}}
-	{{- $relatedAdvancedCSS := resources.Get "css/related-content-advanced.css" -}}
-
-	{{- /* Breadcrumb CSS */ -}}
-	{{- $breadcrumbCSS := resources.Get "css/breadcrumb.css" -}}
-
-	{{- /* Bundle ALL CSS files to reduce render-blocking requests */ -}}
-	{{- $allCSS := slice $normalize $main $markdown $codeblocks $socialShareCSS $authorBioCSS $relatedAdvancedCSS $breadcrumbCSS -}}
-
-	{{- /* Add tags CSS if on taxonomy pages */ -}}
-	{{- if or (eq .Kind "taxonomy") (eq .Kind "term") -}}
-		{{- $tagsCSS := resources.Get "css/tags.css" -}}
-		{{- if $tagsCSS -}}
-			{{- $allCSS = $allCSS | append $tagsCSS -}}
+	{{- $cssResources := slice -}}
+	{{- range (slice "css/normalize.css" "css/main.css" "css/github-markdown.css" "css/github-codeblocks.css" "css/social-share.css" "css/author-bio.css" "css/related-content-advanced.css" "css/breadcrumb.css" "css/accessibility.css") -}}
+		{{- with resources.Get . -}}
+			{{- $cssResources = $cssResources | append . -}}
 		{{- end -}}
 	{{- end -}}
 
-	{{- /* Add custom CSS */ -}}
-	{{- if isset .Site.Params "customcss" -}}
-		{{- range .Site.Params.customCSS -}}
-			{{- $customCSS := resources.Get . -}}
-			{{- if $customCSS -}}
-				{{- $allCSS = $allCSS | append $customCSS -}}
+	{{- if or (eq .Kind "taxonomy") (eq .Kind "term") -}}
+		{{- with resources.Get "css/tags.css" -}}
+			{{- $cssResources = $cssResources | append . -}}
+		{{- end -}}
+	{{- end -}}
+
+	{{- $customCSS := .Site.Params.customCSS -}}
+	{{- if $customCSS -}}
+		{{- $customSlice := cond (reflect.IsSlice $customCSS) $customCSS (slice $customCSS) -}}
+		{{- range $customSlice -}}
+			{{- with resources.Get . -}}
+				{{- $cssResources = $cssResources | append . -}}
 			{{- end -}}
 		{{- end -}}
 	{{- end -}}
 
-	{{- /* Add dark mode CSS */ -}}
-	{{- $darkCSS := resources.Get "css/dark.css" -}}
-	{{- if $darkCSS -}}
-		{{- $allCSS = $allCSS | append $darkCSS -}}
+	{{- with resources.Get "css/dark.css" -}}
+		{{- $cssResources = $cssResources | append . -}}
 	{{- end -}}
 
-	{{- /* Add conditional CSS files */ -}}
 	{{- if .Site.Params.enablePagefind -}}
-		{{- $searchCSS := resources.Get "css/search.css" -}}
-		{{- if $searchCSS -}}
-			{{- $allCSS = $allCSS | append $searchCSS -}}
+		{{- with resources.Get "css/search.css" -}}
+			{{- $cssResources = $cssResources | append . -}}
 		{{- end -}}
 	{{- end -}}
 
 	{{- if eq .Layout "topic-hub" -}}
-		{{- $topicCSS := resources.Get "css/topic-hub.css" -}}
-		{{- if $topicCSS -}}
-			{{- $allCSS = $allCSS | append $topicCSS -}}
+		{{- with resources.Get "css/topic-hub.css" -}}
+			{{- $cssResources = $cssResources | append . -}}
 		{{- end -}}
 	{{- end -}}
 
-    {{- /* Series-specific CSS */ -}}
-    {{- if eq .Type "series" -}}
-        {{- $seriesCSS := resources.Get "css/series.css" -}}
-        {{- if $seriesCSS -}}
-            {{- $allCSS = $allCSS | append $seriesCSS -}}
-        {{- end -}}
-    {{- end -}}
-
-	{{- $accessibilityCSS := resources.Get "css/accessibility.css" -}}
-	{{- if $accessibilityCSS -}}
-		{{- $allCSS = $allCSS | append $accessibilityCSS -}}
+	{{- if eq .Type "series" -}}
+		{{- with resources.Get "css/series.css" -}}
+			{{- $cssResources = $cssResources | append . -}}
+		{{- end -}}
 	{{- end -}}
 
 	{{- if or (eq .Type "about") (in .RelPermalink "/about") -}}
-		{{- $authorEEATCSS := resources.Get "css/author-eeat.css" -}}
-		{{- if $authorEEATCSS -}}
-			{{- $allCSS = $allCSS | append $authorEEATCSS -}}
+		{{- with resources.Get "css/author-eeat.css" -}}
+			{{- $cssResources = $cssResources | append . -}}
 		{{- end -}}
 	{{- end -}}
 
-	{{- $aestheticCSS := resources.Get "css/aesthetic-refinements.css" -}}
-	{{- if $aestheticCSS -}}
-		{{- $allCSS = $allCSS | append $aestheticCSS -}}
+	{{- with resources.Get "css/aesthetic-refinements.css" -}}
+		{{- $cssResources = $cssResources | append . -}}
 	{{- end -}}
 
-	{{- /* Bundle all CSS into single file */ -}}
-	{{- $bundledCSS := $allCSS | resources.Concat "css/bundle.css" | resources.Minify | resources.Fingerprint -}}
-
-	{{- /* Critical CSS inlined for faster rendering */ -}}
-	<style>
+	{{- if gt (len $cssResources) 0 -}}
+		{{- $bundle := $cssResources | resources.Concat "css/bundle.css" | resources.Minify | resources.Fingerprint -}}
+		<style>
 	body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#212121;margin:0;padding:0}
 	.container{max-width:900px;margin:0 auto;padding:0 1rem}
 	.header{text-align:center;padding:2rem 0}
@@ -155,59 +118,44 @@
 	.dark{color:#e0e0e0;background:#1a1a1a}
 	.dark .site-title a{color:#e0e0e0}
 	</style>
-
-	<link rel="stylesheet" href="{{ $bundledCSS.RelPermalink }}" integrity="{{ $bundledCSS.Data.Integrity }}">
-
-	{{- $enableUmami := and (isset .Site.Params "enableumami") (.Site.Params.enableUmami) -}}
-	{{- $hasURL := isset .Site.Params "umamiurl" -}}
-	{{- $hasID := isset .Site.Params "umamiwebsiteid" -}}
-	{{- if and $enableUmami $hasURL $hasID -}}
-	<script defer src="{{ .Site.Params.umamiURL }}" data-website-id="{{ .Site.Params.umamiWebsiteId }}"
-		data-tag="blog"></script>
+		<link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}">
 	{{- end -}}
-	{{- /* JavaScript assets with Hugo Pipes and SRI */ -}}
+
+	{{- $enableUmami := and (isset .Site.Params "enableUmami") (.Site.Params.enableUmami) -}}
+	{{- $hasURL := isset .Site.Params "umamiURL" -}}
+	{{- $hasID := isset .Site.Params "umamiWebsiteId" -}}
+	{{- if and $enableUmami $hasURL $hasID -}}
+	<script defer src="{{ .Site.Params.umamiURL }}" data-website-id="{{ .Site.Params.umamiWebsiteId }}" data-tag="blog"></script>
+	{{- end -}}
+
 	{{ if and (isset .Site.Params "social") (isset .Site.Params "feathericonscdn") (eq .Site.Params.featherIconsCDN true) -}}
-		{{- /* CDN version with SRI */ -}}
-		<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"
-		        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-		        crossorigin="anonymous" defer></script>
+		<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous" defer></script>
 	{{- else if (isset .Site.Params "social") -}}
-		{{- /* Local feather icons */ -}}
-		{{- $feather := resources.Get "js/feather.min.js" -}}
-		{{- if $feather -}}
-			{{- $featherProcessed := $feather | resources.Minify | resources.Fingerprint -}}
-			<script src="{{ $featherProcessed.RelPermalink }}" integrity="{{ $featherProcessed.Data.Integrity }}" defer></script>
+		{{- with resources.Get "js/feather.min.js" -}}
+			{{- $feather := . | resources.Minify | resources.Fingerprint -}}
+			<script src="{{ $feather.RelPermalink }}" integrity="{{ $feather.Data.Integrity }}" defer></script>
 		{{- end -}}
 	{{ end }}
 
-	{{- /* Main theme JavaScript */ -}}
-	{{- $mainJS := resources.Get "js/main.js" -}}
-	{{- if $mainJS -}}
-		{{- $mainJSProcessed := $mainJS | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $mainJSProcessed.RelPermalink }}" integrity="{{ $mainJSProcessed.Data.Integrity }}" defer></script>
+	{{- with resources.Get "js/main.js" -}}
+		{{- $mainJS := . | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $mainJS.RelPermalink }}" integrity="{{ $mainJS.Data.Integrity }}" defer></script>
 	{{- end -}}
 
-	{{- /* Social share initializer (copy link) */ -}}
-	{{- $shareInit := resources.Get "js/share-init.js" -}}
-	{{- if $shareInit -}}
-		{{- $shareInitProcessed := $shareInit | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $shareInitProcessed.RelPermalink }}" integrity="{{ $shareInitProcessed.Data.Integrity }}" defer></script>
+	{{- range (slice "js/share-init.js" "js/codeblock-init.js") -}}
+		{{- with resources.Get . -}}
+			{{- $script := . | resources.Minify | resources.Fingerprint -}}
+			<script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" defer></script>
+		{{- end -}}
 	{{- end -}}
 
-	{{- /* Codeblock initializer (CSP-safe): adds language pill, tools */ -}}
-	{{- $cbInit := resources.Get "js/codeblock-init.js" -}}
-	{{- if $cbInit -}}
-		{{- $cbInitProcessed := $cbInit | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $cbInitProcessed.RelPermalink }}" integrity="{{ $cbInitProcessed.Data.Integrity }}" defer></script>
-	{{- end -}}
-
-	{{- /* Custom JavaScript if defined */ -}}
-	{{- if isset .Site.Params "customjs" -}}
-		{{- range .Site.Params.customJS -}}
-			{{- $customJS := resources.Get . -}}
-			{{- if $customJS -}}
-				{{- $customJSProcessed := $customJS | resources.Minify | resources.Fingerprint -}}
-				<script src="{{ $customJSProcessed.RelPermalink }}" integrity="{{ $customJSProcessed.Data.Integrity }}" defer></script>
+	{{- $customJS := .Site.Params.customJS -}}
+	{{- if $customJS -}}
+		{{- $jsSlice := cond (reflect.IsSlice $customJS) $customJS (slice $customJS) -}}
+		{{- range $jsSlice -}}
+			{{- with resources.Get . -}}
+				{{- $script := . | resources.Minify | resources.Fingerprint -}}
+				<script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" defer></script>
 			{{- end -}}
 		{{- end -}}
 	{{- end -}}

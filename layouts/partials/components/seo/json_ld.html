@@ -1,18 +1,47 @@
-{{- /*
-  Component: JSON-LD Structured Data
-  Purpose: Generate Schema.org structured data for better SEO
+{{- /* Resolve author data safely without hard-coded defaults */ -}}
+{{- $scratch := newScratch -}}
+{{- $scratch.Set "author" nil -}}
+{{- $authors := .Site.Data.authors -}}
 
-  Generates:
-    - Article schema for posts
-    - WebSite schema for homepage
-    - BreadcrumbList schema for navigation
+{{- with .Params.author }}
+  {{- with $authors }}
+    {{- with index . . }}
+      {{- $scratch.Set "author" . -}}
+    {{- end }}
+  {{- end }}
+{{- end }}
 
-  Usage:
-    {{ partial "components/seo/json_ld.html" . }}
-*/ -}}
+{{- if not ($scratch.Get "author") -}}
+  {{- with .Site.Params.author.id }}
+    {{- with $authors }}
+      {{- with index . . }}
+        {{- $scratch.Set "author" . -}}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
 
-{{- $authorId := .Params.author | default "vitthal-mirji" -}}
-{{- $author := index .Site.Data.authors $authorId -}}
+{{- if and (not ($scratch.Get "author")) $authors -}}
+  {{- range $id, $data := $authors -}}
+    {{- if not ($scratch.Get "author") }}{{- $scratch.Set "author" $data -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $author := $scratch.Get "author" -}}
+
+{{- $scratch.Set "authorName" (.Site.Params.author.name | default .Site.Author.name) -}}
+{{- $scratch.Set "authorRole" (.Site.Params.author.role) -}}
+{{- $scratch.Set "authorURL" (.Site.Params.author.url) -}}
+
+{{- if $author -}}
+  {{- $scratch.Set "authorName" ($author.fullName | default $author.name) -}}
+  {{- $scratch.Set "authorRole" ($author.role | default ($scratch.Get "authorRole")) -}}
+  {{- $scratch.Set "authorURL" ($author.website | default ($scratch.Get "authorURL")) -}}
+{{- end -}}
+
+{{- $authorName := $scratch.Get "authorName" -}}
+{{- $authorRole := $scratch.Get "authorRole" -}}
+{{- $authorURL := $scratch.Get "authorURL" -}}
 
 {{- if eq .Type "posts" -}}
 <script type="application/ld+json">
@@ -27,17 +56,10 @@
   "dateModified": {{ .Format "2006-01-02T15:04:05Z07:00" | jsonify }},
   {{- end -}}
   "author": {
-    "@type": "Person",
-    "name": {{ if $author }}{{ $author.fullName | default $author.name | jsonify }}{{ else }}"Vitthal Mirji"{{ end }},
-    {{- if and $author $author.website -}}
-    "url": {{ $author.website | jsonify }},
-    {{- end -}}
-    {{- if and $author $author.twitter -}}
-    "sameAs": [
-      {{ printf "https://twitter.com/%s" $author.twitter | jsonify }}
-    ],
-    {{- end -}}
-    "jobTitle": {{ if $author }}{{ $author.role | jsonify }}{{ else }}"Staff Data Engineer"{{ end }}
+    "@type": "Person"{{ if $authorName }},
+    "name": {{ $authorName | jsonify }}{{ end }}{{ if $authorURL }},
+    "url": {{ $authorURL | jsonify }}{{ end }}{{ if $authorRole }},
+    "jobTitle": {{ $authorRole | jsonify }}{{ end }}
   },
   "publisher": {
     "@type": "Organization",
@@ -58,7 +80,7 @@
   {{- with .WordCount -}}
   "wordCount": {{ . }},
   {{- end -}}
-  "articleSection": {{ with .Params.categories }}{{ index . 0 | jsonify }}{{ else }}"Technology"{{ end }}
+  "articleSection": {{ with .Params.categories }}{{ index . 0 | jsonify }}{{ else }}{{ .Section | default "Posts" | title | jsonify }}{{ end }}
 }
 </script>
 {{- else if .IsHome -}}

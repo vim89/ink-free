@@ -58,3 +58,4 @@ Temporary Items
 .hugo_build.lock
 exampleSite/public
 *.xlsx
+.idea/

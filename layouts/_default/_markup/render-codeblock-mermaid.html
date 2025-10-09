@@ -1,4 +1,6 @@
 <pre class="mermaid">
   {{- .Inner | htmlEscape | safeHTML }}
 </pre>
+{{- /* Support both Store and Scratch so downstream partials can detect Mermaid usage */ -}}
+{{- .Page.Store.Set "hasMermaid" true -}}
 {{- .Page.Scratch.Set "hasMermaid" true -}}

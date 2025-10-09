@@ -14,5 +14,7 @@
     {{ end }}
     {{ .Content }}
     {{ partial "article_footer.html" . }}
+    {{ if templates.Exists "partials/series_nav.html" }}
     {{ partial "series_nav.html" . }}
+    {{ end }}
 </div>

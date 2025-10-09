@@ -1,228 +1,112 @@
-{{- /* Enhanced Author E-E-A-T (Expertise, Authoritativeness, Trustworthiness) Signals */ -}}
-
-{{- $author := .Site.Params.author -}}
+{{- $profile := site.Data.profile -}}
+{{- if $profile -}}
+{{- $author := $profile.author -}}
 {{- $social := .Site.Params.social -}}
-
+{{- if $author -}}
 <section class="author-eeat" itemscope itemtype="https://schema.org/Person">
-  {{- /* Structured Data for Author */ -}}
-  <meta itemprop="name" content="{{ $author.name }}">
-  <meta itemprop="jobTitle" content="Staff Data Engineer & Data Architect">
-  <meta itemprop="worksFor" content="Walmart Global Tech">
-  <meta itemprop="knowsAbout" content="Data Engineering, Scala, Big Data, Cloud Computing, Software Architecture, Apache Spark, Functional Programming">
-  <meta itemprop="alumniOf" content="Visveswaraya University">
-  <meta itemprop="homeLocation" content="Mumbai, India">
+  {{- with $author.meta }}
+  {{- with $.Site.Params.author.name }}<meta itemprop="name" content="{{ . }}">{{ end }}
+  {{- with .job_title }}<meta itemprop="jobTitle" content="{{ . }}">{{ end }}
+  {{- with .works_for }}<meta itemprop="worksFor" content="{{ . }}">{{ end }}
+  {{- with .knows_about }}<meta itemprop="knowsAbout" content="{{ delimit . ", " }}">{{ end }}
+  {{- with .alumni_of }}<meta itemprop="alumniOf" content="{{ . }}">{{ end }}
+  {{- with .home_location }}<meta itemprop="homeLocation" content="{{ . }}">{{ end }}
+  {{- end }}
 
-  {{- /* Social Proof and Authority Signals */ -}}
   <div class="author-credentials">
     <div class="author-title">
-      <h2>About the Author</h2>
+      <h2>{{ default "About the Author" $.Site.Params.author.title }}</h2>
     </div>
 
+    {{- with $author.credentials }}
     <div class="author-expertise">
+      {{- range . }}
       <div class="expertise-badge">
-        <span class="badge-icon">🏆</span>
+        {{- with .icon }}<span class="badge-icon">{{ . }}</span>{{ end }}
         <div class="badge-content">
-          <strong>Staff Data Engineer</strong>
-          <p>Senior-level expertise in distributed systems and data architecture</p>
+          <strong>{{ .title }}</strong>
+          {{- with .summary }}<p>{{ . }}</p>{{ end }}
         </div>
       </div>
-
-      <div class="expertise-badge">
-        <span class="badge-icon">🎓</span>
-        <div class="badge-content">
-          <strong>Technical Speaker & Educator</strong>
-          <p>Regular speaker at conferences and technical meetups</p>
-        </div>
-      </div>
-
-      <div class="expertise-badge">
-        <span class="badge-icon">🚀</span>
-        <div class="badge-content">
-          <strong>Open Source Contributor</strong>
-          <p>Active contributor to data engineering and build tools</p>
-        </div>
-      </div>
+      {{- end }}
     </div>
+    {{- end }}
 
-    {{- /* Personal Philosophy */ -}}
+    {{- with $author.philosophy.items }}
     <div class="personal-philosophy">
-      <h3>My Approach</h3>
+      <h3>{{ default "My Approach" $author.philosophy.title }}</h3>
       <div class="philosophy-grid">
+        {{- range . }}
         <div class="philosophy-item">
-          <span class="philosophy-icon">🔧</span>
+          {{- with .icon }}<span class="philosophy-icon">{{ . }}</span>{{ end }}
           <div class="philosophy-content">
-            <strong>Build > Talk</strong>
-            <p>I believe in creating things that actually work. Every project teaches something new.</p>
+            <strong>{{ .title }}</strong>
+            {{- with .summary }}<p>{{ . }}</p>{{ end }}
           </div>
         </div>
-
-        <div class="philosophy-item">
-          <span class="philosophy-icon">🎯</span>
-          <div class="philosophy-content">
-            <strong>Type Safety First</strong>
-            <p>Catch errors at compile time, not in production. Scala's type system is a superpower.</p>
-          </div>
-        </div>
-
-        <div class="philosophy-item">
-          <span class="philosophy-icon">🌱</span>
-          <div class="philosophy-content">
-            <strong>Share Knowledge</strong>
-            <p>Open source, conference talks, and mentoring. Knowledge grows when shared.</p>
-          </div>
-        </div>
-
-        <div class="philosophy-item">
-          <span class="philosophy-icon">🚀</span>
-          <div class="philosophy-content">
-            <strong>Functional Thinking</strong>
-            <p>Immutability and pure functions make complex systems predictable and maintainable.</p>
-          </div>
-        </div>
+        {{- end }}
       </div>
     </div>
+    {{- end }}
 
-    {{- /* Creative Let's Connect Section */ -}}
     <div class="connect-section">
-      <h3>Let's Connect (I Promise to Respond with Type-Safe Communication)</h3>
-      <p class="connect-intro">Whether you want to discuss monads over biryani, debate the superiority of immutability, or just need someone to review your Scala code - I'm here for it.</p>
+      <h3>{{ default "Let's Connect" $author.connect_title }}</h3>
+      {{- with $author.connect_intro }}<p class="connect-intro">{{ . }}</p>{{ end }}
 
       <div class="connect-grid">
-        {{- range $social -}}
+        {{- range $social }}
         <a href="{{ .url }}" class="connect-link" rel="me" itemprop="sameAs" target="_blank">
-          <span class="connect-icon">{{ if eq .name "Github" }}💻{{ else if eq .name "LinkedIn" }}👔{{ else if eq .name "Twitter" }}🐦{{ else if eq .name "RSS" }}📡{{ end }}</span>
+          <span class="connect-icon">{{ if eq .name "Github" }}💻{{ else if eq .name "LinkedIn" }}👔{{ else if eq .name "Twitter" }}🐦{{ else if eq .name "RSS" }}📡{{ else }}🔗{{ end }}</span>
           <div class="connect-content">
             <strong>{{ .name }}</strong>
-            <span class="connect-desc">{{ if eq .name "Github" }}Where the real magic happens{{ else if eq .name "LinkedIn" }}Professional thoughts{{ else if eq .name "Twitter" }}Random musings{{ else if eq .name "RSS" }}Fresh content{{ end }}</span>
+            {{- with .description }}<span class="connect-desc">{{ . }}</span>{{ end }}
           </div>
           <span class="external-link">↗</span>
         </a>
-        {{- end -}}
-
+        {{- end }}
+        {{- with $author.extra_links }}
+        {{- range . }}
         <div class="connect-link">
-          <span class="connect-icon">📧</span>
+          {{- with .icon }}<span class="connect-icon">{{ . }}</span>{{ end }}
           <div class="connect-content">
-            <strong>vitthalmirji@gmail.com</strong>
-            <span class="connect-desc">Direct line for serious conversations</span>
+            <strong>{{ .label }}</strong>
+            {{- with .description }}<span class="connect-desc">{{ . }}</span>{{ end }}
           </div>
         </div>
-
-        <div class="connect-link">
-          <span class="connect-icon">📍</span>
-          <div class="connect-content">
-            <strong>Mumbai, India</strong>
-            <span class="connect-desc">Where the best Vadapav meets the best code</span>
-          </div>
-        </div>
-
-        <div class="connect-link">
-          <span class="connect-icon">🎤</span>
-          <div class="connect-content">
-            <strong>Conference Speaker</strong>
-            <span class="connect-desc">6+ countries, infinite coffee</span>
-          </div>
-        </div>
+        {{- end }}
+        {{- end }}
       </div>
 
-      {{- /* Conference Talks Section */ -}}
+      {{- with $author.talks }}
       <div class="conference-talks">
-        <h4>🎤 Recent talks</h4>
-        <p>Because sometimes you need to see the code in action:</p>
-
+        <h4>{{ default "Recent Talks" $author.talks_title }}</h4>
+        <p>{{ default "Because sometimes you need to see the code in action:" $author.talks_intro }}</p>
         <div class="talks-grid">
+          {{- range . }}
           <div class="talk-card">
             <div class="talk-header">
-              <span class="talk-icon">🇮🇳</span>
+              {{- with .icon }}<span class="talk-icon">{{ . }}</span>{{ end }}
               <div class="talk-info">
-                <h5>Scala India</h5>
-                <span class="talk-location">YouTube recording</span>
+                <h5>{{ .event }}</h5>
+                {{- with .location }}<span class="talk-location">{{ . }}</span>{{ end }}
               </div>
             </div>
-            <p class="talk-title">Deep dive into Scala frameworks and functional programming approaches</p>
+            <p class="talk-title">{{ .title }}</p>
+            {{- if and .link_label .link_url }}
             <div class="talk-links">
-              <a href="https://youtu.be/bAq8N2ljefU" target="_blank" class="talk-link">
-                <span class="talk-link-icon">📺</span>
-                Watch recording
-              </a>
-            </div>
-          </div>
-
-          <div class="talk-card">
-            <div class="talk-header">
-              <span class="talk-icon">🇫🇷</span>
-              <div class="talk-info">
-                <h5>scala.io Paris 2025</h5>
-                <span class="talk-location">Paris, France</span>
-              </div>
-            </div>
-            <p class="talk-title">"Compile-time contracts & Fiber-safe data pipelines"</p>
-            <div class="talk-links">
-              <a href="https://scala.io/sessions/paris-2025/compile-time-contracts-fiber-safe-data-pipelines" target="_blank" class="talk-link">
+              <a href="{{ .link_url }}" target="_blank" class="talk-link" rel="noopener noreferrer">
                 <span class="talk-link-icon">🔗</span>
-                Event Details
+                {{ .link_label }}
               </a>
             </div>
+            {{- end }}
           </div>
-        </div>
-
-        <div class="github-stats">
-          <h4>📊 GitHub contribution timeline</h4>
-          <div class="contribution-timeline">
-            <div class="timeline-item">
-              <span class="timeline-icon">📤</span>
-              <div class="timeline-content">
-                <strong>Pull Requests</strong>
-                <div class="contribution-bar">
-                  <div class="contribution-fill" style="width: 85%"></div>
-                  <span class="contribution-percent">85%</span>
-                </div>
-                <span class="contribution-desc">Merged successfully across multiple repos</span>
-              </div>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-icon">💻</span>
-              <div class="timeline-content">
-                <strong>Commits</strong>
-                <div class="contribution-bar">
-                  <div class="contribution-fill" style="width: 92%"></div>
-                  <span class="contribution-percent">92%</span>
-                </div>
-                <span class="contribution-desc">Consistent daily contributions</span>
-              </div>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-icon">🐛</span>
-              <div class="timeline-content">
-                <strong>Issues</strong>
-                <div class="contribution-bar">
-                  <div class="contribution-fill" style="width: 78%"></div>
-                  <span class="contribution-percent">78%</span>
-                </div>
-                <span class="contribution-desc">Closed with detailed solutions</span>
-              </div>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-icon">👀</span>
-              <div class="timeline-content">
-                <strong>Code Reviews</strong>
-                <div class="contribution-bar">
-                  <div class="contribution-fill" style="width: 88%"></div>
-                  <span class="contribution-percent">88%</span>
-                </div>
-                <span class="contribution-desc">Thorough and constructive feedback</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="github-profile-link">
-            <a href="https://github.com/vim89" target="_blank" class="profile-link">
-              <span class="profile-icon">📊</span>
-              <strong>More on github</strong>
-              <span class="external-link">↗</span>
-            </a>
-          </div>
+          {{- end }}
         </div>
       </div>
+      {{- end }}
     </div>
   </div>
 </section>
+{{- end -}}
+{{- end -}}
