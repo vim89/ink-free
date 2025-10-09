@@ -1,139 +1,83 @@
-{{- /* Personal Projects & Open Source Contributions */ -}}
-<section class="projects-showcase">
-  <h2>What I actually build (github)</h2>
-  <p class="showcase-subtitle">Here's where your compile-time safety meets my runtime reality.</p>
+{{- $profile := site.Data.profile -}}
+{{- if $profile -}}
+{{- $showcase := $profile.about.project_showcase -}}
+{{- if $showcase -}}
+<section class="series-index" id="project-showcase">
+  <header class="series-header">
+    <h2>{{ $showcase.title }}</h2>
+    {{- with $showcase.subtitle }}<p class="series-description">{{ . }}</p>{{ end }}
+  </header>
 
-  {{- /* Featured project - flowforge flagship */ -}}
-  <div class="project-featured">
-    <div class="project-hero">
-      <div class="project-icon">🔧</div>
-      <div class="project-info">
-        <h3>flowforge - Type-safe Data Engineering framework</h3>
-        <div class="project-tagline">Build data pipelines that fail at compile time when contracts drift, not at 3 AM in production</div>
-        <div class="project-stats">
-          <span class="stat">🏗️ Complete Framework Architecture</span>
-          <span class="stat">📊 CI/CD + Test Coverage</span>
-          <span class="stat">🔌 Multi-Connector Support</span>
-          <span class="stat">📈 Built-in Lineage Tracking</span>
-          <span class="stat">📚 Comprehensive Documentation</span>
-        </div>
-        <div class="project-links">
-          <a href="https://github.com/vim89/flowforge" class="project-link primary" target="_blank">GitHub Repository</a>
-          <a href="https://vim89.github.io/flowforge/api/" class="project-link secondary" target="_blank">API Documentation</a>
-        </div>
+  <div class="series-content">
+    {{- with $showcase.featured }}
+    <div class="series-card">
+      <div class="series-card-header">
+        {{- with .icon }}<div class="topic-icon">{{ . }}</div>{{ end }}
+        <h3 class="series-card-title">
+          {{- if .links }}
+            <a href="{{ (index .links 0).url }}" target="_blank" rel="noopener noreferrer">{{ .name }}</a>
+          {{- else }}
+            {{ .name }}
+          {{- end }}
+        </h3>
       </div>
+      {{- with .tagline }}<p class="series-card-description">{{ . }}</p>{{ end }}
+      {{- with .stats }}
+      <div class="series-article-tags">
+        {{- range . }}<span class="tag">{{ . }}</span>{{ end }}
+      </div>
+      {{- end }}
+      {{- with .links }}
+      <div class="series-card-footer">
+        {{- range . }}
+        <a href="{{ .url }}" class="series-card-link" target="_blank" rel="noopener noreferrer">{{ .label }} →</a>
+        {{- end }}
+      </div>
+      {{- end }}
     </div>
-    <div class="project-description">
-      <p>A production-ready Scala framework for data engineering that catches schema issues during <code>sbt compile</code> using typed contracts and policies. Features pure transformations, effect-safe connectors (S3, GCS, Kafka, BigQuery), built-in quality validation, and OpenLineage integration for complete data lineage tracking.</p>
+    {{- end }}
+
+    {{- with $showcase.projects }}
+    {{- range . }}
+    <div class="series-card">
+      <div class="series-card-header">
+        {{- with .icon }}<div class="topic-icon">{{ . }}</div>{{ end }}
+        <h3 class="series-card-title">
+          {{- if and .link .link.url }}
+            <a href="{{ .link.url }}" target="_blank" rel="noopener noreferrer">{{ .name }}</a>
+          {{- else }}
+            {{ .name }}
+          {{- end }}
+        </h3>
+      </div>
+      {{- with .summary }}<p class="series-card-description">{{ . }}</p>{{ end }}
+      {{- with .tags }}
+      <div class="series-article-tags">
+        {{- range . }}<span class="tag">{{ . }}</span>{{ end }}
+      </div>
+      {{- end }}
+      {{- with .link }}
+      {{- if and .label .url }}
+      <div class="series-card-footer">
+        <a href="{{ .url }}" class="series-card-link" target="_blank" rel="noopener noreferrer">{{ .label }} →</a>
+      </div>
+      {{- end }}
+      {{- end }}
     </div>
+    {{- end }}
+    {{- end }}
   </div>
 
-  {{- /* Project Grid */ -}}
-  <div class="projects-grid">
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">🤖</span>
-        <div class="project-title">
-          <h4>LLM4S</h4>
-          <span class="project-subtitle">Large Language Models for Scala</span>
-        </div>
-      </div>
-      <p>AI framework for Scala with multi-provider support, agent frameworks, and type safety. Featured at Scala Days 2025, GSoC mentoring program with 4 contributors, and conferences across 6+ countries.</p>
-      <div class="project-tech">
-        <span class="tech-tag">Scala 2.13 & 3</span>
-        <span class="tech-tag">Multi-Provider</span>
-        <span class="tech-tag">Agent Framework</span>
-      </div>
-      <a href="https://github.com/llm4s/llm4s" class="project-link primary" target="_blank">View on GitHub</a>
-    </div>
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">🚀</span>
-        <div class="project-title">
-          <h4>Valmuri</h4>
-          <span class="project-subtitle">Fullstack Scala (Yes, Really)</span>
-        </div>
-      </div>
-      <p>A true full-stack web framework that starts in 50ms while Spring Boot is still loading its XML. Auto-configuration, dependency injection, and zero external dependencies.</p>
-      <div class="project-tech">
-        <span class="tech-tag">Scala 2.13</span>
-        <span class="tech-tag">Zero Dependencies</span>
-        <span class="tech-tag">JDK HTTP Server</span>
-      </div>
-      <a href="https://github.com/vim89/valmuri" class="project-link primary" target="_blank">View on GitHub</a>
-    </div>
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">📊</span>
-        <div class="project-title">
-          <h4>Compile-time Data Contracts</h4>
-          <span class="project-subtitle">Schema drift detection at Compile time</span>
-        </div>
-      </div>
-      <p>Scala 3 macros + Spark POC where pipelines don't compile if schemas drift. Type-level validation using quotes reflection because runtime surprises are for amateurs.</p>
-      <div class="project-tech">
-        <span class="tech-tag">Scala 3</span>
-        <span class="tech-tag">Macros</span>
-        <span class="tech-tag">Apache Spark</span>
-      </div>
-      <a href="https://github.com/vim89/compile-time-data-contracts" class="project-link primary" target="_blank">View on GitHub</a>
-    </div>
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">☁️</span>
-        <div class="project-title">
-          <h4>Abortable Bytes</h4>
-          <span class="project-subtitle">Cancel-safe cloud uploads</span>
-        </div>
-      </div>
-      <p>Making cloud uploads resumable with Cats Effect and Kyo. Proves cancellation doesn't finalize objects and implements deterministic replay buffers.</p>
-      <div class="project-tech">
-        <span class="tech-tag">Scala 3</span>
-        <span class="tech-tag">Cats Effect</span>
-        <span class="tech-tag">Kyo</span>
-      </div>
-      <a href="https://github.com/vim89/abortable-bytes" class="project-link primary" target="_blank">View on GitHub</a>
-    </div>
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">🎨</span>
-        <div class="project-title">
-          <h4>DataEngineering-Savvy</h4>
-          <span class="project-subtitle">Functional Data Engineering</span>
-        </div>
-      </div>
-      <p>Applying functional programming influence to data engineering. Chain algorithm steps with the power of Scala because spaghetti code is for dinner, not data pipelines.</p>
-      <div class="project-tech">
-        <span class="tech-tag">Scala</span>
-        <span class="tech-tag">Functional Programming</span>
-        <span class="tech-tag">Data Engineering</span>
-      </div>
-      <a href="https://github.com/vim89/dataengineering-savvy" class="project-link primary" target="_blank">View on GitHub</a>
-    </div>
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">🌐</span>
-        <div class="project-title">
-          <h4>Ink-Free Theme</h4>
-          <span class="project-subtitle">Hugo theme development</span>
-        </div>
-      </div>
-      <p>Custom Hugo theme with performance optimization, dark mode, and the kind of attention to detail that makes designers weep tears of joy.</p>
-      <div class="project-tech">
-        <span class="tech-tag">Hugo</span>
-        <span class="tech-tag">CSS</span>
-        <span class="tech-tag">JavaScript</span>
-      </div>
-      <a href="https://github.com/vim89/ink-free" class="project-link primary" target="_blank">View on GitHub</a>
-    </div>
-  </div>
-
-  <div class="projects-footer">
-    <p class="footer-text">Want to see more? Check out my <a href="https://github.com/vim89" target="_blank">GitHub profile</a> where I keep the code that actually matters.</p>
-  </div>
+  {{- with $showcase.footer }}
+  <footer class="series-footer">
+    <p class="series-footer-text">
+      {{- .text -}}
+      {{- if and .link_label .link_url }}
+        <a href="{{ .link_url }}" target="_blank" rel="noopener noreferrer">{{ .link_label }}</a>
+      {{- end }}
+    </p>
+  </footer>
+  {{- end }}
 </section>
+{{- end -}}
+{{- end -}}

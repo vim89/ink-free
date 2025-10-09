@@ -1,89 +1,31 @@
-{{- /* Technical Skills & Expertise */ -}}
-<section class="technical-skills">
-  <h2>Technical Arsenal (Battle-tested)</h2>
-  <p class="skills-intro">Because good tools matter when you're building things that actually need to work.</p>
+{{- $profile := site.Data.profile -}}
+{{- if $profile -}}
+{{- $skills := $profile.skills -}}
+{{- if $skills -}}
+<section class="series-index" id="technical-skills">
+  <header class="series-header">
+    <h2>{{ $skills.heading | default "Technical Skills" }}</h2>
+    {{- with $skills.subtitle }}<p class="series-description">{{ . }}</p>{{ end }}
+  </header>
 
   <div class="skills-grid">
-    <div class="skill-category">
-      <h3>
-        <span class="skill-icon">⚡</span>
-        The usual suspects
-      </h3>
-      <div class="skill-tags">
-        <span class="skill-tag primary">Scala</span>
-        <span class="skill-tag primary">Apache Spark</span>
-        <span class="skill-tag primary">Functional Programming</span>
-        <span class="skill-tag">Python</span>
-        <span class="skill-tag">Java</span>
-        <span class="skill-tag">Data Engineering</span>
-        <span class="skill-tag">SQL</span>
+    {{- with $skills.stacks }}
+    {{- range . }}
+    <div class="skill-card">
+      <div class="skill-card-header">
+        {{- with .icon }}<span class="skill-icon">{{ . }}</span>{{ end }}
+        <h3>{{ .title }}</h3>
       </div>
+      {{- with .description }}<p class="skill-description">{{ . }}</p>{{ end }}
+      {{- with .items }}
+      <ul class="skill-list">
+        {{- range . }}<li>{{ . }}</li>{{ end }}
+      </ul>
+      {{- end }}
     </div>
-
-    <div class="skill-category">
-      <h3>
-        <span class="skill-icon">☁️</span>
-        Cloud & Distributed systems
-      </h3>
-      <div class="skill-tags">
-        <span class="skill-tag primary">AWS (S3, Glue, EMR)</span>
-        <span class="skill-tag primary">GCP (BigQuery, Dataflow)</span>
-        <span class="skill-tag primary">Apache Kafka</span>
-        <span class="skill-tag">Databricks</span>
-        <span class="skill-tag">Apache Flink</span>
-        <span class="skill-tag">Kubernetes</span>
-      </div>
-    </div>
-
-    <div class="skill-category">
-      <h3>
-        <span class="skill-icon">🔧</span>
-        Frameworks & SDKs
-      </h3>
-      <div class="skill-tags">
-        <span class="skill-tag primary">Cats Effect & Zio</span>
-        <span class="skill-tag primary">Type-safe design</span>
-        <span class="skill-tag primary">Compile-time validation</span>
-        <span class="skill-tag">Effect Systems</span>
-        <span class="skill-tag">Macro Programming</span>
-        <span class="skill-tag">API Design</span>
-      </div>
-    </div>
-
-    <div class="skill-category">
-      <h3>
-        <span class="skill-icon">🎯</span>
-        Philosophy in practice
-      </h3>
-      <div class="skill-tags">
-        <span class="skill-tag primary">Immutability first</span>
-        <span class="skill-tag primary">Pure functions</span>
-        <span class="skill-tag primary">Compile-time safety</span>
-        <span class="skill-tag">Zero Runtime surprises</span>
-        <span class="skill-tag">Performance optimization</span>
-        <span class="skill-tag">Open source mentoring</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="tech-philosophy">
-    <h3>💭 Technical philosophy</h3>
-    <div class="philosophy-cards">
-      <div class="philosophy-card">
-        <span class="philosophy-emoji">🛡️</span>
-        <strong>Type safety over speed</strong>
-        <p>I'd rather catch bugs at compile time than debug them at 3 AM.</p>
-      </div>
-      <div class="philosophy-card">
-        <span class="philosophy-emoji">🚀</span>
-        <strong>Build Frameworks, not scripts</strong>
-        <p>Solve the problem once, properly, so others don't have to solve it again.</p>
-      </div>
-      <div class="philosophy-card">
-        <span class="philosophy-emoji">🎓</span>
-        <strong>Share everything</strong>
-        <p>Knowledge hoarding is for dragons. Code should be open, mentoring should be generous.</p>
-      </div>
-    </div>
+    {{- end }}
+    {{- end }}
   </div>
 </section>
+{{- end -}}
+{{- end -}}

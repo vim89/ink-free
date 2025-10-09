@@ -18,7 +18,7 @@
 
 {{- /* Author Bio Section */ -}}
 {{ if and (eq .Type "posts") (not .Params.hideAuthor) }}
-    {{- $authorId := .Params.author | default "vitthal-mirji" -}}
+    {{- $authorId := .Params.author | default .Site.Params.author.id -}}
     {{ partial "components/author/bio.html" (dict "authorId" $authorId "Site" .Site) }}
 {{ end }}
 

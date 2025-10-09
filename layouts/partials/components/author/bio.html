@@ -1,25 +1,29 @@
-{{- /*
-  Component: Author Bio
-  Purpose: Display author information with avatar, bio, and social links
+{{- $authors := .Site.Data.authors -}}
+{{- $authorId := .authorId | default .Site.Params.author.id -}}
+{{- $scratch := newScratch -}}
+{{- $scratch.Set "author" nil -}}
 
-  Parameters:
-    - .authorId (string): Author ID from data/authors.yaml (defaults to "vitthal-mirji")
+{{- if and $authorId $authors -}}
+  {{- with index $authors $authorId -}}
+    {{- $scratch.Set "author" . -}}
+  {{- end -}}
+{{- end -}}
 
-  Usage:
-    {{ partial "components/author/bio.html" (dict "authorId" "vitthal-mirji") }}
-    {{ partial "components/author/bio.html" (dict "authorId" .Params.author) }}
-*/ -}}
+{{- if and (not ($scratch.Get "author")) $authors -}}
+  {{- range $id, $data := $authors -}}
+    {{- if or (not $authorId) (not ($scratch.Get "author")) }}{{- $scratch.Set "author" $data -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
 
-{{- $authorId := .authorId | default "vitthal-mirji" -}}
-{{- $author := index .Site.Data.authors $authorId -}}
+{{- $author := $scratch.Get "author" -}}
 
 {{- if $author -}}
 <div class="author-bio" itemscope itemtype="https://schema.org/Person">
   <div class="author-bio-header">
-    {{- if $author.avatar -}}
+    {{- with $author.avatar -}}
     <img
-      src="{{ $author.avatar }}"
-      alt="{{ $author.avatarAlt | default (printf "%s profile photo" $author.name) }}"
+      src="{{ . }}"
+      alt="{{ $author.avatarAlt | default (printf "%s profile photo" ($author.fullName | default $author.name)) }}"
       class="author-avatar"
       itemprop="image"
       width="80"
@@ -33,36 +37,36 @@
 
       {{- if or $author.role $author.company -}}
       <p class="author-position">
-        {{- if $author.role -}}
-          <span itemprop="jobTitle">{{ $author.role }}</span>
+        {{- with $author.role -}}
+          <span itemprop="jobTitle">{{ . }}</span>
         {{- end -}}
         {{- if and $author.role $author.company -}}
           <span> @ </span>
         {{- end -}}
-        {{- if $author.company -}}
-          <span itemprop="worksFor">{{ $author.company }}</span>
+        {{- with $author.company -}}
+          <span itemprop="worksFor">{{ . }}</span>
         {{- end -}}
       </p>
       {{- end -}}
 
-      {{- if $author.location -}}
+      {{- with $author.location -}}
       <p class="author-location">
         <i data-feather="map-pin" aria-hidden="true"></i>
-        <span itemprop="address">{{ $author.location }}</span>
+        <span itemprop="address">{{ . }}</span>
       </p>
       {{- end -}}
     </div>
   </div>
 
-  {{- if $author.bio -}}
-  <p class="author-bio-text" itemprop="description">{{ $author.bio }}</p>
+  {{- with $author.bio -}}
+  <p class="author-bio-text" itemprop="description">{{ . }}</p>
   {{- end -}}
 
   {{- if or $author.twitter $author.github $author.linkedin $author.website -}}
   <div class="author-social-links">
-    {{- if $author.twitter -}}
+    {{- with $author.twitter -}}
     <a
-      href="https://twitter.com/{{ $author.twitter }}"
+      href="https://twitter.com/{{ . }}"
       target="_blank"
       rel="noopener noreferrer me"
       class="author-social-link"
@@ -74,9 +78,9 @@
     </a>
     {{- end -}}
 
-    {{- if $author.github -}}
+    {{- with $author.github -}}
     <a
-      href="https://github.com/{{ $author.github }}"
+      href="https://github.com/{{ . }}"
       target="_blank"
       rel="noopener noreferrer me"
       class="author-social-link"
@@ -88,9 +92,9 @@
     </a>
     {{- end -}}
 
-    {{- if $author.linkedin -}}
+    {{- with $author.linkedin -}}
     <a
-      href="https://www.linkedin.com/in/{{ $author.linkedin }}"
+      href="https://www.linkedin.com/in/{{ . }}"
       target="_blank"
       rel="noopener noreferrer me"
       class="author-social-link"
@@ -102,9 +106,9 @@
     </a>
     {{- end -}}
 
-    {{- if $author.website -}}
+    {{- with $author.website -}}
     <a
-      href="{{ $author.website }}"
+      href="{{ . }}"
       target="_blank"
       rel="noopener noreferrer me"
       class="author-social-link"
@@ -118,11 +122,11 @@
   </div>
   {{- end -}}
 
-  {{- if $author.expertise -}}
+  {{- with $author.expertise -}}
   <div class="author-expertise">
-    <h5>Expertise</h5>
+    <h5>{{ default "Expertise" $author.expertise_title }}</h5>
     <ul class="expertise-tags">
-      {{- range $author.expertise -}}
+      {{- range . -}}
       <li><span class="expertise-tag">{{ . }}</span></li>
       {{- end -}}
     </ul>

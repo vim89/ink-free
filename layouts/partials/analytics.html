@@ -1,2 +1,6 @@
-<script async defer data-website-id="{{ .Site.Params.umamiID }}"
-        src="https://analytics.vitthalmirji.com/umami.js"></script>
+{{- $enableUmami := .Site.Params.enableUmami | default false -}}
+{{- $hasUrl := .Site.Params.umamiURL -}}
+{{- $hasId := .Site.Params.umamiWebsiteId -}}
+{{- if and $enableUmami $hasUrl $hasId -}}
+<script async defer data-website-id="{{ $hasId }}" src="{{ $hasUrl }}"></script>
+{{- end -}}

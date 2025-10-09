@@ -1,16 +1,14 @@
-{{- /* Author Biography with E-E-A-T Signals Shortcode */ -}}
-
 {{- $includeEEAT := .Get "eeat" | default "true" -}}
 {{- $layout := .Get "layout" | default "full" -}}
+{{- $authorName := .Site.Params.author.name | default .Site.Author.name | default "The Author" -}}
+{{- $authorSummary := .Site.Params.author.summary | default .Site.Params.description -}}
 
 <div class="author-bio-section">
   {{- if eq $layout "compact" -}}
-    {{- /* Compact author bio for article footers */ -}}
     <div class="author-bio-compact">
       <div class="author-info">
-        <h3>About {{ .Site.Params.author.name }}</h3>
-        <p>Staff Data Engineer & Software Architect specializing in big data systems, Scala, and cloud architecture.
-           Passionate about open source, technical education, and building scalable data platforms.</p>
+        <h3>About {{ $authorName }}</h3>
+        {{- with $authorSummary }}<p>{{ . }}</p>{{ end }}
 
         <div class="author-links">
           {{- range .Site.Params.social -}}
@@ -22,22 +20,19 @@
       </div>
     </div>
   {{- else -}}
-    {{- /* Full E-E-A-T enhanced author section */ -}}
     {{- if eq $includeEEAT "true" -}}
       {{- partial "author-eeat.html" . -}}
     {{- else -}}
       <div class="author-bio-standard">
-        <h2>About {{ .Site.Params.author.name }}</h2>
-        <p>{{ .Site.Params.description }}</p>
+        <h2>About {{ $authorName }}</h2>
+        {{- with $authorSummary }}<p>{{ . }}</p>{{ else }}<p>{{ i18n "author_bio_default" | default "Stories about software, systems, and the people who build them." }}</p>{{ end }}
       </div>
     {{- end -}}
   {{- end -}}
 </div>
 
-{{- /* Include CSS for author bio */ -}}
 {{- if eq $includeEEAT "true" -}}
 <style>
-  /* Inline critical styles for author bio */
   .author-bio-section {
     margin: 2rem 0;
   }
