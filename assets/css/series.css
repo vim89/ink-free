@@ -211,9 +211,24 @@
 /* Series Grid */
 .series-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
+}
+
+/* Series Content (used in about page) */
+.series-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 1400px) {
+  .series-grid,
+  .series-content {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
 }
 
 .series-card {
@@ -391,7 +406,7 @@
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .series-term,
   .series-list {
     padding: 0.5rem;

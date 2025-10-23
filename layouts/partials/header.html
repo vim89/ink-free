@@ -90,13 +90,16 @@
 		{{- end -}}
 	{{- end -}}
 
-	{{- if eq .Type "series" -}}
+	{{- if or (eq .Type "series") (eq .Type "topics") (eq .Kind "taxonomy") -}}
 		{{- with resources.Get "css/series.css" -}}
 			{{- $cssResources = $cssResources | append . -}}
 		{{- end -}}
 	{{- end -}}
 
 	{{- if or (eq .Type "about") (in .RelPermalink "/about") -}}
+		{{- with resources.Get "css/series.css" -}}
+			{{- $cssResources = $cssResources | append . -}}
+		{{- end -}}
 		{{- with resources.Get "css/author-eeat.css" -}}
 			{{- $cssResources = $cssResources | append . -}}
 		{{- end -}}
