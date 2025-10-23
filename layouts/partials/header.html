@@ -2,9 +2,10 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+	{{- /* Inline critical theme-init script to avoid render blocking */ -}}
 	{{- with resources.Get "js/theme-init.js" -}}
-		{{- $themeInit := . | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $themeInit.RelPermalink }}" integrity="{{ $themeInit.Data.Integrity }}"></script>
+		{{- $themeInit := . | resources.Minify -}}
+		<script>{{ $themeInit.Content | safeJS }}</script>
 	{{- end -}}
 
 	{{- partial "security-headers.html" . -}}
@@ -32,6 +33,13 @@
 	{{- end -}}
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	{{- /* Performance: Resource hints for external domains */ -}}
+	{{- if .Site.Params.featherIconsCDN -}}
+	<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+	<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+	{{- end -}}
+
 	{{- if .IsHome -}}
 	<meta name="description" content="{{ .Site.Params.description }}">
 	{{- else if .Description -}}
@@ -132,11 +140,11 @@
 	{{- end -}}
 
 	{{ if and (isset .Site.Params "social") (isset .Site.Params "feathericonscdn") (eq .Site.Params.featherIconsCDN true) -}}
-		<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous" defer></script>
+		<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous" defer async></script>
 	{{- else if (isset .Site.Params "social") -}}
 		{{- with resources.Get "js/feather.min.js" -}}
 			{{- $feather := . | resources.Minify | resources.Fingerprint -}}
-			<script src="{{ $feather.RelPermalink }}" integrity="{{ $feather.Data.Integrity }}" defer></script>
+			<script src="{{ $feather.RelPermalink }}" integrity="{{ $feather.Data.Integrity }}" defer async></script>
 		{{- end -}}
 	{{ end }}
 
