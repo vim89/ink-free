@@ -1,3 +1,6 @@
+{{- /* Inline SVG icon sprite - load before footer for icon rendering */ -}}
+{{- partial "inline-icons.html" . -}}
+
 <footer class="footer wrapper" role="contentinfo">
 	<nav class="nav" aria-label="Footer navigation">
 		<div>{{ default 2024 .Date.Year}} {{ with .Site.Copyright }} {{ . | safeHTML }} {{ end }}</div>

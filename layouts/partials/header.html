@@ -34,6 +34,9 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+	{{- /* Performance: Preload critical resources */ -}}
+	{{- partial "resource-hints.html" . -}}
+
 	{{- /* Performance: Resource hints for external domains */ -}}
 	{{- if .Site.Params.featherIconsCDN -}}
 	<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -129,7 +132,9 @@
 	.dark{color:#e0e0e0;background:#1a1a1a}
 	.dark .site-title a{color:#e0e0e0}
 	</style>
-		<link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}">
+		{{- /* Async CSS loading using preload with onload trick for better FCP */ -}}
+		<link rel="preload" href="{{ $bundle.RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'" integrity="{{ $bundle.Data.Integrity }}">
+		<noscript><link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}"></noscript>
 	{{- end -}}
 
 	{{- $enableUmami := and (isset .Site.Params "enableUmami") (.Site.Params.enableUmami) -}}
@@ -139,25 +144,27 @@
 	<script defer src="{{ .Site.Params.umamiURL }}" data-website-id="{{ .Site.Params.umamiWebsiteId }}" data-tag="blog"></script>
 	{{- end -}}
 
-	{{ if and (isset .Site.Params "social") (isset .Site.Params "feathericonscdn") (eq .Site.Params.featherIconsCDN true) -}}
-		<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous" defer async></script>
-	{{- else if (isset .Site.Params "social") -}}
-		{{- with resources.Get "js/feather.min.js" -}}
-			{{- $feather := . | resources.Minify | resources.Fingerprint -}}
-			<script src="{{ $feather.RelPermalink }}" integrity="{{ $feather.Data.Integrity }}" defer async></script>
-		{{- end -}}
-	{{ end }}
+	{{- /* Bundled init script (icons, share, codeblock) - reduces 3 requests to 1 */ -}}
+	{{- with resources.Get "js/bundle-init.js" -}}
+		{{- $bundle := . | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" defer></script>
+	{{- end -}}
 
 	{{- with resources.Get "js/main.js" -}}
 		{{- $mainJS := . | resources.Minify | resources.Fingerprint -}}
 		<script src="{{ $mainJS.RelPermalink }}" integrity="{{ $mainJS.Data.Integrity }}" defer></script>
 	{{- end -}}
 
-	{{- range (slice "js/share-init.js" "js/codeblock-init.js") -}}
-		{{- with resources.Get . -}}
-			{{- $script := . | resources.Minify | resources.Fingerprint -}}
-			<script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" defer></script>
-		{{- end -}}
+	{{- /* Performance: Lazy loading for below-the-fold content */ -}}
+	{{- with resources.Get "js/lazy-content.js" -}}
+		{{- $lazy := . | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $lazy.RelPermalink }}" integrity="{{ $lazy.Data.Integrity }}" defer></script>
+	{{- end -}}
+
+	{{- /* Error tracking (dev only) */ -}}
+	{{- with resources.Get "js/error-tracker.js" -}}
+		{{- $errorTracker := . | resources.Minify | resources.Fingerprint -}}
+		<script src="{{ $errorTracker.RelPermalink }}" integrity="{{ $errorTracker.Data.Integrity }}" defer></script>
 	{{- end -}}
 
 	{{- $customJS := .Site.Params.customJS -}}
