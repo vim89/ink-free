@@ -132,9 +132,8 @@
 	.dark{color:#e0e0e0;background:#1a1a1a}
 	.dark .site-title a{color:#e0e0e0}
 	</style>
-		{{- /* Async CSS loading using preload with onload trick for better FCP */ -}}
-		<link rel="preload" href="{{ $bundle.RelPermalink }}" as="style" onload="this.onload=null;this.rel='stylesheet'" integrity="{{ $bundle.Data.Integrity }}">
-		<noscript><link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}"></noscript>
+		{{- /* Synchronous CSS loading - reverted from async for compatibility */ -}}
+		<link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}">
 	{{- end -}}
 
 	{{- $enableUmami := and (isset .Site.Params "enableUmami") (.Site.Params.enableUmami) -}}
