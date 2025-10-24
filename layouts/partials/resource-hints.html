@@ -1,0 +1,69 @@
+{{- /* Preload critical CSS bundle for faster FCP */ -}}
+{{- $cssResources := slice -}}
+{{- range (slice "css/normalize.css" "css/main.css" "css/github-markdown.css" "css/github-codeblocks.css" "css/social-share.css" "css/author-bio.css" "css/related-content-advanced.css" "css/breadcrumb.css" "css/accessibility.css") -}}
+  {{- with resources.Get . -}}
+    {{- $cssResources = $cssResources | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if or (eq .Kind "taxonomy") (eq .Kind "term") -}}
+  {{- with resources.Get "css/tags.css" -}}
+    {{- $cssResources = $cssResources | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $customCSS := .Site.Params.customCSS -}}
+{{- if $customCSS -}}
+  {{- $customSlice := cond (reflect.IsSlice $customCSS) $customCSS (slice $customCSS) -}}
+  {{- range $customSlice -}}
+    {{- with resources.Get . -}}
+      {{- $cssResources = $cssResources | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with resources.Get "css/dark.css" -}}
+  {{- $cssResources = $cssResources | append . -}}
+{{- end -}}
+
+{{- if .Site.Params.enablePagefind -}}
+  {{- with resources.Get "css/search.css" -}}
+    {{- $cssResources = $cssResources | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if eq .Layout "topic-hub" -}}
+  {{- with resources.Get "css/topic-hub.css" -}}
+    {{- $cssResources = $cssResources | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if or (eq .Type "series") (eq .Type "topics") (eq .Kind "taxonomy") -}}
+  {{- with resources.Get "css/series.css" -}}
+    {{- $cssResources = $cssResources | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if or (eq .Type "about") (in .RelPermalink "/about") -}}
+  {{- with resources.Get "css/series.css" -}}
+    {{- $cssResources = $cssResources | append . -}}
+  {{- end -}}
+  {{- with resources.Get "css/author-eeat.css" -}}
+    {{- $cssResources = $cssResources | append . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with resources.Get "css/aesthetic-refinements.css" -}}
+  {{- $cssResources = $cssResources | append . -}}
+{{- end -}}
+
+{{- if gt (len $cssResources) 0 -}}
+  {{- $bundle := $cssResources | resources.Concat "css/bundle.css" | resources.Minify | resources.Fingerprint -}}
+  <link rel="preload" href="{{ $bundle.RelPermalink }}" as="style">
+{{- end -}}
+
+{{- /* Preload main JavaScript file */ -}}
+{{- with resources.Get "js/main.js" -}}
+  {{- $mainJS := . | resources.Minify | resources.Fingerprint -}}
+  <link rel="preload" href="{{ $mainJS.RelPermalink }}" as="script">
+{{- end -}}
