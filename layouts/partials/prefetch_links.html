@@ -20,7 +20,7 @@
 
 {{- $related := .Site.RegularPages.Related . | first 5 -}}
 {{- if $related -}}
-<script>
+<script data-cfasync="false">
 (function() {
   'use strict';
 

@@ -5,7 +5,7 @@
 	{{- /* Inline critical theme-init script to avoid render blocking */ -}}
 	{{- with resources.Get "js/theme-init.js" -}}
 		{{- $themeInit := . | resources.Minify -}}
-		<script>{{ $themeInit.Content | safeJS }}</script>
+		<script data-cfasync="false">{{ $themeInit.Content | safeJS }}</script>
 	{{- end -}}
 
 	{{- partial "security-headers.html" . -}}
@@ -133,37 +133,39 @@
 	.dark .site-title a{color:#e0e0e0}
 	</style>
 		{{- /* Synchronous CSS loading - reverted from async for compatibility */ -}}
-		<link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}">
+		<link rel="preload" href="{{ $bundle.RelPermalink }}" as="style" fetchpriority="high">
+		<link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" media="print" data-preload-css="true">
+		<noscript><link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}"></noscript>
 	{{- end -}}
 
 	{{- $enableUmami := and (isset .Site.Params "enableUmami") (.Site.Params.enableUmami) -}}
 	{{- $hasURL := isset .Site.Params "umamiURL" -}}
 	{{- $hasID := isset .Site.Params "umamiWebsiteId" -}}
 	{{- if and $enableUmami $hasURL $hasID -}}
-	<script defer src="{{ .Site.Params.umamiURL }}" data-website-id="{{ .Site.Params.umamiWebsiteId }}" data-tag="blog"></script>
+	<script data-cfasync="false" defer src="{{ .Site.Params.umamiURL }}" data-website-id="{{ .Site.Params.umamiWebsiteId }}" data-tag="blog"></script>
 	{{- end -}}
 
 	{{- /* Bundled init script (icons, share, codeblock) - reduces 3 requests to 1 */ -}}
 	{{- with resources.Get "js/bundle-init.js" -}}
 		{{- $bundle := . | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" defer></script>
+		<script data-cfasync="false" src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" defer></script>
 	{{- end -}}
 
 	{{- with resources.Get "js/main.js" -}}
 		{{- $mainJS := . | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $mainJS.RelPermalink }}" integrity="{{ $mainJS.Data.Integrity }}" defer></script>
+		<script data-cfasync="false" src="{{ $mainJS.RelPermalink }}" integrity="{{ $mainJS.Data.Integrity }}" defer></script>
 	{{- end -}}
 
 	{{- /* Performance: Lazy loading for below-the-fold content */ -}}
 	{{- with resources.Get "js/lazy-content.js" -}}
 		{{- $lazy := . | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $lazy.RelPermalink }}" integrity="{{ $lazy.Data.Integrity }}" defer></script>
+		<script data-cfasync="false" src="{{ $lazy.RelPermalink }}" integrity="{{ $lazy.Data.Integrity }}" defer></script>
 	{{- end -}}
 
 	{{- /* Error tracking (dev only) */ -}}
 	{{- with resources.Get "js/error-tracker.js" -}}
 		{{- $errorTracker := . | resources.Minify | resources.Fingerprint -}}
-		<script src="{{ $errorTracker.RelPermalink }}" integrity="{{ $errorTracker.Data.Integrity }}" defer></script>
+		<script data-cfasync="false" src="{{ $errorTracker.RelPermalink }}" integrity="{{ $errorTracker.Data.Integrity }}" defer></script>
 	{{- end -}}
 
 	{{- $customJS := .Site.Params.customJS -}}
@@ -172,7 +174,7 @@
 		{{- range $jsSlice -}}
 			{{- with resources.Get . -}}
 				{{- $script := . | resources.Minify | resources.Fingerprint -}}
-				<script src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" defer></script>
+				<script data-cfasync="false" src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" defer></script>
 			{{- end -}}
 		{{- end -}}
 	{{- end -}}

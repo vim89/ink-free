@@ -2,5 +2,5 @@
 {{- $hasUrl := .Site.Params.umamiURL -}}
 {{- $hasId := .Site.Params.umamiWebsiteId -}}
 {{- if and $enableUmami $hasUrl $hasId -}}
-<script async defer data-website-id="{{ $hasId }}" src="{{ $hasUrl }}"></script>
+<script data-cfasync="false" async defer data-website-id="{{ $hasId }}" src="{{ $hasUrl }}"></script>
 {{- end -}}
