@@ -3,6 +3,41 @@
 (function() {
   'use strict';
   try {
+    // CRITICAL FIX (2025-10-27): Strip InfinityFree tracking query (?i=1) ASAP
+    // This prevents Lighthouse from flagging an extra redirect and keeps sharing URLs clean.
+    if (window.location && window.location.search === '?i=1' && window.history && window.history.replaceState) {
+      var cleanUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.hash;
+      window.history.replaceState(null, '', cleanUrl);
+    }
+
+    // Compatibility shim: InfinityFree injects StorageType.persistent (deprecated) access.
+    // Define a noop getter that forwards to navigator.storage.persist() when available to avoid warnings.
+    if (typeof window !== 'undefined') {
+      var globalObj = window;
+      if (!globalObj.StorageType) {
+        globalObj.StorageType = {};
+      }
+      if (!Object.prototype.hasOwnProperty.call(globalObj.StorageType, 'persistent')) {
+        Object.defineProperty(globalObj.StorageType, 'persistent', {
+          configurable: true,
+          enumerable: false,
+          get: function() {
+            if (typeof navigator !== 'undefined' && navigator.storage && typeof navigator.storage.persist === 'function') {
+              try {
+                navigator.storage.persist();
+              } catch (err) {
+                // Ignore failures - this is best effort only
+              }
+            }
+            return 'persistent';
+          },
+          set: function() {
+            // Swallow assignments gracefully
+          }
+        });
+      }
+    }
+
     // Get theme mode from Hugo site params (injected via data attribute)
     var mode = document.documentElement.getAttribute('data-theme-mode') || 'auto';
     var savedTheme = null;
