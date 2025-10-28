@@ -1,0 +1,82 @@
+{{- $page := .Page -}}
+{{- $params := $page.Params -}}
+{{- $journal := $params.journal -}}
+{{- $tasks := cond (and $journal (isset $journal "tasks")) $journal.tasks $params.tasks -}}
+{{- if not $tasks }}
+  <p class="journal-tabs__empty">No structured tasks found. Add them under <code>journal.tasks</code> in front matter.</p>
+{{- else -}}
+  {{- $statuses := .Site.Params.journal.statuses | default (slice "todo" "doing" "review" "blocked" "done") -}}
+  {{- $baseRaw := default (printf "%s-board" $page.RelPermalink) (.Get "id") -}}
+  {{- $base := anchorize $baseRaw -}}
+  {{- $statusData := slice -}}
+  {{- range $i, $s := $statuses -}}
+    {{- $statusNorm := lower $s -}}
+    {{- $scratch := newScratch -}}
+    {{- $scratch.Set "items" (slice) -}}
+    {{- range $tasks -}}
+      {{- $taskStatus := lower (default "todo" .status) -}}
+      {{- if eq $taskStatus $statusNorm -}}
+        {{- $scratch.Set "items" ($scratch.Get "items" | append .) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $statusData = $statusData | append (dict "name" $s "norm" $statusNorm "items" ($scratch.Get "items")) -}}
+  {{- end -}}
+  <div class="journal-tabs" id="{{ $base }}">
+    <div class="journal-tabs__legend">
+      <span><span class="marker" style="background:#f5f5f5"></span>Todo</span>
+      <span><span class="marker" style="background:#e3f2fd"></span>Doing</span>
+      <span><span class="marker" style="background:#f3e5f5"></span>Review</span>
+      <span><span class="marker" style="background:#ffebee"></span>Blocked</span>
+      <span><span class="marker" style="background:#e8f5e9"></span>Done</span>
+    </div>
+    <div class="journal-tabs__controls">
+      {{- $nameAttr := printf "%s-status" $base -}}
+      {{- range $index, $col := $statusData }}
+        {{- $inputId := printf "%s-%s" $base $col.norm -}}
+        <input type="radio" name="{{ $nameAttr }}" id="{{ $inputId }}" data-status="{{ $col.norm }}" {{ if eq $index 0 }}checked{{ end }}>
+        <label for="{{ $inputId }}" class="journal-tabs__tab" data-status="{{ $col.norm }}">
+          {{ $col.name | title }}
+          <span class="journal-tabs__tab-count">{{ len $col.items }}</span>
+        </label>
+      {{- end }}
+    </div>
+    <div class="journal-tabs__panes">
+      {{- range $col := $statusData }}
+        <section class="journal-tabs__pane journal-tabs__pane--{{ $col.norm }}" data-status="{{ $col.norm }}">
+          <header>{{ $col.name | title }} · {{ len $col.items }} task{{ if ne (len $col.items) 1 }}s{{ end }}</header>
+          {{- if gt (len $col.items) 0 -}}
+            <div class="journal-tabs__tasks">
+              {{- range $col.items }}
+                <div class="task">
+                  <div class="task__row">
+                    <span class="task__status {{ lower (default "todo" .status) }}"></span>
+                    <span class="task__title">{{ .title }}</span>
+                  </div>
+                  {{- with .subtasks }}
+                    <ul class="subtasks">
+                      {{- range . }}
+                        {{- $done := default false .done -}}
+                        <li class="subtask">
+                          <span class="checkbox {{ if not $done }}incomplete{{ end }}">{{ if $done }}✔{{ else }}○{{ end }}</span>
+                          <span class="subtask__title">{{ .title }}</span>
+                        </li>
+                      {{- end }}
+                    </ul>
+                  {{- end }}
+                </div>
+              {{- end }}
+            </div>
+          {{- else -}}
+            <p class="journal-tabs__empty">No tasks in this column yet.</p>
+          {{- end -}}
+        </section>
+      {{- end }}
+    </div>
+    <style>
+      {{- range $col := $statusData }}
+        #{{ $base }} input[data-status="{{ $col.norm }}"]:checked ~ .journal-tabs__panes [data-status="{{ $col.norm }}"] { display:block; }
+        #{{ $base }} input[data-status="{{ $col.norm }}"]:checked + label { border-color:#1976d2; }
+      {{- end }}
+    </style>
+  </div>
+{{- end -}}
