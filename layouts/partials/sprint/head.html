@@ -1,7 +1,0 @@
-{{/* Returns sprint board CSS when enabled */}}
-{{- $enable := or (.Site.Params.sprintboard.enable) (.Params.sprintboard) (.HasShortcode "sprint-board") -}}
-{{- if $enable -}}
-  {{- with resources.Get "css/sprint-board.css" -}}
-    {{- return . -}}
-  {{- end -}}
-{{- end -}}
