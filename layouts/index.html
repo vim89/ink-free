@@ -54,11 +54,9 @@
 							</h2>
 							{{ $wordCountNoCode := replaceRE `(?s)<div class="highlight">.*?</div>` "" .Content |
 							countwords }}
-							<div class="meta-info small smaller">
-								{{ $wordCountNoCode | lang.FormatNumberCustom 0 }} words, ~{{ div $wordCountNoCode
-								.Site.Params.wpm
-								}} min read
-							</div>
+								<div class="meta-info small smaller">
+									{{ $wordCountNoCode | lang.FormatNumberCustom 0 }} words, ~{{ div (int $wordCountNoCode) (int .Site.Params.wpm) }} min read
+								</div>
 							<div class="tags-section small smaller">
 								{{ with .Params.tags }}
 								<ul class="tags flat">
