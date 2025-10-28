@@ -69,12 +69,12 @@
         {{- end -}}
     {{- end -}}
 
-    {{- /* Journal & sprint component CSS (theme-level) */ -}}
-    {{- with partial "journal/head.html" . -}}
-      {{- $cssResources = $cssResources | append . -}}
-    {{- end -}}
-    {{- with partial "sprint/head.html" . -}}
-      {{- $cssResources = $cssResources | append . -}}
+    {{- /* Journal board CSS */ -}}
+    {{- $enableJournal := or (.Site.Params.journal.enable) (eq .Type "journal") (.Params.journal.enable) (.HasShortcode "journal") (.HasShortcode "journal-board") -}}
+    {{- if $enableJournal -}}
+      {{- with resources.Get "css/journal.css" -}}
+        {{- $cssResources = $cssResources | append . -}}
+      {{- end -}}
     {{- end -}}
 
 	{{- if or (eq .Kind "taxonomy") (eq .Kind "term") -}}

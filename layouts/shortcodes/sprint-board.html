@@ -67,6 +67,14 @@ sprintboard:
 {{- if not $board -}}
   <div class="sprint-board"><p class="sprint-board__empty">No sprint board configuration found. Provide <code>sprintboard</code> in front matter or via <code>ref</code>/<code>data</code>.</p></div>
 {{- else -}}
+  {{- if not (.Page.Scratch.Get "sprint-board-css") -}}
+    {{- with resources.Get "css/sprint-board.css" -}}
+      {{- $css := . | resources.Minify -}}
+      <style>{{ $css.Content | safeCSS }}</style>
+    {{- end -}}
+    {{- .Page.Scratch.Set "sprint-board-css" true -}}
+  {{- end -}}
+
   {{- $defaultCols := (slice
       (dict "id" "planned" "title" "Planned" "color" "#cbd5f5")
       (dict "id" "in-progress" "title" "In Progress" "color" "#bfdbfe")
