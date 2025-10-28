@@ -1,0 +1,17 @@
+{{/* Journal card used on the Kanban board */}}
+{{ $p := .Params }}
+{{ $j := $p.journal }}
+{{ $status := default $p.status (default "todo" $j.status) }}
+<article class="kanban-card">
+  <a class="kanban-card__title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+  <div class="kanban-card__meta">
+    {{ with (default $p.sprint $j.sprint) }}<span class="meta">🗓 {{ . }}</span>{{ end }}
+    {{ with (default $p.points $j.points) }}<span class="meta">⏱ {{ . }}pt</span>{{ end }}
+    {{ with (default $p.priority $j.priority) }}<span class="meta">⚑ {{ . }}</span>{{ end }}
+  </div>
+  <div class="kanban-card__status">
+    <span class="status-badge status-{{ $status }}">{{ $status | title }}</span>
+    {{ partial "journal/progress.html" . }}
+  </div>
+  {{ with .Summary }}<p class="kanban-card__summary">{{ . }}</p>{{ end }}
+</article>

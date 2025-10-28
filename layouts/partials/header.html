@@ -62,12 +62,20 @@
 	{{- template "_internal/opengraph.html" . -}}
 	{{- template "_internal/twitter_cards.html" . -}}
 
-	{{- $cssResources := slice -}}
-	{{- range (slice "css/normalize.css" "css/main.css" "css/github-markdown.css" "css/github-codeblocks.css" "css/social-share.css" "css/author-bio.css" "css/related-content-advanced.css" "css/breadcrumb.css" "css/accessibility.css") -}}
-		{{- with resources.Get . -}}
-			{{- $cssResources = $cssResources | append . -}}
-		{{- end -}}
-	{{- end -}}
+    {{- $cssResources := slice -}}
+    {{- range (slice "css/normalize.css" "css/main.css" "css/github-markdown.css" "css/github-codeblocks.css" "css/social-share.css" "css/author-bio.css" "css/related-content-advanced.css" "css/breadcrumb.css" "css/accessibility.css") -}}
+        {{- with resources.Get . -}}
+            {{- $cssResources = $cssResources | append . -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- /* Journal board CSS */ -}}
+    {{- $enableJournal := or (.Site.Params.journal.enable) (eq .Type "journal") (.Params.journal.enable) (.HasShortcode "journal") (.HasShortcode "journal-board") -}}
+    {{- if $enableJournal -}}
+      {{- with resources.Get "css/journal.css" -}}
+        {{- $cssResources = $cssResources | append . -}}
+      {{- end -}}
+    {{- end -}}
 
 	{{- if or (eq .Kind "taxonomy") (eq .Kind "term") -}}
 		{{- with resources.Get "css/tags.css" -}}

@@ -1,0 +1,208 @@
+{{/*
+Usage examples:
+  {{< sprint-board >}}                      # use current page's .Params.sprintboard
+  {{< sprint-board ref="/journal/week-1" >}}  # pull from another page
+  {{< sprint-board data="boards.rust" >}}     # pull from data/boards/rust.{yaml|toml|json}
+
+Front matter structure example:
+
+sprintboard:
+  title: "Rust Fundamentals: 6-week plan"
+  sprint: "2025-W44"
+  owner: "Vitthal"
+  columns:
+    - id: planned
+      title: "Planned"
+      color: "#cbd5f5"
+    - id: in-progress
+      title: "In Progress"
+    - id: review
+      title: "Review"
+    - id: blocked
+      title: "Blocked"
+    - id: done
+      title: "Done"
+  stories:
+    - id: week0
+      title: "Day 0 – Toolchain verified"
+      status: "in-progress"
+      points: 1
+      owner: "Vitthal"
+      due: 2025-11-01
+      tags: ["setup"]
+      summary: "Install rustup, linting and velocity tools."
+      url: "#day0"
+      tasks:
+        - text: "Install rustup & components"
+          done: false
+        - text: "Set up IDE with rust-analyzer"
+          done: true
+      comments:
+        - author: "Vitthal"
+          when: 2025-10-28
+          body: "Kickoff complete."
+*/}}
+
+{{- $ctx := .Page -}}
+{{- $board := $ctx.Params.sprintboard -}}
+
+{{- with .Get "ref" -}}
+  {{- with site.GetPage . -}}
+    {{- $ctx = . -}}
+    {{- $board = .Params.sprintboard -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with .Get "data" -}}
+  {{- $board = site.Data -}}
+  {{- range (split . ".") -}}
+    {{- if and $board (isset $board .) -}}
+      {{- $board = index $board . -}}
+    {{- else -}}
+      {{- $board = nil -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if not $board -}}
+  <div class="sprint-board"><p class="sprint-board__empty">No sprint board configuration found. Provide <code>sprintboard</code> in front matter or via <code>ref</code>/<code>data</code>.</p></div>
+{{- else -}}
+  {{- if not (.Page.Scratch.Get "sprint-board-css") -}}
+    {{- with resources.Get "css/sprint-board.css" -}}
+      {{- $css := . | resources.Minify -}}
+      <style>{{ $css.Content | safeCSS }}</style>
+    {{- end -}}
+    {{- .Page.Scratch.Set "sprint-board-css" true -}}
+  {{- end -}}
+
+  {{- $defaultCols := (slice
+      (dict "id" "planned" "title" "Planned" "color" "#cbd5f5")
+      (dict "id" "in-progress" "title" "In Progress" "color" "#bfdbfe")
+      (dict "id" "review" "title" "Review" "color" "#ede9fe")
+      (dict "id" "blocked" "title" "Blocked" "color" "#fecdd3")
+      (dict "id" "done" "title" "Done" "color" "#bbf7d0")
+    ) -}}
+  {{- $columns := $defaultCols -}}
+  {{- with $board.columns -}}
+    {{- if eq (printf "%T" .) "[]interface {}" -}}
+      {{- $columns = slice -}}
+      {{- range . -}}
+        {{- $columns = $columns | append (dict "id" (lower (default "planned" .id)) "title" (default (title .id) .title) "color" (default "" .color)) -}}
+      {{- end -}}
+    {{- else if eq (printf "%T" .) "map[string]interface {}" -}}
+      {{- $columns = slice -}}
+      {{- range $k, $v := . -}}
+        {{- if eq (printf "%T" $v) "map[string]interface {}" -}}
+          {{- $columns = $columns | append (dict "id" (lower $k) "title" (default (title $k) (index $v "title")) "color" (default "" (index $v "color"))) -}}
+        {{- else -}}
+          {{- $columns = $columns | append (dict "id" (lower $k) "title" (title $k) "color" "") -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $stories := slice -}}
+  {{- with $board.stories -}}
+    {{- if eq (printf "%T" .) "[]interface {}" -}}
+      {{- $stories = . -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $base := anchorize (default (printf "%s-sprint-board" $ctx.RelPermalink) $board.id) -}}
+  <div class="sprint-board" id="{{ $base }}">
+    <div class="sprint-board__header">
+      <div class="sprint-board__title">
+        {{- with $board.icon -}}<span>{{ . }}</span>{{- end -}}
+        <span>{{ default "Sprint Board" $board.title }}</span>
+      </div>
+      <div class="sprint-board__meta">
+        {{- with $board.sprint -}}<span>🗓 Sprint {{ . }}</span>{{- end -}}
+        {{- with $board.owner -}}<span>👤 Owner {{ . }}</span>{{- end -}}
+        {{- with $board.velocity -}}<span>⚡ Velocity {{ . }}</span>{{- end -}}
+        {{- with $board.dates -}}
+          {{- with index . "start" -}}<span>📅 Start {{ . }}</span>{{- end -}}
+          {{- with index . "end" -}}<span>⏳ End {{ . }}</span>{{- end -}}
+        {{- end -}}
+      </div>
+    </div>
+
+    <div class="sprint-board__columns">
+      {{- range $columns }}
+        {{- $col := . -}}
+        {{- $colStories := where $stories "status" (lower $col.id) -}}
+        <section class="sprint-board__column">
+          <header class="sprint-board__column-header" style="border-bottom-color: {{ default "rgba(148,163,184,0.35)" $col.color }}80;">
+            <span>{{ $col.title }}</span>
+            <span class="sprint-board__column-count">{{ len $colStories }}</span>
+          </header>
+          <div class="sprint-board__column-body">
+            {{- if gt (len $colStories) 0 -}}
+              {{- range $colStories }}
+                {{- $story := . -}}
+                <article class="sprint-card">
+                  <a class="sprint-card__title" href="{{ default (print "#" (default $story.id "")) $story.url }}">{{ $story.title }}</a>
+                  {{- with $story.tags }}
+                    <div class="sprint-card__tags">
+                      {{- range . }}<span class="sprint-card__tag">{{ . }}</span>{{ end -}}
+                    </div>
+                  {{- end }}
+                  <div class="sprint-card__meta">
+                    {{- with $story.points }}<span>⏱ {{ . }}pt</span>{{- end -}}
+                    {{- with $story.owner }}<span>👤 {{ . }}</span>{{- end -}}
+                    {{- with $story.due }}<span>📅 Due {{ . }}</span>{{- end -}}
+                    {{- with $story.priority }}<span>⚑ {{ upper . }}</span>{{- end -}}
+                  </div>
+                  {{- with $story.summary }}<p class="sprint-card__summary">{{ . }}</p>{{- end -}}
+                  {{- with $story.tasks }}
+                    {{- $total := len . -}}
+                    {{- $done := 0 -}}
+                    {{- range . }}{{ if default false .done }}{{ $done = add $done 1 }}{{ end }}{{ end -}}
+                    <div class="sprint-card__tasks">
+                      {{- if gt $total 0 -}}
+                        <progress max="{{ $total }}" value="{{ $done }}"></progress>
+                        <div class="sprint-card__task-stats">{{ $done }}/{{ $total }} tasks</div>
+                      {{- end -}}
+                      <ul class="sprint-card__task-list">
+                        {{- range . }}
+                          <li class="sprint-card__task">
+                            <input type="checkbox" disabled {{ if default false .done }}checked{{ end }}>
+                            <span>{{ .text | default . }}</span>
+                          </li>
+                        {{- end -}}
+                      </ul>
+                    </div>
+                  {{- end -}}
+                  {{- with $story.comments }}
+                    <div class="sprint-card__comments">
+                      {{- $first := index . 0 -}}
+                      {{- range first 2 . }}
+                        <div class="sprint-card__comment">
+                          <span class="sprint-card__comment-avatar">{{ substr (default "?" .author) 0 1 | upper }}</span>
+                          <div class="sprint-card__comment-body">
+                            <div class="sprint-card__comment-meta">{{ .author }} · {{ .when }}</div>
+                            <div class="sprint-card__comment-text">{{ .body }}</div>
+                          </div>
+                        </div>
+                      {{- end -}}
+                      {{- if gt (len .) 2 }}<span class="sprint-card__comment-more">+{{ sub (len .) 2 }} more comment(s)</span>{{ end -}}
+                    </div>
+                  {{- end -}}
+                </article>
+              {{- end -}}
+            {{- else -}}
+              <div class="sprint-board__empty">No stories in this column yet.</div>
+            {{- end -}}
+          </div>
+        </section>
+      {{- end }}
+    </div>
+
+    {{- with $board.legend }}
+      <div class="sprint-board__legend">
+        {{- range . }}
+          <span><span class="sprint-board__legend-bullet" style="background: {{ .color | default "#cbd5f5" }}"></span>{{ .label }}</span>
+        {{- end }}
+      </div>
+    {{- end }}
+  </div>
+{{- end -}}

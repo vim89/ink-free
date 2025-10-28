@@ -1,0 +1,31 @@
+{{/* Renders a simple percent complete from front matter tasks/subtasks */}}
+{{ $tasks := .Params.tasks }}
+{{ if not $tasks }}
+  {{ with .Params.journal }}
+    {{ $tasks = .tasks }}
+  {{ end }}
+{{ end }}
+
+{{ if $tasks }}
+  {{ $total := 0 }}
+  {{ $done := 0 }}
+  {{ range $tasks }}
+    {{ $total = add $total 1 }}
+    {{ if eq (lower (default "todo" .status)) "done" }}
+      {{ $done = add $done 1 }}
+    {{ end }}
+    {{ with .subtasks }}
+      {{ $total = add $total (len .) }}
+      {{ range . }}
+        {{ if .done }}{{ $done = add $done 1 }}{{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ $pct := 0 }}
+  {{ if gt $total 0 }}
+    {{ $pct = div (mul $done 100) $total }}
+  {{ end }}
+  <div class="progress" title="{{ $done }}/{{ $total }}">
+    <div class="progress__bar" style="width: {{ $pct }}%"></div>
+  </div>
+{{ end }}

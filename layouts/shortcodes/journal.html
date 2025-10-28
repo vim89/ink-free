@@ -1,0 +1,38 @@
+{{/* Journal shortcode: embed sprint info in any page */}}
+{{/* Usage examples:
+   {{< journal >}}                     # full panel from current page params
+   {{< journal mode="card" >}}         # compact card
+   {{< journal mode="progress" >}}     # only progress bar
+   {{< journal mode="tasks" >}}        # only tasks list
+   {{< journal ref="/journal/story" >}} # render from another page by path
+*/}}
+
+{{- $ref := .Get "ref" -}}
+{{- $mode := .Get "mode" | default "full" -}}
+{{- $page := .Page -}}
+{{- if $ref -}}
+  {{- $p := site.GetPage $ref -}}
+  {{- if $p -}}
+    {{- $page = $p -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if eq $mode "card" -}}
+  {{ partial "journal/card.html" $page }}
+{{- else if eq $mode "progress" -}}
+  {{ partial "journal/progress.html" $page }}
+{{- else if eq $mode "tasks" -}}
+  {{ partial "journal/tasks.html" $page }}
+{{- else -}}
+  <div class="kanban-card">
+    <div class="kanban-card__meta">
+      {{ with $page.Params.sprint }}<span class="meta">🗓 {{ . }}</span>{{ end }}
+      {{ with $page.Params.points }}<span class="meta">⏱ {{ . }}pt</span>{{ end }}
+      {{ with $page.Params.priority }}<span class="meta">⚑ {{ . }}</span>{{ end }}
+      {{ with $page.Params.status }}<span class="status-badge status-{{ . }}">{{ . | title }}</span>{{ end }}
+    </div>
+    {{ partial "journal/progress.html" $page }}
+    {{ partial "journal/tasks.html" $page }}
+  </div>
+{{- end -}}
+

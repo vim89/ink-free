@@ -1,0 +1,23 @@
+{{- define "main" -}}
+<main class="container">
+  <h1>Journal Board</h1>
+  {{- $statuses := .Site.Params.journal.statuses | default (slice "todo" "doing" "review" "blocked" "done") -}}
+  <div class="kanban">
+    {{- range $statuses }}
+      {{- $col := . -}}
+      <section class="kanban-col">
+        <header class="kanban-col__header">
+          <span class="status-badge status-{{ $col }}">{{ $col | title }}</span>
+          <span class="kanban-col__count">{{ (where $.Pages "Params.status" $col) | len }}</span>
+        </header>
+        <div class="kanban-col__cards">
+          {{- range (where $.Pages "Params.status" $col) }}
+            {{- partial "journal/card.html" . -}}
+          {{- end }}
+        </div>
+      </section>
+    {{- end }}
+  </div>
+</main>
+{{- end -}}
+

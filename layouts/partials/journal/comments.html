@@ -1,0 +1,22 @@
+{{/* Giscus embed (GitHub Discussions). Configure in hugo.toml under [params.giscus]. */}}
+{{ $cfg := .Site.Params.giscus }}
+{{ if $cfg.repo }}
+  <script src="https://giscus.app/client.js"
+          data-repo="{{ $cfg.repo }}"
+          data-repo-id="{{ $cfg.repoId }}"
+          data-category="{{ $cfg.category }}"
+          data-category-id="{{ $cfg.categoryId }}"
+          data-mapping="{{ or $cfg.mapping "pathname" }}"
+          data-reactions-enabled="{{ or $cfg.reactionsEnabled "1" }}"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="{{ or $cfg.theme "preferred_color_scheme" }}"
+          data-lang="{{ or $cfg.lang "en" }}"
+          crossorigin="anonymous"
+          async>
+  </script>
+  <noscript>Please enable JavaScript to view comments.</noscript>
+{{ else }}
+  <p class="hint">Comments are disabled. Configure <code>[params.giscus]</code> to enable.</p>
+{{ end }}
+
