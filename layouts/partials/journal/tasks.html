@@ -1,0 +1,26 @@
+{{ $tasks := .Params.tasks }}
+{{ if not $tasks }}
+  <p>No structured tasks in front matter. Use Markdown checkboxes in the body if preferred.</p>
+{{ else }}
+  <ol class="tasks">
+    {{ range $tasks }}
+      <li class="task">
+        <div class="task__row">
+          <span class="task__status {{ lower (default "todo" .status) }}"></span>
+          <span class="task__title">{{ .title }}</span>
+        </div>
+        {{ with .subtasks }}
+          <ul class="subtasks">
+            {{ range . }}
+              <li class="subtask">
+                <span class="checkbox">{{ if .done }}✔{{ else }}○{{ end }}</span>
+                <span class="subtask__title">{{ .title }}</span>
+              </li>
+            {{ end }}
+          </ul>
+        {{ end }}
+      </li>
+    {{ end }}
+  </ol>
+{{ end }}
+

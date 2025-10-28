@@ -1,0 +1,36 @@
+{{ define "main" }}
+<main class="container journal">
+  <article>
+    <header class="journal__header">
+      <h1>{{ .Title }}</h1>
+      <div class="journal__badges">
+        {{ with .Params.status }}<span class="status-badge status-{{ . }}">{{ . | title }}</span>{{ end }}
+        {{ with .Params.sprint }}<span class="meta">🗓 {{ . }}</span>{{ end }}
+        {{ with .Params.points }}<span class="meta">⏱ {{ . }}pt</span>{{ end }}
+        {{ with .Params.priority }}<span class="meta">⚑ {{ . }}</span>{{ end }}
+      </div>
+      {{ partial "journal/progress.html" . }}
+    </header>
+
+    {{ with .Params.summary }}<p class="lead">{{ . }}</p>{{ end }}
+
+    <section class="journal__content markdown-body">
+      {{ .Content }}
+    </section>
+
+    {{ with .Params.tasks }}
+    <section class="journal__tasks">
+      <h2>Tasks</h2>
+      {{ partial "journal/tasks.html" $ }}
+    </section>
+    {{ end }}
+
+    {{ if or .Params.comments .Site.Params.journal.enableComments }}
+    <section class="journal__comments">
+      {{ partial "journal/comments.html" . }}
+    </section>
+    {{ end }}
+  </article>
+</main>
+{{ end }}
+
