@@ -53,7 +53,8 @@
 									class="draft-label">DRAFT</sup>{{ end }}</a>
 							</h2>
 							{{ $wc := 0 }}
-							{{ with .Plain }}{{ $wc = countwords . }}{{ end }}
+							{{ with .WordCount }}{{ $wc = . }}{{ end }}
+							{{ if eq $wc 0 }}{{ $wc = countwords (default "" .Plain) }}{{ end }}
 							<div class="meta-info small smaller">
 								{{ $wc | lang.FormatNumberCustom 0 }} words,
 								{{ $wpm := cond (gt (int .Site.Params.wpm) 0) (int .Site.Params.wpm) 250 }}
