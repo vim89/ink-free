@@ -24,15 +24,15 @@
   {{ partial "footer.html" . }}
 
 <style>
-/* reuse the same styles defined in topics-index template */
 .topics-index { max-width: 900px; margin: 0 auto; padding: 1rem; }
 .topics-header { text-align: center; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border, #e1e5e9); padding-bottom: 1.5rem; }
 .topics-header h1 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--color-primary, #333); }
 .topics-description { font-size: 1.2rem; color: var(--color-text-secondary, #666); line-height: 1.6; max-width: 600px; margin: 0 auto; }
-.topics-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem; line-height: 1.7; }
+.topics-content { line-height: 1.7; display: flex; flex-direction: column; gap: 1.5rem; }
+.topics-content > hr { margin: 2rem 0; border: none; border-top: 1px solid var(--color-border, #e1e5e9); }
 .topics-content h2 { margin-top: 2rem; margin-bottom: 1rem; color: var(--color-primary, #333); border-bottom: 2px solid var(--color-accent, #007acc); padding-bottom: 0.5rem; }
 .topics-content h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; }
-/* cards use series.css classes; only icon sizing remains */
+.topic-grid { margin-top: 1rem; }
 .topic-icon { font-size: 2rem; flex-shrink: 0; }
 @media (max-width: 768px) {
   .topics-index { padding: .5rem; }
