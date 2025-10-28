@@ -8,7 +8,9 @@
 	{{- /* WCAG 2.2 Level A: Skip link for keyboard navigation */ -}}
 	<a href="#main-content" class="skip-link">Skip to main content</a>
 
-	{{ if and (gt .WordCount 400 ) (or (eq .Site.Params.toc "floating") (eq .Site.Params.toc "both") )}}
+{{/* DEBUG REMOVE ME */}}
+{{ $tocSetting := default "both" .Site.Params.toc }}
+{{ if and (gt .WordCount 400 ) (or (eq $tocSetting "floating") (eq $tocSetting "both") )}}
 	<div class="container-wide wrapper">
 		<header class="site-header">
 			{{ partial "head.html" . }}
