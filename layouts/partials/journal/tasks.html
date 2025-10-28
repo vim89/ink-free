@@ -1,5 +1,11 @@
 {{ $tasks := .Params.tasks }}
 {{ if not $tasks }}
+  {{ with .Params.journal }}
+    {{ $tasks = .tasks }}
+  {{ end }}
+{{ end }}
+
+{{ if not $tasks }}
   <p>No structured tasks in front matter. Use Markdown checkboxes in the body if preferred.</p>
 {{ else }}
   <ol class="tasks">
@@ -23,4 +29,3 @@
     {{ end }}
   </ol>
 {{ end }}
-

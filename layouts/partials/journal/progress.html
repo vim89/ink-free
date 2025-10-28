@@ -1,5 +1,11 @@
 {{/* Renders a simple percent complete from front matter tasks/subtasks */}}
 {{ $tasks := .Params.tasks }}
+{{ if not $tasks }}
+  {{ with .Params.journal }}
+    {{ $tasks = .tasks }}
+  {{ end }}
+{{ end }}
+
 {{ if $tasks }}
   {{ $total := 0 }}
   {{ $done := 0 }}
@@ -23,4 +29,3 @@
     <div class="progress__bar" style="width: {{ $pct }}%"></div>
   </div>
 {{ end }}
-
