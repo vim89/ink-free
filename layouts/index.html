@@ -52,9 +52,7 @@
 								<a href="{{ .RelPermalink }}">{{ if .Params.pinned }}<span class="pinned-icon" title="Pinned Post">📌</span> {{ end }}{{.Title}}{{ if .Draft }}<sup
 									class="draft-label">DRAFT</sup>{{ end }}</a>
 							</h2>
-							{{ $wc := 0 }}
-							{{ with .WordCount }}{{ $wc = . }}{{ end }}
-							{{ if eq $wc 0 }}{{ $wc = countwords (default "" .Plain) }}{{ end }}
+							{{ $wc := countwords (default "" .Plain) }}
 							<div class="meta-info small smaller">
 								{{ $wc | lang.FormatNumberCustom 0 }} words,
 								{{ $wpm := cond (gt (int .Site.Params.wpm) 0) (int .Site.Params.wpm) 250 }}
