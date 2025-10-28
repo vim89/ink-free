@@ -1,5 +1,5 @@
 {{/* Returns a CSS resource for journal feature when enabled */}}
-{{- $enable := or (.Site.Params.journal.enable) (eq .Type "journal") -}}
+{{- $enable := or (.Site.Params.journal.enable) (eq .Type "journal") (.Params.journal.enable) (.HasShortcode "journal") -}}
 {{- if $enable -}}
   {{- with resources.Get "css/journal.css" -}}
     {{- . -}}
