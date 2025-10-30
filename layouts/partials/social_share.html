@@ -31,8 +31,10 @@
 {{- $hashtags := slice -}}
 
 {{- /* Generate hashtags from first 3 tags (remove special chars, title case) */ -}}
-{{- with .Params.tags -}}
-  {{- range first 3 . -}}
+{{- $tagsRaw := .Params.tags -}}
+{{- if $tagsRaw -}}
+  {{- $tagsList := cond (reflect.IsSlice $tagsRaw) $tagsRaw (slice $tagsRaw) -}}
+  {{- range first 3 $tagsList -}}
     {{- $tag := . | replaceRE "[^a-zA-Z0-9]" "" | title -}}
     {{- $hashtags = $hashtags | append $tag -}}
   {{- end -}}
@@ -120,9 +122,17 @@
 
     {{- /* Reddit r/scala (conditional on scala-related taxonomy) */ -}}
     {{- $labels := slice -}}
-    {{- with .Params.tags -}}{{- range . -}}{{- $labels = $labels | append . -}}{{- end -}}{{- end -}}
-    {{- with .Params.categories -}}{{- range . -}}{{- $labels = $labels | append . -}}{{- end -}}{{- end -}}
-    {{- with .Params.series -}}{{- range . -}}{{- $labels = $labels | append . -}}{{- end -}}{{- end -}}
+    {{- range (slice .Params.tags .Params.categories .Params.series) -}}
+      {{- if . -}}
+        {{- $items := . -}}
+        {{- if not (reflect.IsSlice $items) -}}
+          {{- $items = slice $items -}}
+        {{- end -}}
+        {{- range $items -}}
+          {{- $labels = $labels | append . -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
     {{- $isScala := false -}}
     {{- range $labels -}}
       {{- $norm := . | lower | replaceRE "[\\s_]+" "-" | replaceRE "[^a-z0-9-]" "" -}}
