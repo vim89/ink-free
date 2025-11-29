@@ -140,9 +140,9 @@
 	.dark{color:#e0e0e0;background:#1a1a1a}
 	.dark .site-title a{color:#e0e0e0}
 	</style>
-		{{- /* Synchronous CSS loading - reverted from async for compatibility */ -}}
+		{{- /* Synchronous CSS loading - always use media=all for reliability */ -}}
 		<link rel="preload" href="{{ $bundle.RelPermalink }}" as="style" fetchpriority="high">
-		<link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" media="print" data-preload-css="true">
+		<link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}">
 		<noscript><link rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}"></noscript>
 	{{- end -}}
 
