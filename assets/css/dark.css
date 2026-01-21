@@ -77,6 +77,11 @@ html.dark .post .tags a {
   color: var(--accent-color);
 }
 
+html.dark .post .draft-label {
+  color: #ffffff;
+  background-color: #7a0000;
+}
+
 html.dark .site-title a {
   color: var(--text-color);
   text-decoration: none !important;
