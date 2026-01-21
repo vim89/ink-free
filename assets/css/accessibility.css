@@ -21,6 +21,11 @@
   outline-offset: 2px;
 }
 
+html.dark .skip-link {
+  color: #ffffff;
+  background: #1f6feb;
+}
+
 /* Enhanced Focus States */
 a:focus,
 button:focus,

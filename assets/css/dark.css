@@ -29,6 +29,14 @@ html.dark .footer {
   border-color: #333;
 }
 
+html.dark .footer {
+  color: #c9d1d9;
+}
+
+html.dark .footer a {
+  color: #c9d1d9;
+}
+
 html.dark blockquote {
   border-color: var(--text-color);
 }

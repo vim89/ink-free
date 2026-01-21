@@ -10,7 +10,7 @@
 {{- $cspDirectives = $cspDirectives | append "default-src 'self'" -}}
 
 {{- /* script-src: JavaScript sources */ -}}
-{{- $scriptSrc := slice "'self'" -}}
+{{- $scriptSrc := slice "'self'" "'unsafe-inline'" -}}
 {{- /* Removed unsafe-inline for better security - all scripts are external with SRI */ -}}
 {{- /* Allow Plausible analytics if enabled */ -}}
 {{- if .Site.Params.plausibleDomain -}}
@@ -38,7 +38,7 @@
 {{- /* img-src: Image sources */ -}}
 {{- $imgSrc := slice "'self'" "data:" -}}
 {{- /* Allow external images from common sources */ -}}
-{{- $imgSrc = $imgSrc | append "*.gravatar.com" "avatars.githubusercontent.com" -}}
+{{- $imgSrc = $imgSrc | append "*.gravatar.com" "avatars.githubusercontent.com" "imgs.xkcd.com" -}}
 {{- $cspDirectives = $cspDirectives | append (printf "img-src %s" (delimit $imgSrc " ")) -}}
 
 {{- /* font-src: Font sources */ -}}

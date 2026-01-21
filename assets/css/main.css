@@ -562,13 +562,14 @@ ul {
     display: inline-block;
     border: 1px solid var(--accent-color);
     border-radius: 3px;
-    padding: 2px 8px; /* Increased from 0 6px for better touch targets */
+    padding: 6px 10px;
     color: var(--accent-color);
-    line-height: 20px;
-    min-height: 24px; /* WCAG 2.2 Level AA minimum touch target size */
+    line-height: 1.1;
+    min-height: 44px;
+    min-width: 44px;
     font-size: 0.85em;
     text-decoration: none;
-    margin: 0 10px 0 0;
+    margin: 4px 8px 4px 0;
 }
 
 .list .posts .post-header .meta {

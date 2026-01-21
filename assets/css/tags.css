@@ -117,13 +117,13 @@
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--accent-color, #0969da);
+  color: #1f6feb;
   margin-bottom: 0.25rem;
 }
 
 .stat-label {
   font-size: 0.875rem;
-  color: var(--text-muted, #6e7781);
+  color: #4b5563;
   font-weight: 500;
 }
 

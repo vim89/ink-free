@@ -67,10 +67,10 @@
 							</div>
 							<div class="tags-section small smaller">
 								{{ with .Params.tags }}
-								<ul class="tags flat">
+								<ul class="series-article-tags flat">
 									{{ range . }}
-									<li class="tag-li">
-									<a href="{{ (printf "/tags/%s/" (. | urlize)) | relLangURL }}" aria-label="Tag: {{ . }}">{{ . }}</a>
+									<li>
+									<a class="tag" href="{{ (printf "/tags/%s/" (. | urlize)) | relLangURL }}" aria-label="Tag: {{ . }}">{{ . }}</a>
 									</li>
 									{{ end }}
 								</ul>
