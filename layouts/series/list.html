@@ -2,7 +2,7 @@
 <html lang="{{ .Site.Language.Lang }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
 {{ partial "header.html" . }}
 
-<body>
+<body data-pagefind-body>
 
 	<div class="container wrapper">
 		{{ partial "head.html" . }}

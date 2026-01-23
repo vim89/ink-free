@@ -1,23 +1,40 @@
-{{- define "main" -}}
-<main class="container">
-  <h1>Journal Board</h1>
-  {{- $statuses := .Site.Params.journal.statuses | default (slice "todo" "doing" "review" "blocked" "done") -}}
-  <div class="kanban">
-    {{- range $statuses }}
-      {{- $col := . -}}
-      <section class="kanban-col">
-        <header class="kanban-col__header">
-          <span class="status-badge status-{{ $col }}">{{ $col | title }}</span>
-          <span class="kanban-col__count">{{ (where $.Pages "Params.status" $col) | len }}</span>
-        </header>
-        <div class="kanban-col__cards">
-          {{- range (where $.Pages "Params.status" $col) }}
-            {{- partial "journal/card.html" . -}}
-          {{- end }}
-        </div>
-      </section>
-    {{- end }}
-  </div>
-</main>
-{{- end -}}
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}" data-theme-mode="{{ .Site.Params.mode | default "auto" }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
+{{ partial "header.html" . }}
 
+<body data-pagefind-body>
+	<a href="#main-content" class="skip-link">Skip to main content</a>
+
+	<div class="container wrapper journal">
+		{{ partial "head.html" . }}
+
+		<h1 class="page-title" id="main-content">{{ .Title }}</h1>
+
+		{{ if .Content }}
+		<div class="list-content">
+			{{ .Content }}
+		</div>
+		{{ end }}
+
+		{{- $statuses := .Site.Params.journal.statuses | default (slice "todo" "doing" "review" "blocked" "done") -}}
+		<div class="kanban">
+			{{- range $statuses }}
+				{{- $col := . -}}
+				<section class="kanban-col">
+					<header class="kanban-col__header">
+						<span class="status-badge status-{{ $col }}">{{ $col | title }}</span>
+						<span class="kanban-col__count">{{ (where $.Pages "Params.status" $col) | len }}</span>
+					</header>
+					<div class="kanban-col__cards">
+						{{- range (where $.Pages "Params.status" $col) }}
+							{{- partial "journal/card.html" . -}}
+						{{- end }}
+					</div>
+				</section>
+			{{- end }}
+		</div>
+	</div>
+
+	{{ partial "footer.html" . }}
+</body>
+</html>

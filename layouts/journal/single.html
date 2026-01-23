@@ -1,37 +1,50 @@
-{{ define "main" }}
-<main class="container journal">
-  <article>
-    <header class="journal__header">
-      <h1>{{ .Title }}</h1>
-      <div class="journal__badges">
-        {{ $p := .Params }}
-        {{ $j := $p.journal }}
-        {{ with (default $p.status $j.status) }}<span class="status-badge status-{{ . }}">{{ . | title }}</span>{{ end }}
-        {{ with (default $p.sprint $j.sprint) }}<span class="meta">🗓 {{ . }}</span>{{ end }}
-        {{ with (default $p.points $j.points) }}<span class="meta">⏱ {{ . }}pt</span>{{ end }}
-        {{ with (default $p.priority $j.priority) }}<span class="meta">⚑ {{ . }}</span>{{ end }}
-      </div>
-      {{ partial "journal/progress.html" . }}
-    </header>
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}" data-theme-mode="{{ .Site.Params.mode | default "auto" }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
+{{ partial "header.html" . }}
 
-    {{ with .Params.summary }}<p class="lead">{{ . }}</p>{{ end }}
+<body data-pagefind-body>
+	<a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <section class="journal__content markdown-body">
-      {{ .Content }}
-    </section>
+	<div class="container wrapper journal">
+		{{ partial "head.html" . }}
 
-    {{ with .Params.tasks }}
-    <section class="journal__tasks">
-      <h2>Tasks</h2>
-      {{ partial "journal/tasks.html" $ }}
-    </section>
-    {{ end }}
+		<main id="main-content" class="journal">
+			<article>
+				<header class="journal__header">
+					<h1>{{ .Title }}</h1>
+					<div class="journal__badges">
+						{{ $p := .Params }}
+						{{ $j := $p.journal }}
+						{{ with (default $p.status $j.status) }}<span class="status-badge status-{{ . }}">{{ . | title }}</span>{{ end }}
+						{{ with (default $p.sprint $j.sprint) }}<span class="meta">🗓 {{ . }}</span>{{ end }}
+						{{ with (default $p.points $j.points) }}<span class="meta">⏱ {{ . }}pt</span>{{ end }}
+						{{ with (default $p.priority $j.priority) }}<span class="meta">⚑ {{ . }}</span>{{ end }}
+					</div>
+					{{ partial "journal/progress.html" . }}
+				</header>
 
-    {{ if or .Params.comments .Site.Params.journal.enableComments }}
-    <section class="journal__comments">
-      {{ partial "journal/comments.html" . }}
-    </section>
-    {{ end }}
-  </article>
-</main>
-{{ end }}
+				{{ with .Params.summary }}<p class="lead">{{ . }}</p>{{ end }}
+
+				<section class="journal__content markdown-body">
+					{{ .Content }}
+				</section>
+
+				{{ with .Params.tasks }}
+				<section class="journal__tasks">
+					<h2>Tasks</h2>
+					{{ partial "journal/tasks.html" $ }}
+				</section>
+				{{ end }}
+
+				{{ if or .Params.comments .Site.Params.journal.enableComments }}
+				<section class="journal__comments">
+					{{ partial "journal/comments.html" . }}
+				</section>
+				{{ end }}
+			</article>
+		</main>
+	</div>
+
+	{{ partial "footer.html" . }}
+</body>
+</html>

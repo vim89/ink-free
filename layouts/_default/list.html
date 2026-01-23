@@ -2,7 +2,7 @@
 <html lang="{{ .Site.Language.Lang }}" data-theme-mode="{{ .Site.Params.mode | default "auto" }}"{{- if (eq .Site.Params.mode "dark") -}} class="dark"{{ end }}>
 {{ partial "header.html" . }}
 
-<body>
+<body data-pagefind-body>
 	{{- /* WCAG 2.2 Level A: Skip link for keyboard navigation */ -}}
 	<a href="#main-content" class="skip-link">Skip to main content</a>
 
