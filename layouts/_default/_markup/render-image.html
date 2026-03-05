@@ -42,19 +42,23 @@
     {{- range $widths -}}
       {{- $width := . -}}
       {{- if le $width $img.Width -}}
-        {{- with $img.Resize (printf "%dx avif q85" $width) -}}
+        {{- $avifTry := try ($img.Resize (printf "%dx avif q85" $width)) -}}
+        {{- with $avifTry.Value -}}
           {{- $avifSrcset = $avifSrcset | append (printf "%s %dw" .RelPermalink $width) -}}
         {{- end -}}
-        {{- with $img.Resize (printf "%dx webp q85" $width) -}}
+        {{- $webpTry := try ($img.Resize (printf "%dx webp q85" $width)) -}}
+        {{- with $webpTry.Value -}}
           {{- $webpSrcset = $webpSrcset | append (printf "%s %dw" .RelPermalink $width) -}}
         {{- end -}}
-        {{- with $img.Resize (printf "%dx %s q85" $width $format) -}}
+        {{- $fallbackTry := try ($img.Resize (printf "%dx %s q85" $width $format)) -}}
+        {{- with $fallbackTry.Value -}}
           {{- $fallbackSrcset = $fallbackSrcset | append (printf "%s %dw" .RelPermalink $width) -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
 
-    {{- $default := or ($img.Resize "800x jpg q85") $img -}}
+    {{- $defaultTry := try ($img.Resize "800x jpg q85") -}}
+    {{- $default := or $defaultTry.Value $img -}}
 
     {{- if $title -}}
     <figure>
