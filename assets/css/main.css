@@ -319,6 +319,15 @@ ul {
     margin-bottom: 10px;
 }
 
+.about-personal-content ul li {
+    margin-bottom: 10px;
+}
+
+.about-personal-content ul li a {
+    display: inline-block;
+    padding: 4px 0;
+}
+
 .post ul li p {
     display: inline;
 }
