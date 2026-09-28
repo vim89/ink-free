@@ -1,7 +1,7 @@
 "use strict";
 
 function toggleDarkMode() {
-    const theme = localStorage.getItem("scheme");
+    const theme = localStorage.getItem("theme");
     const toggle = document.getElementById("scheme-toggle");
     const container = document.documentElement;
 
@@ -26,11 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const globalDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const localMode = localStorage.getItem("scheme");
+        const localMode = localStorage.getItem("theme");
         const mode = document.getElementById("scheme-toggle");
 
         if (globalDark && (localMode === null)) {
-            localStorage.setItem("scheme", "dark");
+            localStorage.setItem("theme", "dark");
         }
 
         if (mode !== null) {
@@ -45,9 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (window.matchMedia) {
                 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (event) {
                     if (event.matches) {
-                        localStorage.setItem("scheme", "dark");
+                        localStorage.setItem("theme", "dark");
                     } else {
-                        localStorage.setItem("scheme", "light");
+                        localStorage.setItem("theme", "light");
                     }
                     toggleDarkMode();
                 });
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Handle click events
             mode.addEventListener("click", function (e) {
                 e.preventDefault();
-                localStorage.setItem("scheme", document.documentElement.classList.contains('dark') ? "light" : "dark");
+                localStorage.setItem("theme", document.documentElement.classList.contains('dark') ? "light" : "dark");
                 toggleDarkMode();
             });
 
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
             mode.addEventListener("keydown", function (e) {
                 if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    localStorage.setItem("scheme", document.documentElement.classList.contains('dark') ? "light" : "dark");
+                    localStorage.setItem("theme", document.documentElement.classList.contains('dark') ? "light" : "dark");
                     toggleDarkMode();
                 }
             });
