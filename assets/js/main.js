@@ -33,7 +33,14 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("theme", "dark");
         }
 
-        if (mode !== null) {
+        // Cloudflare Rocket Loader replays DOMContentLoaded listeners a second
+        // time to simulate its own defer semantics, even for scripts marked
+        // data-cfasync="false". Guard against that double-fire so init and
+        // click/keydown listeners aren't attached twice (which made every
+        // click toggle the class on, then immediately back off again).
+        if (mode !== null && !mode.dataset.themeToggleInitialized) {
+            mode.dataset.themeToggleInitialized = "true";
+
             // Add proper accessibility attributes
             mode.setAttribute("role", "button");
             mode.setAttribute("aria-label", "Toggle dark mode");
