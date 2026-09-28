@@ -176,6 +176,15 @@
   text-decoration: none;
 }
 
+/* Links inline in prose must not rely on color alone (WCAG 1.4.1 / Lighthouse link-in-text-block) */
+.markdown-body p a,
+.markdown-body li a,
+.markdown-body td a,
+.markdown-body blockquote a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .markdown-body abbr[title] {
   border-bottom: none;
   -webkit-text-decoration: underline dotted;
